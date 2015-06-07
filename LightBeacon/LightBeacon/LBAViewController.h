@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  LBAViewController.h
 //  LightBeacon
 //
 //  Created by Jonathan Fox on 6/6/15.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface LBAViewController : UIViewController 
 
 
 @end

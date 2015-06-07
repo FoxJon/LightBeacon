@@ -10,14 +10,15 @@
 		B09D90A71B233F1F00C2653B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B09D90A61B233F1F00C2653B /* main.m */; };
 		B09D90AA1B233F1F00C2653B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B09D90A91B233F1F00C2653B /* AppDelegate.m */; };
 		B09D90AD1B233F1F00C2653B /* LightBeacon.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B09D90AB1B233F1F00C2653B /* LightBeacon.xcdatamodeld */; };
-		B09D90B01B233F1F00C2653B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B09D90AF1B233F1F00C2653B /* ViewController.m */; };
+		B09D90B01B233F1F00C2653B /* LBAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B09D90AF1B233F1F00C2653B /* LBAViewController.m */; };
 		B09D90B31B233F1F00C2653B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B09D90B11B233F1F00C2653B /* Main.storyboard */; };
 		B09D90B51B233F1F00C2653B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B09D90B41B233F1F00C2653B /* Images.xcassets */; };
 		B09D90B81B233F1F00C2653B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B09D90B61B233F1F00C2653B /* LaunchScreen.xib */; };
 		B09D90C41B233F1F00C2653B /* LightBeaconTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B09D90C31B233F1F00C2653B /* LightBeaconTests.m */; };
 		B09D90CE1B239E3200C2653B /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B09D90CD1B239E3200C2653B /* libz.dylib */; };
 		B0D4B9571B24758B00713A26 /* Gimbal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0D4B9561B24758B00713A26 /* Gimbal.framework */; };
-		B0D4B9591B247D0600713A26 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = B0D4B9581B247D0600713A26 /* Keys.plist */; };
+		B0D4B95B1B24837300713A26 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = B0D4B95A1B24837300713A26 /* Keys.plist */; };
+		B0D4B9641B248A6700713A26 /* LBAGimbalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D4B9631B248A6700713A26 /* LBAGimbalManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,8 +38,8 @@
 		B09D90A81B233F1F00C2653B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B09D90A91B233F1F00C2653B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		B09D90AC1B233F1F00C2653B /* LightBeacon.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LightBeacon.xcdatamodel; sourceTree = "<group>"; };
-		B09D90AE1B233F1F00C2653B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		B09D90AF1B233F1F00C2653B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		B09D90AE1B233F1F00C2653B /* LBAViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBAViewController.h; sourceTree = "<group>"; };
+		B09D90AF1B233F1F00C2653B /* LBAViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBAViewController.m; sourceTree = "<group>"; };
 		B09D90B21B233F1F00C2653B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B09D90B41B233F1F00C2653B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B09D90B71B233F1F00C2653B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -47,7 +48,9 @@
 		B09D90C31B233F1F00C2653B /* LightBeaconTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LightBeaconTests.m; sourceTree = "<group>"; };
 		B09D90CD1B239E3200C2653B /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		B0D4B9561B24758B00713A26 /* Gimbal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Gimbal.framework; sourceTree = "<group>"; };
-		B0D4B9581B247D0600713A26 /* Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
+		B0D4B95A1B24837300713A26 /* Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
+		B0D4B9621B248A6700713A26 /* LBAGimbalManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBAGimbalManager.h; sourceTree = "<group>"; };
+		B0D4B9631B248A6700713A26 /* LBAGimbalManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBAGimbalManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,14 +95,9 @@
 		B09D90A31B233F1F00C2653B /* LightBeacon */ = {
 			isa = PBXGroup;
 			children = (
-				B09D90A81B233F1F00C2653B /* AppDelegate.h */,
-				B09D90A91B233F1F00C2653B /* AppDelegate.m */,
-				B09D90AE1B233F1F00C2653B /* ViewController.h */,
-				B09D90AF1B233F1F00C2653B /* ViewController.m */,
-				B09D90B11B233F1F00C2653B /* Main.storyboard */,
-				B09D90B41B233F1F00C2653B /* Images.xcassets */,
-				B09D90B61B233F1F00C2653B /* LaunchScreen.xib */,
-				B09D90AB1B233F1F00C2653B /* LightBeacon.xcdatamodeld */,
+				B0D4B9611B248A0D00713A26 /* Data */,
+				B0D4B9601B2489C900713A26 /* Controller */,
+				B0D4B95C1B24898D00713A26 /* Model */,
 				B09D90A41B233F1F00C2653B /* Supporting Files */,
 			);
 			path = LightBeacon;
@@ -108,9 +106,14 @@
 		B09D90A41B233F1F00C2653B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				B0D4B9581B247D0600713A26 /* Keys.plist */,
+				B09D90A81B233F1F00C2653B /* AppDelegate.h */,
+				B09D90A91B233F1F00C2653B /* AppDelegate.m */,
+				B09D90B11B233F1F00C2653B /* Main.storyboard */,
+				B09D90B41B233F1F00C2653B /* Images.xcassets */,
+				B09D90B61B233F1F00C2653B /* LaunchScreen.xib */,
 				B09D90A51B233F1F00C2653B /* Info.plist */,
 				B09D90A61B233F1F00C2653B /* main.m */,
+				B0D4B95A1B24837300713A26 /* Keys.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -139,6 +142,32 @@
 				B0D4B9561B24758B00713A26 /* Gimbal.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B0D4B95C1B24898D00713A26 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B0D4B9621B248A6700713A26 /* LBAGimbalManager.h */,
+				B0D4B9631B248A6700713A26 /* LBAGimbalManager.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		B0D4B9601B2489C900713A26 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				B09D90AE1B233F1F00C2653B /* LBAViewController.h */,
+				B09D90AF1B233F1F00C2653B /* LBAViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		B0D4B9611B248A0D00713A26 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				B09D90AB1B233F1F00C2653B /* LightBeacon.xcdatamodeld */,
+			);
+			name = Data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -227,7 +256,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B0D4B9591B247D0600713A26 /* Keys.plist in Resources */,
+				B0D4B95B1B24837300713A26 /* Keys.plist in Resources */,
 				B09D90B31B233F1F00C2653B /* Main.storyboard in Resources */,
 				B09D90B81B233F1F00C2653B /* LaunchScreen.xib in Resources */,
 				B09D90B51B233F1F00C2653B /* Images.xcassets in Resources */,
@@ -249,8 +278,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B09D90AA1B233F1F00C2653B /* AppDelegate.m in Sources */,
+				B0D4B9641B248A6700713A26 /* LBAGimbalManager.m in Sources */,
 				B09D90AD1B233F1F00C2653B /* LightBeacon.xcdatamodeld in Sources */,
-				B09D90B01B233F1F00C2653B /* ViewController.m in Sources */,
+				B09D90B01B233F1F00C2653B /* LBAViewController.m in Sources */,
 				B09D90A71B233F1F00C2653B /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
