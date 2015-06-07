@@ -1,0 +1,21 @@
+BeaconLight
+
+Features:
+- detects when you enter the room.
+- able to adjust proximity detection
+- when light is off and you enter the room:
+	- check to see if time is between sunset and sunrise.
+		- use location services and weather app api to get sunrise and sunset times
+		- Will need to use REST call to weather service.
+		- check to see that user has not disabled auto detect
+			- if not, turn on the light if light is not already on.
+when user leaves the room:
+		- check to see that user has not disabled auto detect
+			- wait 30 seconds.
+			- if not, turn off the light if light is not already off
+			
+Light features:
+- dimmer
+- RGB color sliders
+- auto detect switch
+- favorite settings (core data)
