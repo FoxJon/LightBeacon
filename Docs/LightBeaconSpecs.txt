@@ -24,8 +24,11 @@ Settings:
 - Favorite Light Settings (ie. color and brightness, dim speed)
 - Auto detect light (ON/OFF)
 - Sunset/Sunrise Mode (ON/OFF)
+- Shows current range (useful for range calibration)
 - Beacon entry detection range
+	- will auto adjust exit range so that exit range is never closer than entry range.
 - Beacon exit detection range
+	- will auto adjust entry range so that entry range is never further than exit range.
 
 Functions:
 - Turn on/off light
