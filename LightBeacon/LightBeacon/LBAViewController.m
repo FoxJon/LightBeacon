@@ -33,6 +33,10 @@
 @property (nonatomic) BOOL userLightOffTimerIsOn;
 @property (nonatomic) NSInteger userOnThreshold;
 @property (nonatomic) NSInteger userOffThreshold;
+@property (nonatomic) int redColor;
+@property (nonatomic) int greenColor;
+@property (nonatomic) int blueColor;
+@property (nonatomic) float alpha;
 
 //UI Elements
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *darkTintColorElements;
@@ -40,13 +44,17 @@
 @property (weak, nonatomic) IBOutlet UISlider *redSlider;
 @property (weak, nonatomic) IBOutlet UISlider *greenSlider;
 @property (weak, nonatomic) IBOutlet UISlider *blueSlider;
+@property (weak, nonatomic) IBOutlet UISlider *dimmerSlider;
 @property (weak, nonatomic) IBOutlet UISwitch *lightSwitch;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *settingsButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *favoritesButton;
 @property (weak, nonatomic) IBOutlet LBARectangleView *dimBox;
-@property (nonatomic) UISlider *dimmerSlider;
+
 //Labels
 @property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
+@property (weak, nonatomic) IBOutlet UILabel *redLabel;
+@property (weak, nonatomic) IBOutlet UILabel *greenLabel;
+@property (weak, nonatomic) IBOutlet UILabel *blueLabel;
 
 
 @end
@@ -54,12 +62,11 @@
 @implementation LBAViewController
 
 - (void)viewDidLoad {
-    self.dimmerSlider = [UISlider new];
-    [self.view addSubview:self.dimmerSlider];
     [super viewDidLoad];
     [self setUpConfigurations];
     [self setUpUserDefaults];
     [self setTintColors];
+    [self changeBackgroundColor];
     [self setUpVerticalSlider];
 }
 
@@ -88,7 +95,6 @@
         self.liteTintColor = LIGHT_OFF_LITE_TINT_COLOR;
         self.darkTintColor = LIGHT_OFF_DARK_TINT_COLOR;
     }
-    [self changeBackgroundColor];
     [self refreshTintColors];
 }
 
@@ -126,27 +132,8 @@
 }
 
 - (void)setUpVerticalSlider{
-    self.dimmerSlider.minimumValue = 0;
-    self.dimmerSlider.maximumValue = 100;
-    [self.dimmerSlider setValue:100];
     CGAffineTransform trans = CGAffineTransformMakeRotation(-M_PI * 0.5);
     self.dimmerSlider.transform = trans;
-    self.dimmerSlider.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *viewsDictionary = @{@"dimmerSlider":self.dimmerSlider, @"dimBox":self.dimBox};
-    
-    NSArray *constraint_H = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[dimmerSlider(37)]" options:0 metrics:nil views:viewsDictionary];
-    
-    NSArray *constraint_V = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[dimmerSlider(150)]" options:0 metrics:nil views:viewsDictionary];
-    
-    NSArray *constraint_POS_V = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[dimBox]-70-[dimmerSlider]" options:0 metrics:nil views:viewsDictionary];
-    
-    NSArray *constraint_POS_H = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[dimmerSlider]-(-10)-|" options:0 metrics:nil views:viewsDictionary];
-    
-    [self.dimmerSlider addConstraints:constraint_H];
-    [self.dimmerSlider addConstraints:constraint_V];
-    [self.view addConstraints:constraint_POS_V];
-    [self.view addConstraints:constraint_POS_H];
-
 }
 
 
@@ -155,6 +142,27 @@
         _log = [@"" mutableCopy];
     }
     return _log;
+}
+
+-(int)redColor{
+    if (!_redColor) {
+        _redColor = [self.redLabel.text intValue];
+    }
+    return _redColor;
+}
+
+-(int)greenColor{
+    if (!_greenColor) {
+        _greenColor = [self.greenLabel.text intValue];;
+    }
+    return _greenColor;
+}
+
+-(int)blueColor{
+    if (!_blueColor) {
+        _blueColor = [self.blueLabel.text intValue];;
+    }
+    return _blueColor;
 }
 
 
@@ -189,15 +197,20 @@
 - (void)placeManager:(GMBLPlaceManager *)manager didReceiveBeaconSighting:(GMBLBeaconSighting *)sighting forVisits:(NSArray *)visits{
     NSString * sightingLog = [LBALogManager createDeveloperLogsWithSighting:sighting];
     [self updateLogWithString:sightingLog];
+    self.distanceLabel.text = [NSString stringWithFormat:@"%ld", (long)sighting.RSSI];
     if (!self.lightIsOn && !self.delayTimerIsOn) {
         if (sighting.RSSI > self.userOnThreshold){
             [self startDelay];
+            self.lightSwitch.on = YES;
             [self changeBackgroundColor];
+            [self refreshTintColors];
         }
     }
     if (self.lightIsOn && !self.delayTimerIsOn && !self.userLightOffTimerIsOn) {
         if (sighting.RSSI < self.userOffThreshold){
             [self startUserLightOffTimer];
+            self.lightSwitch.on = NO;
+            [self refreshTintColors];
         }
     }
 }
@@ -207,13 +220,52 @@
 - (IBAction)lightSwitch:(UISwitch *)sender {
     self.lightIsOn = sender.on ? YES : NO;
     [self setTintColors];
+    [self changeBackgroundColor];
 }
 
+- (IBAction)redSliderMoved:(UISlider *)sender {
+    int value = sender.value;
+    self.redLabel.text = [NSString stringWithFormat:@"%d",value];
+    [self updateUserBackgroundColorWithRedColor:value green:0 blue:0 alpha:0];
+}
+
+- (IBAction)greenSliderMoved:(UISlider *)sender {
+    int value = sender.value;
+    self.greenLabel.text = [NSString stringWithFormat:@"%d",value];
+    [self updateUserBackgroundColorWithRedColor:0 green:value blue:0 alpha:0];
+}
+
+- (IBAction)blueSliderMoved:(UISlider *)sender {
+    int value = sender.value;
+    self.blueLabel.text = [NSString stringWithFormat:@"%d",value];
+    [self updateUserBackgroundColorWithRedColor:0 green:0 blue:value alpha:0];
+}
+- (IBAction)dimmerValueChanged:(UISlider *)sender {
+    [self updateUserBackgroundColorWithRedColor:0 green:0 blue:0 alpha:sender.value];
+}
 
 #pragma mark - HELPERS
 - (void)updateLogWithString:(NSString *)log{
     [self.log insertString:log atIndex:0];
     NSLog(@"%@", log);
+}
+
+-(void)updateUserBackgroundColorWithRedColor:(int)red green:(int)green blue:(int)blue alpha:(float)alpha{
+    if (self.lightIsOn) {
+        if (red > 0) {
+            self.redColor = red;
+        }
+        if (green > 0) {
+            self.greenColor = green;
+        }
+        if (blue > 0) {
+            self.blueColor = blue;
+        }
+        if (alpha > 0) {
+            self.alpha = alpha;
+        }
+        self.view.backgroundColor = [UIColor colorWithRed:self.redColor / 255.0 green:self.greenColor / 255.0 blue:self.blueColor / 255.0 alpha:self.alpha];
+    }
 }
 
 
@@ -245,7 +297,10 @@
 
 - (void)changeBackgroundColor{
     [UIView animateWithDuration:1.0 animations:^{
-        self.view.backgroundColor = self.lightIsOn ? [UIColor colorWithRed:0.937f green:0.992f blue:0.976f alpha:1.0f] : [UIColor colorWithRed:0.098f green:0.098f blue:0.098f alpha:1.0f];
+        int red = [self.redLabel.text intValue] / 255.0;
+        int green = [self.greenLabel.text intValue] / 255.0;
+        int blue = [self.blueLabel.text intValue] / 255.0;
+        self.view.backgroundColor = self.lightIsOn ? [UIColor colorWithRed:red green:green blue:blue alpha:1.0f] : [UIColor colorWithRed:0.098f green:0.098f blue:0.098f alpha:1.0f];
     }];
 }
 

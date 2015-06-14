@@ -194,17 +194,26 @@
                                     <constraint firstAttribute="width" constant="20" id="q5y-ic-C4J"/>
                                 </constraints>
                             </view>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="jhT-kt-9F1" userLabel="Blue Slider">
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="255" minValue="0.0" maxValue="255" translatesAutoresizingMaskIntoConstraints="NO" id="jhT-kt-9F1" userLabel="Blue Slider">
                                 <rect key="frame" x="173" y="509" width="154" height="37"/>
                                 <color key="minimumTrackTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="blueSliderMoved:" destination="vXZ-lx-hvc" eventType="valueChanged" id="1E5-Wh-lPa"/>
+                                </connections>
                             </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Unh-G6-J4F" userLabel="Green Slider">
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="255" minValue="0.0" maxValue="255" translatesAutoresizingMaskIntoConstraints="NO" id="Unh-G6-J4F" userLabel="Green Slider">
                                 <rect key="frame" x="173" y="459" width="154" height="37"/>
                                 <color key="minimumTrackTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="greenSliderMoved:" destination="vXZ-lx-hvc" eventType="valueChanged" id="exk-mV-iOz"/>
+                                </connections>
                             </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="kH3-NI-6S9" userLabel="Red Slider">
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="255" minValue="0.0" maxValue="255" translatesAutoresizingMaskIntoConstraints="NO" id="kH3-NI-6S9" userLabel="Red Slider">
                                 <rect key="frame" x="171" y="408" width="154" height="37"/>
                                 <color key="minimumTrackTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="redSliderMoved:" destination="vXZ-lx-hvc" eventType="valueChanged" id="Iba-mF-lvp"/>
+                                </connections>
                             </slider>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qw7-S9-vcu" userLabel="Red Plus Sign" customClass="LBAPlusSign">
                                 <rect key="frame" x="339" y="416" width="20" height="20"/>
@@ -242,7 +251,7 @@
                                     <constraint firstItem="m3q-Cq-4DT" firstAttribute="top" secondItem="may-0u-b3F" secondAttribute="top" id="rUU-7c-JTQ"/>
                                 </constraints>
                             </view>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="REj-hX-qag">
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="REj-hX-qag">
                                 <rect key="frame" x="277" y="616" width="51" height="31"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="49" id="Kvc-54-tgL"/>
@@ -256,7 +265,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="50a-ie-grc" userLabel="Distance Box" customClass="LBARectangleView">
                                 <rect key="frame" x="16" y="86" width="85" height="85"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-65" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f6A-CU-J8Y">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f6A-CU-J8Y">
                                         <rect key="frame" x="0.0" y="0.0" width="85" height="85"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="36"/>
                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -303,6 +312,13 @@
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.84999999999999998" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="0YG-nz-thj">
+                                <rect key="frame" x="170" y="197" width="169" height="31"/>
+                                <color key="minimumTrackTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="dimmerValueChanged:" destination="vXZ-lx-hvc" eventType="valueChanged" id="CJm-rx-ROp"/>
+                                </connections>
+                            </slider>
                         </subviews>
                         <color key="backgroundColor" red="0.94901960784313721" green="0.99215686274509807" blue="0.98431372549019602" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -417,11 +433,16 @@
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
+                        <outlet property="blueLabel" destination="9WO-9Z-3gA" id="p1d-Dc-3R9"/>
                         <outlet property="blueSlider" destination="jhT-kt-9F1" id="2tJ-QJ-rcY"/>
                         <outlet property="dimBox" destination="BEU-j1-KJI" id="Zh6-oc-vrV"/>
+                        <outlet property="dimmerSlider" destination="0YG-nz-thj" id="woC-mi-UcY"/>
+                        <outlet property="distanceLabel" destination="f6A-CU-J8Y" id="DGT-f5-mot"/>
                         <outlet property="favoritesButton" destination="8JC-6C-LCb" id="49C-k7-eyW"/>
+                        <outlet property="greenLabel" destination="NNS-ql-Lu6" id="RvG-TM-uTd"/>
                         <outlet property="greenSlider" destination="Unh-G6-J4F" id="Hud-LM-R6b"/>
                         <outlet property="lightSwitch" destination="REj-hX-qag" id="3Ua-Nf-UHj"/>
+                        <outlet property="redLabel" destination="t6W-Hg-V3N" id="UAD-m2-Yfd"/>
                         <outlet property="redSlider" destination="kH3-NI-6S9" id="APp-Xp-suQ"/>
                         <outlet property="settingsButton" destination="vVg-Xr-bY4" id="zTA-6H-haP"/>
                         <outletCollection property="darkTintColorElements" destination="BEU-j1-KJI" id="koK-ID-REA"/>
