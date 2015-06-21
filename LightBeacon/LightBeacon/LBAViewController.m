@@ -46,6 +46,7 @@
 @property (weak, nonatomic) IBOutlet UISlider *blueSlider;
 @property (weak, nonatomic) IBOutlet UISlider *dimmerSlider;
 @property (weak, nonatomic) IBOutlet UISwitch *lightSwitch;
+@property (weak, nonatomic) IBOutlet UISwitch *autoSwitch;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *settingsButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *favoritesButton;
 @property (weak, nonatomic) IBOutlet LBARectangleView *dimBox;
@@ -73,6 +74,21 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:NO];
     self.log = [@""mutableCopy];
+    
+    for (UILabel *label in self.lightTintColorElements) {
+        label.tintColor = self.liteTintColor;
+    }
+    for (UIView *view in self.darkTintColorElements) {
+        view.tintColor = self.darkTintColor;
+    }
+    self.lightSwitch.onTintColor = self.darkTintColor;
+    self.lightSwitch.tintColor = self.liteTintColor;
+    self.lightSwitch.thumbTintColor = self.whiteTintColor;
+    self.autoSwitch.onTintColor = self.darkTintColor;
+    self.autoSwitch.tintColor = self.liteTintColor;
+    self.autoSwitch.thumbTintColor = self.whiteTintColor;
+    self.settingsButton.tintColor = self.liteTintColor;
+    self.favoritesButton.tintColor = self.liteTintColor;
 }
 
 
@@ -88,6 +104,7 @@
 
 
 - (void)setTintColors{
+    self.whiteTintColor = LIGHT_ON_WHITE_TINT_COLOR;
     if (self.lightIsOn) {
         self.liteTintColor = LIGHT_ON_LITE_TINT_COLOR;
         self.darkTintColor = LIGHT_ON_DARK_TINT_COLOR;
@@ -95,39 +112,17 @@
         self.liteTintColor = LIGHT_OFF_LITE_TINT_COLOR;
         self.darkTintColor = LIGHT_OFF_DARK_TINT_COLOR;
     }
-    [self refreshTintColors];
-}
-
-
-- (void)refreshTintColors{
-    for (UILabel *label in self.lightTintColorElements) {
-        label.tintColor = self.liteTintColor;
+    if (!self.autoSwitch.on && self.lightSwitch.on) {
+        self.autoSwitch.thumbTintColor = self.liteTintColor;
+        self.autoSwitch.tintColor = self.darkTintColor;
+    }else if (!self.autoSwitch.on && !self.lightSwitch.on){
+        self.autoSwitch.thumbTintColor = self.whiteTintColor;
+        self.autoSwitch.tintColor = self.liteTintColor;
     }
-    for (UIView *view in self.darkTintColorElements) {
-        view.tintColor = self.darkTintColor;
-    }
-    self.lightSwitch.onTintColor = self.darkTintColor;
-    self.lightSwitch.tintColor = self.liteTintColor;
-    self.lightSwitch.thumbTintColor = self.liteTintColor;
-    self.settingsButton.tintColor = self.liteTintColor;
-    self.favoritesButton.tintColor = self.liteTintColor;
-    
-    [self setUpSliderTint:self.dimmerSlider];
-    [self setUpSliderTint:self.redSlider];
-    [self setUpSliderTint:self.greenSlider];
-    [self setUpSliderTint:self.blueSlider];
-}
-
-- (void)setUpSliderTint:(UISlider *)slider{
-    if (!self.lightIsOn) {
-        slider.thumbTintColor = self.liteTintColor;
-        slider.minimumTrackTintColor = self.liteTintColor;
-        slider.maximumTrackTintColor = self.liteTintColor;
-    }else{
-        slider.thumbTintColor = self.whiteTintColor;
-        slider.minimumTrackTintColor = self.liteTintColor;
-        slider.maximumTrackTintColor = self.darkTintColor;
-        self.lightSwitch.thumbTintColor = self.whiteTintColor;
+    if (self.autoSwitch.on & self.lightSwitch.on){
+        self.autoSwitch.thumbTintColor = self.whiteTintColor;
+        self.autoSwitch.tintColor = self.whiteTintColor;
+        self.autoSwitch.onTintColor = LIGHT_OFF_DARK_TINT_COLOR;
     }
 }
 
@@ -153,18 +148,24 @@
 
 -(int)greenColor{
     if (!_greenColor) {
-        _greenColor = [self.greenLabel.text intValue];;
+        _greenColor = [self.greenLabel.text intValue];
     }
     return _greenColor;
 }
 
 -(int)blueColor{
     if (!_blueColor) {
-        _blueColor = [self.blueLabel.text intValue];;
+        _blueColor = [self.blueLabel.text intValue];
     }
     return _blueColor;
 }
 
+-(float)alpha{
+    if (!_alpha) {
+        _alpha = self.dimmerSlider.value;
+    }
+    return _alpha;
+}
 
 - (void)setUpUserDefaults{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -203,14 +204,14 @@
             [self startDelay];
             self.lightSwitch.on = YES;
             [self changeBackgroundColor];
-            [self refreshTintColors];
+            [self setTintColors];
         }
     }
     if (self.lightIsOn && !self.delayTimerIsOn && !self.userLightOffTimerIsOn) {
         if (sighting.RSSI < self.userOffThreshold){
             [self startUserLightOffTimer];
             self.lightSwitch.on = NO;
-            [self refreshTintColors];
+            [self setTintColors];
         }
     }
 }
@@ -218,9 +219,25 @@
 #pragma mark - ACTIONS
 
 - (IBAction)lightSwitch:(UISwitch *)sender {
-    self.lightIsOn = sender.on ? YES : NO;
+    if (sender.on) {
+        self.lightIsOn = YES;
+    }else{
+        self.lightIsOn = NO;
+        self.autoSwitch.on = NO;
+        [GMBLPlaceManager stopMonitoring];
+    }
     [self setTintColors];
     [self changeBackgroundColor];
+}
+
+- (IBAction)autoSwitch:(UISwitch *)sender {
+    if (sender.on) {
+        [GMBLPlaceManager startMonitoring];
+        [self setTintColors];
+    }else{
+        [GMBLPlaceManager stopMonitoring];
+        [self setTintColors];
+    }
 }
 
 - (IBAction)redSliderMoved:(UISlider *)sender {
@@ -244,6 +261,30 @@
     [self updateUserBackgroundColorWithRedColor:0 green:0 blue:0 alpha:sender.value];
 }
 
+- (IBAction)redMinusButton:(UIButton *)sender {
+   [self adjustRedValueWithOperator:@"-"];
+}
+
+- (IBAction)redPlusButton:(UIButton *)sender {
+    [self adjustRedValueWithOperator:@"+"];
+}
+
+- (IBAction)greenMinusButton:(UIButton *)sender {
+    [self adjustGreenValueWithOperator:@"-"];
+}
+
+- (IBAction)greenPlusButton:(UIButton *)sender {
+    [self adjustGreenValueWithOperator:@"+"];
+}
+
+- (IBAction)blueMinusButton:(UIButton *)sender {
+    [self adjustBlueValueWithOperator:@"-"];
+}
+
+- (IBAction)bluePlusButton:(UIButton *)sender {
+    [self adjustBlueValueWithOperator:@"+"];
+}
+
 #pragma mark - HELPERS
 - (void)updateLogWithString:(NSString *)log{
     [self.log insertString:log atIndex:0];
@@ -261,7 +302,7 @@
         if (blue > 0) {
             self.blueColor = blue;
         }
-        if (alpha > 0) {
+        if (alpha > 0.0) {
             self.alpha = alpha;
         }
         self.view.backgroundColor = [UIColor colorWithRed:self.redColor / 255.0 green:self.greenColor / 255.0 blue:self.blueColor / 255.0 alpha:self.alpha];
@@ -300,8 +341,34 @@
         int red = [self.redLabel.text intValue] / 255.0;
         int green = [self.greenLabel.text intValue] / 255.0;
         int blue = [self.blueLabel.text intValue] / 255.0;
-        self.view.backgroundColor = self.lightIsOn ? [UIColor colorWithRed:red green:green blue:blue alpha:1.0f] : [UIColor colorWithRed:0.098f green:0.098f blue:0.098f alpha:1.0f];
+        float alpha = self.alpha;
+        self.view.backgroundColor = self.lightIsOn ? [UIColor colorWithRed:red green:green blue:blue alpha:alpha] : [UIColor colorWithRed:0.098f green:0.098f blue:0.098f alpha:1.0f];
     }];
 }
+
+-(void)adjustRedValueWithOperator:(NSString *)operator{
+    int redValue = [self.redLabel.text intValue];
+    redValue = [operator isEqualToString:@"+"] ? (redValue += 1) : (redValue -= 1);
+    self.redSlider.value = redValue;
+    self.redLabel.text = [NSString stringWithFormat:@"%d",redValue];
+    [self updateUserBackgroundColorWithRedColor:redValue green:0 blue:0 alpha:0];
+}
+
+-(void)adjustGreenValueWithOperator:(NSString *)operator{
+    int greenValue = [self.greenLabel.text intValue];
+    greenValue = [operator isEqualToString:@"+"] ? (greenValue += 1) : (greenValue -= 1);
+    self.greenSlider.value = greenValue;
+    self.greenLabel.text = [NSString stringWithFormat:@"%d",greenValue];
+    [self updateUserBackgroundColorWithRedColor:0 green:greenValue blue:0 alpha:0];
+}
+
+-(void)adjustBlueValueWithOperator:(NSString *)operator{
+    int blueValue = [self.blueLabel.text intValue];
+    blueValue = [operator isEqualToString:@"+"] ? (blueValue += 1) : (blueValue -= 1);
+    self.blueSlider.value = blueValue;
+    self.blueLabel.text = [NSString stringWithFormat:@"%d",blueValue];
+    [self updateUserBackgroundColorWithRedColor:0 green:0 blue:blueValue alpha:0];
+}
+
 
 @end
