@@ -50,6 +50,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *settingsButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *favoritesButton;
 @property (weak, nonatomic) IBOutlet LBARectangleView *dimBox;
+@property (weak, nonatomic) IBOutlet UILabel *lowBatteryLabel;
 
 //Labels
 @property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
@@ -74,6 +75,7 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:NO];
     self.log = [@""mutableCopy];
+    self.lowBatteryLabel.hidden = YES;
     
     for (UILabel *label in self.lightTintColorElements) {
         label.tintColor = self.liteTintColor;
@@ -201,6 +203,9 @@
     self.distanceLabel.text = [NSString stringWithFormat:@"%ld", (long)sighting.RSSI];
     if (!self.lightIsOn && !self.delayTimerIsOn) {
         if (sighting.RSSI > self.userOnThreshold){
+            if (sighting.beacon.batteryLevel == GMBLBatteryLevelLow) {
+                self.lowBatteryLabel.hidden = NO;
+            }
             [self startDelay];
             self.lightSwitch.on = YES;
             [self changeBackgroundColor];

@@ -583,6 +583,7 @@
                         <outlet property="greenLabel" destination="NNS-ql-Lu6" id="RvG-TM-uTd"/>
                         <outlet property="greenSlider" destination="Unh-G6-J4F" id="Hud-LM-R6b"/>
                         <outlet property="lightSwitch" destination="REj-hX-qag" id="3Ua-Nf-UHj"/>
+                        <outlet property="lowBatteryLabel" destination="RF1-hj-he3" id="KLh-ww-m6X"/>
                         <outlet property="redLabel" destination="t6W-Hg-V3N" id="UAD-m2-Yfd"/>
                         <outlet property="redSlider" destination="kH3-NI-6S9" id="APp-Xp-suQ"/>
                         <outlet property="settingsButton" destination="vVg-Xr-bY4" id="zTA-6H-haP"/>
