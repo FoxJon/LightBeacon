@@ -1,36 +1,34 @@
 BeaconLight
 
 Features:
-- detects when you enter the room.
+X detects when you enter the room.
 - Will wake up a force closed app.
 - able to adjust proximity detection.
 	- When app is in background, only detects 3 times/minute??!!
-- displays room temperature
-- Will give a low battery warning
+X Will give a low battery warning
 - when light is off and you enter the room:
 	- check to see if time is between sunset and sunrise.
 		- use location services and weather app api to get sunrise and sunset times
-		- Will need to use REST call to weather service.
-		- check to see that user has not disabled auto detect
-			- if not, turn on the light if light is not already on.
+		X check to see that user has not disabled auto detect
+			X if not, turn on the light if light is not already on.
 when user leaves the room:
 		- check to see that user has not disabled auto detect
 			- wait 30 seconds.
 			- if not, turn off the light if light is not already off
-- Able to dim lights
+X Able to dim lights
 - Able to create favorite light settings (core data)
 
 Settings:
 - Favorite Light Settings (ie. color and brightness, dim speed)
-- Auto detect light (ON/OFF)
+X Auto detect light (ON/OFF)
 - Sunset/Sunrise Mode (ON/OFF)
-- Shows current range (useful for range calibration)
+X Shows current range (useful for range calibration)
 - Beacon entry detection range
 	- will auto adjust exit range so that exit range is never closer than entry range.
 - Beacon exit detection range
 	- will auto adjust entry range so that entry range is never further than exit range.
 
 Functions:
-- Turn on/off light
-- RGB sliders
-- Dimmer sliders
+X Turn on/off light
+X RGB sliders
+X Dimmer sliders
