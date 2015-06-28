@@ -23,6 +23,9 @@
 		B0D4B9571B24758B00713A26 /* Gimbal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0D4B9561B24758B00713A26 /* Gimbal.framework */; };
 		B0D4B95B1B24837300713A26 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = B0D4B95A1B24837300713A26 /* Keys.plist */; };
 		B0D4B9641B248A6700713A26 /* LBAGimbalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D4B9631B248A6700713A26 /* LBAGimbalManager.m */; };
+		B0E8D2721B4075B3009683A2 /* LBASettingsPlusSign.m in Sources */ = {isa = PBXBuildFile; fileRef = B0E8D2711B4075B3009683A2 /* LBASettingsPlusSign.m */; };
+		B0E8D2751B4075C4009683A2 /* LBASettingsMinusSign.m in Sources */ = {isa = PBXBuildFile; fileRef = B0E8D2741B4075C4009683A2 /* LBASettingsMinusSign.m */; };
+		B0EB69A51B3F18980031B9D4 /* LBASettingsBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0EB69A41B3F18980031B9D4 /* LBASettingsBoxView.m */; };
 		B0FCFD021B2521410034FD4E /* LBALogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0FCFD011B2521410034FD4E /* LBALogManager.m */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +68,12 @@
 		B0D4B95A1B24837300713A26 /* Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		B0D4B9621B248A6700713A26 /* LBAGimbalManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBAGimbalManager.h; sourceTree = "<group>"; };
 		B0D4B9631B248A6700713A26 /* LBAGimbalManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBAGimbalManager.m; sourceTree = "<group>"; };
+		B0E8D2701B4075B3009683A2 /* LBASettingsPlusSign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBASettingsPlusSign.h; sourceTree = "<group>"; };
+		B0E8D2711B4075B3009683A2 /* LBASettingsPlusSign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBASettingsPlusSign.m; sourceTree = "<group>"; };
+		B0E8D2731B4075C4009683A2 /* LBASettingsMinusSign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBASettingsMinusSign.h; sourceTree = "<group>"; };
+		B0E8D2741B4075C4009683A2 /* LBASettingsMinusSign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBASettingsMinusSign.m; sourceTree = "<group>"; };
+		B0EB69A31B3F18980031B9D4 /* LBASettingsBoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBASettingsBoxView.h; sourceTree = "<group>"; };
+		B0EB69A41B3F18980031B9D4 /* LBASettingsBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBASettingsBoxView.m; sourceTree = "<group>"; };
 		B0FCFD001B2521410034FD4E /* LBALogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBALogManager.h; sourceTree = "<group>"; };
 		B0FCFD011B2521410034FD4E /* LBALogManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBALogManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,6 +109,12 @@
 				B032BCF81B2BE0EE003AC098 /* LBAPlusSign.m */,
 				B032BCFA1B2BE10A003AC098 /* LBAMinusSign.h */,
 				B032BCFB1B2BE10A003AC098 /* LBAMinusSign.m */,
+				B0EB69A31B3F18980031B9D4 /* LBASettingsBoxView.h */,
+				B0EB69A41B3F18980031B9D4 /* LBASettingsBoxView.m */,
+				B0E8D2701B4075B3009683A2 /* LBASettingsPlusSign.h */,
+				B0E8D2711B4075B3009683A2 /* LBASettingsPlusSign.m */,
+				B0E8D2731B4075C4009683A2 /* LBASettingsMinusSign.h */,
+				B0E8D2741B4075C4009683A2 /* LBASettingsMinusSign.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -312,13 +327,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0EB69A51B3F18980031B9D4 /* LBASettingsBoxView.m in Sources */,
 				B032BCF31B2BD25A003AC098 /* LBASettingsTab.m in Sources */,
 				B032BCEF1B2BCF72003AC098 /* LBARectangleView.m in Sources */,
 				B09D90AA1B233F1F00C2653B /* AppDelegate.m in Sources */,
 				B032BCFC1B2BE10A003AC098 /* LBAMinusSign.m in Sources */,
+				B0E8D2721B4075B3009683A2 /* LBASettingsPlusSign.m in Sources */,
 				B0D4B9641B248A6700713A26 /* LBAGimbalManager.m in Sources */,
 				B09D90AD1B233F1F00C2653B /* LightBeacon.xcdatamodeld in Sources */,
 				B032BCF91B2BE0EE003AC098 /* LBAPlusSign.m in Sources */,
+				B0E8D2751B4075C4009683A2 /* LBASettingsMinusSign.m in Sources */,
 				B09D90B01B233F1F00C2653B /* LBAViewController.m in Sources */,
 				B0FCFD021B2521410034FD4E /* LBALogManager.m in Sources */,
 				B09D90A71B233F1F00C2653B /* main.m in Sources */,

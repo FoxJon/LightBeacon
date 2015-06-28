@@ -31,8 +31,11 @@
 
 // User configurable properties
 @property (nonatomic) BOOL userLightOffTimerIsOn;
-@property (nonatomic) NSInteger userOnThreshold;
-@property (nonatomic) NSInteger userOffThreshold;
+@property (nonatomic) NSInteger entryThreshold;
+@property (weak, nonatomic) IBOutlet UISlider *entrySlider;
+@property (nonatomic) NSInteger exitThreshold;
+@property (weak, nonatomic) IBOutlet UISlider *exitSlider;
+@property (weak, nonatomic) IBOutlet UISlider *exitDelaySlider;
 @property (nonatomic) int redColor;
 @property (nonatomic) int greenColor;
 @property (nonatomic) int blueColor;
@@ -51,20 +54,29 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *favoritesButton;
 @property (weak, nonatomic) IBOutlet LBARectangleView *dimBox;
 @property (weak, nonatomic) IBOutlet UILabel *lowBatteryLabel;
+@property (weak, nonatomic) IBOutlet UIView *mainViewContainer;
+@property (weak, nonatomic) IBOutlet UIView *mainView;
+@property (weak, nonatomic) IBOutlet UIView *settingsView;
 
 //Labels
 @property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
 @property (weak, nonatomic) IBOutlet UILabel *redLabel;
 @property (weak, nonatomic) IBOutlet UILabel *greenLabel;
 @property (weak, nonatomic) IBOutlet UILabel *blueLabel;
+@property (weak, nonatomic) IBOutlet UILabel *entryLabel;
+@property (weak, nonatomic) IBOutlet UILabel *exitLabel;
+@property (weak, nonatomic) IBOutlet UILabel *exitDelayLabel;
 
 
 @end
 
 @implementation LBAViewController
 
+NSUserDefaults *defaults;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.navigationController setNavigationBarHidden:YES];
     [self setUpConfigurations];
     [self setUpUserDefaults];
     [self setTintColors];
@@ -170,19 +182,21 @@
 }
 
 - (void)setUpUserDefaults{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    defaults = [NSUserDefaults standardUserDefaults];
     if (defaults == nil){
         defaults = [NSUserDefaults standardUserDefaults];
     }
     if (![defaults objectForKey:LIGHT_ON_THRESHOLD]){
-        NSDictionary *lightDefaults = @{LIGHT_ON_THRESHOLD:@-80, LIGHT_OFF_THRESHOLD:@-90};
+        NSDictionary *lightDefaults = @{LIGHT_ON_THRESHOLD:@80, LIGHT_OFF_THRESHOLD:@90, USER_LIGHT_OFF_DELAY:@20};
         [defaults registerDefaults:lightDefaults];
     };
-    
-    self.userOnThreshold = [[defaults objectForKey:LIGHT_ON_THRESHOLD] integerValue];
-    self.userOffThreshold = [[defaults objectForKey:LIGHT_OFF_THRESHOLD] integerValue];
+    self.entrySlider.value = fabs([[defaults objectForKey:LIGHT_ON_THRESHOLD] floatValue]);
+    self.entryLabel.text = [NSString stringWithFormat:@"-%i", (int)self.entrySlider.value];
+    self.exitSlider.value = fabs([[defaults objectForKey:LIGHT_OFF_THRESHOLD] floatValue]);
+    self.exitLabel.text = [NSString stringWithFormat:@"-%i", (int)self.exitSlider.value];
+    self.exitDelaySlider.value = [[defaults objectForKey:USER_LIGHT_OFF_DELAY] intValue];
+    self.exitDelayLabel.text = [NSString stringWithFormat:@"%is", (int)self.exitDelaySlider.value];
 }
-
 
 #pragma mark - GMBL PLACE MANAGER DELEGATE METHODS
 - (void)placeManager:(GMBLPlaceManager *)manager didBeginVisit:(GMBLVisit *)visit{
@@ -202,7 +216,7 @@
     [self updateLogWithString:sightingLog];
     self.distanceLabel.text = [NSString stringWithFormat:@"%ld", (long)sighting.RSSI];
     if (!self.lightIsOn && !self.delayTimerIsOn) {
-        if (sighting.RSSI > self.userOnThreshold){
+        if ((int)labs(sighting.RSSI) < self.entrySlider.value){
             if (sighting.beacon.batteryLevel == GMBLBatteryLevelLow) {
                 self.lowBatteryLabel.hidden = NO;
             }
@@ -213,9 +227,8 @@
         }
     }
     if (self.lightIsOn && !self.delayTimerIsOn && !self.userLightOffTimerIsOn) {
-        if (sighting.RSSI < self.userOffThreshold){
+        if ((int)labs(sighting.RSSI) > self.entrySlider.value){
             [self startUserLightOffTimer];
-            self.lightSwitch.on = NO;
             [self setTintColors];
         }
     }
@@ -244,6 +257,8 @@
         [self setTintColors];
     }
 }
+- (IBAction)sunsetSwitch:(UISwitch *)sender {
+}
 
 - (IBAction)redSliderMoved:(UISlider *)sender {
     int value = sender.value;
@@ -262,8 +277,32 @@
     self.blueLabel.text = [NSString stringWithFormat:@"%d",value];
     [self updateUserBackgroundColorWithRedColor:0 green:0 blue:value alpha:0];
 }
+
 - (IBAction)dimmerValueChanged:(UISlider *)sender {
     [self updateUserBackgroundColorWithRedColor:0 green:0 blue:0 alpha:sender.value];
+}
+
+- (IBAction)entrySliderMoved:(UISlider *)sender {
+    if (sender.value >= self.exitSlider.value) {
+        self.exitSlider.value = self.entrySlider.value + 1;
+        self.exitLabel.text = [NSString stringWithFormat:@"-%i", (int)self.exitSlider.value];
+    }
+    self.entryLabel.text = [NSString stringWithFormat:@"-%i", (int)self.entrySlider.value];
+    [defaults setObject:@(-[NSNumber numberWithFloat:self.entrySlider.value].doubleValue) forKey:LIGHT_ON_THRESHOLD];
+}
+
+- (IBAction)exitSliderMoved:(UISlider *)sender {
+    if (sender.value <= self.entrySlider.value) {
+        self.entrySlider.value = sender.value - 1;
+        self.entryLabel.text = [NSString stringWithFormat:@"-%i", (int)self.entrySlider.value];
+    }
+    self.exitLabel.text = [NSString stringWithFormat:@"-%i", (int)self.exitSlider.value];
+    [defaults setObject:@(-[NSNumber numberWithFloat:self.exitSlider.value].doubleValue) forKey:LIGHT_OFF_THRESHOLD];
+}
+
+- (IBAction)exitDelaySliderMoved:(id)sender {
+    self.exitDelayLabel.text = [NSString stringWithFormat:@"%is", (int)self.exitDelaySlider.value];
+    [defaults setObject:[NSNumber numberWithFloat:self.exitDelaySlider.value] forKey:LIGHT_OFF_THRESHOLD];
 }
 
 - (IBAction)redMinusButton:(UIButton *)sender {
@@ -290,6 +329,47 @@
     [self adjustBlueValueWithOperator:@"+"];
 }
 
+- (IBAction)entryMinusButton:(UIButton *)sender {
+    [self adjustEntryValueWithOperator:@"-"];
+}
+
+- (IBAction)entryPlusButton:(UIButton *)sender {
+    [self adjustEntryValueWithOperator:@"+"];
+}
+
+- (IBAction)exitMinusButton:(UIButton *)sender {
+    [self adjustExitValueWithOperator:@"-"];
+}
+
+- (IBAction)exitPlusButton:(UIButton *)sender {
+    [self adjustExitValueWithOperator:@"+"];
+}
+
+- (IBAction)exitDelayMinusButton:(UIButton *)sender {
+    [self adjustExitDelayValueWithOperator:@"-"];
+}
+
+- (IBAction)exitDelayPlusButton:(UIButton *)sender {
+    [self adjustExitDelayValueWithOperator:@"+"];
+}
+
+- (IBAction)settingsButtonTapped:(UIBarButtonItem *)sender {
+    if (self.mainViewContainer.frame.origin.x == 0) {
+        self.mainViewContainer.translatesAutoresizingMaskIntoConstraints = YES;
+        [UIView animateWithDuration:0.8 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.5 options:0 animations:^{
+            self.mainViewContainer.frame = CGRectMake(self.mainViewContainer.frame.size.width - 90, 20, self.mainViewContainer.frame.size.width, self.mainViewContainer.frame.size.height);
+            
+        } completion:nil];
+    }else{
+        [UIView animateWithDuration:0.4 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:0 animations:^{
+            self.mainViewContainer.frame = CGRectMake(0, 20, self.mainViewContainer.frame.size.width, self.mainViewContainer.frame.size.height);
+        } completion:^(BOOL finished) {
+            self.mainViewContainer.translatesAutoresizingMaskIntoConstraints = NO;
+        }];
+    }
+}
+
+
 #pragma mark - HELPERS
 - (void)updateLogWithString:(NSString *)log{
     [self.log insertString:log atIndex:0];
@@ -310,7 +390,7 @@
         if (alpha > 0.0) {
             self.alpha = alpha;
         }
-        self.view.backgroundColor = [UIColor colorWithRed:self.redColor / 255.0 green:self.greenColor / 255.0 blue:self.blueColor / 255.0 alpha:self.alpha];
+        self.mainView.backgroundColor = [UIColor colorWithRed:self.redColor / 255.0 green:self.greenColor / 255.0 blue:self.blueColor / 255.0 alpha:self.alpha];
     }
 }
 
@@ -324,8 +404,7 @@
 
 - (void)startUserLightOffTimer{
     self.userLightOffTimerIsOn = YES;
-    NSTimer *timer = [NSTimer timerWithTimeInterval:20 target:self selector:@selector(turnOffUserLightOffTimer) userInfo:nil repeats:NO];
-    [timer fire];
+    [self performSelector:@selector(turnOffUserLightOffTimer) withObject:nil afterDelay:(int)self.exitDelaySlider.value];
 }
 
 
@@ -337,6 +416,7 @@
 
 - (void)turnOffUserLightOffTimer{
     self.lightIsOn = NO;
+    self.lightSwitch.on = NO;
     self.userLightOffTimerIsOn = NO;
     [self changeBackgroundColor];
 }
@@ -347,33 +427,68 @@
         int green = [self.greenLabel.text intValue] / 255.0;
         int blue = [self.blueLabel.text intValue] / 255.0;
         float alpha = self.alpha;
-        self.view.backgroundColor = self.lightIsOn ? [UIColor colorWithRed:red green:green blue:blue alpha:alpha] : [UIColor colorWithRed:0.098f green:0.098f blue:0.098f alpha:1.0f];
+        self.mainView.backgroundColor = self.lightIsOn ? [UIColor colorWithRed:red green:green blue:blue alpha:alpha] : [UIColor colorWithRed:0.098f green:0.098f blue:0.098f alpha:1.0f];
     }];
 }
 
 -(void)adjustRedValueWithOperator:(NSString *)operator{
     int redValue = [self.redLabel.text intValue];
     redValue = [operator isEqualToString:@"+"] ? (redValue += 1) : (redValue -= 1);
-    self.redSlider.value = redValue;
-    self.redLabel.text = [NSString stringWithFormat:@"%d",redValue];
-    [self updateUserBackgroundColorWithRedColor:redValue green:0 blue:0 alpha:0];
+    if (redValue >= 0 && redValue <= 255) {
+        self.redSlider.value = redValue;
+        self.redLabel.text = [NSString stringWithFormat:@"%d",redValue];
+        [self updateUserBackgroundColorWithRedColor:redValue green:0 blue:0 alpha:0];
+    }
 }
 
 -(void)adjustGreenValueWithOperator:(NSString *)operator{
     int greenValue = [self.greenLabel.text intValue];
     greenValue = [operator isEqualToString:@"+"] ? (greenValue += 1) : (greenValue -= 1);
-    self.greenSlider.value = greenValue;
-    self.greenLabel.text = [NSString stringWithFormat:@"%d",greenValue];
-    [self updateUserBackgroundColorWithRedColor:0 green:greenValue blue:0 alpha:0];
+    if (greenValue >= 0 && greenValue <= 255) {
+        self.greenSlider.value = greenValue;
+        self.greenLabel.text = [NSString stringWithFormat:@"%d",greenValue];
+        [self updateUserBackgroundColorWithRedColor:0 green:greenValue blue:0 alpha:0];
+    }
 }
 
 -(void)adjustBlueValueWithOperator:(NSString *)operator{
     int blueValue = [self.blueLabel.text intValue];
     blueValue = [operator isEqualToString:@"+"] ? (blueValue += 1) : (blueValue -= 1);
-    self.blueSlider.value = blueValue;
-    self.blueLabel.text = [NSString stringWithFormat:@"%d",blueValue];
-    [self updateUserBackgroundColorWithRedColor:0 green:0 blue:blueValue alpha:0];
+    if (blueValue >= 0 && blueValue <= 255) {
+        self.blueSlider.value = blueValue;
+        self.blueLabel.text = [NSString stringWithFormat:@"%d",blueValue];
+        [self updateUserBackgroundColorWithRedColor:0 green:0 blue:blueValue alpha:0];
+    }
 }
 
+-(void)adjustEntryValueWithOperator:(NSString *)operator{
+    int entryValue = abs([self.entryLabel.text intValue]);
+    entryValue = [operator isEqualToString:@"+"] ? (entryValue += 1) : (entryValue -= 1);
+    if (entryValue >= 20 && entryValue <= 99) {
+        self.entrySlider.value = entryValue;
+        self.entryLabel.text = [NSString stringWithFormat:@"-%d",entryValue];
+        [defaults setObject:@(-[NSNumber numberWithFloat:self.entrySlider.value].doubleValue) forKey:LIGHT_ON_THRESHOLD];
+    }
+}
+
+-(void)adjustExitValueWithOperator:(NSString *)operator{
+    int exitValue = abs([self.exitLabel.text intValue]);
+    exitValue = [operator isEqualToString:@"+"] ? (exitValue += 1) : (exitValue -= 1);
+    if (exitValue >= 21 && exitValue <= 100) {
+    self.exitSlider.value = exitValue;
+    self.exitLabel.text = [NSString stringWithFormat:@"-%d",exitValue];
+    [defaults setObject:@(-[NSNumber numberWithFloat:self.exitSlider.value].doubleValue) forKey:LIGHT_OFF_THRESHOLD];
+    }
+}
+
+-(void)adjustExitDelayValueWithOperator:(NSString *)operator{
+    int exitDelayValue = abs([self.exitDelayLabel.text intValue]);
+    exitDelayValue = [operator isEqualToString:@"+"] ? (exitDelayValue += 1) : (exitDelayValue -= 1);
+    if (exitDelayValue >= 0 && exitDelayValue <= 300) {
+        self.exitDelaySlider.value = exitDelayValue;
+        self.exitDelayLabel.text = [NSString stringWithFormat:@"%ds",exitDelayValue];
+        [defaults setObject:[NSNumber numberWithFloat:self.exitDelaySlider.value] forKey:USER_LIGHT_OFF_DELAY];
+    }
+}
 
 @end
