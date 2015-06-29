@@ -29,6 +29,7 @@
                                                 <rect key="frame" x="8" y="30" width="51" height="31"/>
                                                 <color key="onTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 <connections>
+                                                    <action selector="sunriseSunsetSwitch:" destination="kdH-oU-iOP" eventType="valueChanged" id="cTi-fW-sSb"/>
                                                     <action selector="sunsetSwitch:" destination="kdH-oU-iOP" eventType="valueChanged" id="drc-F1-EDR"/>
                                                 </connections>
                                             </switch>
@@ -999,6 +1000,7 @@
                         <outlet property="redSlider" destination="Yr3-bn-3ax" id="P9R-96-H3v"/>
                         <outlet property="settingsButton" destination="h5X-gk-84d" id="SQE-pu-m8Q"/>
                         <outlet property="settingsView" destination="hit-qv-yPv" id="zOO-cu-Fgb"/>
+                        <outlet property="sunriseSunsetSwitch" destination="8tP-ps-ZSL" id="X7R-7d-vJs"/>
                         <outletCollection property="darkTintColorElements" destination="pzJ-Ll-bls" id="lah-Uh-Hdw"/>
                         <outletCollection property="darkTintColorElements" destination="2z0-15-2Ih" id="eQs-mS-i45"/>
                         <outletCollection property="lightTintColorElements" destination="zXx-0f-kX0" id="IfL-QM-Yeg"/>

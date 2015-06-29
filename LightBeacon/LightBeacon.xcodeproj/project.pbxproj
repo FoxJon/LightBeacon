@@ -25,6 +25,7 @@
 		B0D4B9641B248A6700713A26 /* LBAGimbalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D4B9631B248A6700713A26 /* LBAGimbalManager.m */; };
 		B0E8D2721B4075B3009683A2 /* LBASettingsPlusSign.m in Sources */ = {isa = PBXBuildFile; fileRef = B0E8D2711B4075B3009683A2 /* LBASettingsPlusSign.m */; };
 		B0E8D2751B4075C4009683A2 /* LBASettingsMinusSign.m in Sources */ = {isa = PBXBuildFile; fileRef = B0E8D2741B4075C4009683A2 /* LBASettingsMinusSign.m */; };
+		B0E8D2771B40A65C009683A2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E8D2761B40A65C009683A2 /* CoreLocation.framework */; };
 		B0EB69A51B3F18980031B9D4 /* LBASettingsBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0EB69A41B3F18980031B9D4 /* LBASettingsBoxView.m */; };
 		B0FCFD021B2521410034FD4E /* LBALogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0FCFD011B2521410034FD4E /* LBALogManager.m */; };
 /* End PBXBuildFile section */
@@ -72,6 +73,7 @@
 		B0E8D2711B4075B3009683A2 /* LBASettingsPlusSign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBASettingsPlusSign.m; sourceTree = "<group>"; };
 		B0E8D2731B4075C4009683A2 /* LBASettingsMinusSign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBASettingsMinusSign.h; sourceTree = "<group>"; };
 		B0E8D2741B4075C4009683A2 /* LBASettingsMinusSign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBASettingsMinusSign.m; sourceTree = "<group>"; };
+		B0E8D2761B40A65C009683A2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B0EB69A31B3F18980031B9D4 /* LBASettingsBoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBASettingsBoxView.h; sourceTree = "<group>"; };
 		B0EB69A41B3F18980031B9D4 /* LBASettingsBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBASettingsBoxView.m; sourceTree = "<group>"; };
 		B0FCFD001B2521410034FD4E /* LBALogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBALogManager.h; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0E8D2771B40A65C009683A2 /* CoreLocation.framework in Frameworks */,
 				B0D4B9571B24758B00713A26 /* Gimbal.framework in Frameworks */,
 				B09D90CE1B239E3200C2653B /* libz.dylib in Frameworks */,
 			);
@@ -186,6 +189,7 @@
 		B09D90D11B23A0F800C2653B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B0E8D2761B40A65C009683A2 /* CoreLocation.framework */,
 				B09D90CD1B239E3200C2653B /* libz.dylib */,
 				B0D4B9561B24758B00713A26 /* Gimbal.framework */,
 			);

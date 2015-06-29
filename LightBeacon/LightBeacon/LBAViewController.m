@@ -14,13 +14,15 @@
 #import "LBAPlusSign.h"
 #import "LBAMinusSign.h"
 #import <Gimbal/Gimbal.h>
+#import <CoreLocation/CoreLocation.h>
 
 #define LIGHT_ON_THRESHOLD @"Light_On_Threshold"
 #define LIGHT_OFF_THRESHOLD @"Light_Off_Threshold"
 #define USER_LIGHT_OFF_DELAY @"User_light_Off_Delay"
 
-@interface LBAViewController () <GMBLPlaceManagerDelegate>
+@interface LBAViewController () <GMBLPlaceManagerDelegate, CLLocationManagerDelegate>
 @property (nonatomic) GMBLPlaceManager *placeManager;
+@property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) NSMutableString *log;
 
 @property (nonatomic) BOOL lightIsOn;
@@ -28,6 +30,8 @@
 @property (nonatomic) UIColor *liteTintColor;
 @property (nonatomic) UIColor *darkTintColor;
 @property (nonatomic) UIColor *whiteTintColor;
+@property (nonatomic) NSDictionary *currentLocation;
+@property (nonatomic) NSDictionary *sunriseSunset;
 
 // User configurable properties
 @property (nonatomic) BOOL userLightOffTimerIsOn;
@@ -57,6 +61,7 @@
 @property (weak, nonatomic) IBOutlet UIView *mainViewContainer;
 @property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) IBOutlet UIView *settingsView;
+@property (weak, nonatomic) IBOutlet UISwitch *sunriseSunsetSwitch;
 
 //Labels
 @property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
@@ -86,6 +91,9 @@ NSUserDefaults *defaults;
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:NO];
+    
+    [self setUpCoreLocation];
+    
     self.log = [@""mutableCopy];
     self.lowBatteryLabel.hidden = YES;
     
@@ -103,6 +111,39 @@ NSUserDefaults *defaults;
     self.autoSwitch.thumbTintColor = self.whiteTintColor;
     self.settingsButton.tintColor = self.liteTintColor;
     self.favoritesButton.tintColor = self.liteTintColor;
+}
+
+
+- (void)setUpCoreLocation{
+    if (!self.locationManager) {
+        self.locationManager = [CLLocationManager new];
+        self.locationManager.delegate = self;
+    }
+    if ([CLLocationManager locationServicesEnabled]) {
+        [self.locationManager startUpdatingLocation];
+    }
+}
+
+
+- (void)getSunriseSunset{
+    if (self.sunriseSunsetSwitch.on && [CLLocationManager locationServicesEnabled]) {
+        NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Keys" ofType:@"plist"]];
+        NSString *forecastIOAPIKey = [dictionary objectForKey:@"ForecastAPIKey"];
+        NSURL *baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.forecast.io/forecast/%@/", forecastIOAPIKey]];
+        NSURL *forecastURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@,%@", [self.currentLocation objectForKey:@"currentLat"], [self.currentLocation objectForKey:@"currentLng"]] relativeToURL:baseUrl];
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionDownloadTask *task = [session downloadTaskWithURL:forecastURL completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
+            if (error == nil) {
+                NSData *data = [NSData dataWithContentsOfURL:location];
+                NSDictionary *weatherDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+                NSNumber *sunset = weatherDictionary[@"daily"][@"data"][0][@"sunsetTime"];
+                NSNumber *sunrise = weatherDictionary[@"daily"][@"data"][1][@"sunriseTime"];
+                self.sunriseSunset = @{@"sunrise":sunrise, @"sunset":sunset};
+            };
+        }];
+        [task resume];
+    }
 }
 
 
@@ -187,15 +228,21 @@ NSUserDefaults *defaults;
         defaults = [NSUserDefaults standardUserDefaults];
     }
     if (![defaults objectForKey:LIGHT_ON_THRESHOLD]){
-        NSDictionary *lightDefaults = @{LIGHT_ON_THRESHOLD:@80, LIGHT_OFF_THRESHOLD:@90, USER_LIGHT_OFF_DELAY:@20};
+        NSDictionary *lightDefaults = @{LIGHT_ON_THRESHOLD:@80, LIGHT_OFF_THRESHOLD:@90, USER_LIGHT_OFF_DELAY:@20, @"sunriseSunsetMode": @YES};
         [defaults registerDefaults:lightDefaults];
     };
+    
     self.entrySlider.value = fabs([[defaults objectForKey:LIGHT_ON_THRESHOLD] floatValue]);
     self.entryLabel.text = [NSString stringWithFormat:@"-%i", (int)self.entrySlider.value];
     self.exitSlider.value = fabs([[defaults objectForKey:LIGHT_OFF_THRESHOLD] floatValue]);
     self.exitLabel.text = [NSString stringWithFormat:@"-%i", (int)self.exitSlider.value];
     self.exitDelaySlider.value = [[defaults objectForKey:USER_LIGHT_OFF_DELAY] intValue];
     self.exitDelayLabel.text = [NSString stringWithFormat:@"%is", (int)self.exitDelaySlider.value];
+    if ([[defaults objectForKey:@"sunriseSunsetMode"] isEqual: @YES]) {
+        self.sunriseSunsetSwitch.on = YES;
+    }else{
+        self.sunriseSunsetSwitch.on = NO;
+    }
 }
 
 #pragma mark - GMBL PLACE MANAGER DELEGATE METHODS
@@ -212,31 +259,47 @@ NSUserDefaults *defaults;
 
 
 - (void)placeManager:(GMBLPlaceManager *)manager didReceiveBeaconSighting:(GMBLBeaconSighting *)sighting forVisits:(NSArray *)visits{
-    NSString * sightingLog = [LBALogManager createDeveloperLogsWithSighting:sighting];
-    [self updateLogWithString:sightingLog];
-    self.distanceLabel.text = [NSString stringWithFormat:@"%ld", (long)sighting.RSSI];
-    if (!self.lightIsOn && !self.delayTimerIsOn) {
-        if ((int)labs(sighting.RSSI) < self.entrySlider.value){
-            if (sighting.beacon.batteryLevel == GMBLBatteryLevelLow) {
-                self.lowBatteryLabel.hidden = NO;
+    if ([self checkIfIsBetweenSunsetAndSunrise] == NO && self.sunriseSunsetSwitch.on) {
+        return;
+    }else{
+        NSString * sightingLog = [LBALogManager createDeveloperLogsWithSighting:sighting];
+        [self updateLogWithString:sightingLog];
+        self.distanceLabel.text = [NSString stringWithFormat:@"%ld", (long)sighting.RSSI];
+        if (!self.lightIsOn && !self.delayTimerIsOn) {
+            if ((int)labs(sighting.RSSI) < self.entrySlider.value){
+                if (sighting.beacon.batteryLevel == GMBLBatteryLevelLow) {
+                    self.lowBatteryLabel.hidden = NO;
+                }
+                [self startDelay];
+                self.lightSwitch.on = YES;
+                [self changeBackgroundColor];
+                [self setTintColors];
             }
-            [self startDelay];
-            self.lightSwitch.on = YES;
-            [self changeBackgroundColor];
-            [self setTintColors];
+        }
+        if (self.lightIsOn && !self.delayTimerIsOn && !self.userLightOffTimerIsOn) {
+            if ((int)labs(sighting.RSSI) > self.entrySlider.value){
+                [self startUserLightOffTimer];
+                [self setTintColors];
+            }
         }
     }
-    if (self.lightIsOn && !self.delayTimerIsOn && !self.userLightOffTimerIsOn) {
-        if ((int)labs(sighting.RSSI) > self.entrySlider.value){
-            [self startUserLightOffTimer];
-            [self setTintColors];
-        }
-    }
+}
+
+#pragma mark - CLLOCATION DELEGATE
+
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
+    CLLocation* location = [locations lastObject];
+    self.currentLocation = @{@"currentLat":[NSString stringWithFormat:@"%+.6f", location.coordinate.latitude], @"currentLng":[NSString stringWithFormat:@"%+.6f", location.coordinate.longitude]};
+    
+    [self.locationManager stopUpdatingLocation];
+    
+    [self getSunriseSunset];
 }
 
 #pragma mark - ACTIONS
 
 - (IBAction)lightSwitch:(UISwitch *)sender {
+    
     if (sender.on) {
         self.lightIsOn = YES;
     }else{
@@ -256,8 +319,6 @@ NSUserDefaults *defaults;
         [GMBLPlaceManager stopMonitoring];
         [self setTintColors];
     }
-}
-- (IBAction)sunsetSwitch:(UISwitch *)sender {
 }
 
 - (IBAction)redSliderMoved:(UISlider *)sender {
@@ -369,8 +430,22 @@ NSUserDefaults *defaults;
     }
 }
 
+- (IBAction)sunriseSunsetSwitch:(UISwitch *)sender {
+    if (sender.on) {
+        if ([CLLocationManager locationServicesEnabled]) {
+            [defaults setObject:@YES forKey:@"sunriseSunsetMode"];
+        }else{
+            self.sunriseSunsetSwitch.on = NO;
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Location Services Disabled" message:@"Please turn on location services in order to use this feature." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+    }else{
+        [defaults setObject:@NO forKey:@"sunriseSunsetMode"];
+    }
+}
 
 #pragma mark - HELPERS
+
 - (void)updateLogWithString:(NSString *)log{
     [self.log insertString:log atIndex:0];
     NSLog(@"%@", log);
@@ -489,6 +564,16 @@ NSUserDefaults *defaults;
         self.exitDelayLabel.text = [NSString stringWithFormat:@"%ds",exitDelayValue];
         [defaults setObject:[NSNumber numberWithFloat:self.exitDelaySlider.value] forKey:USER_LIGHT_OFF_DELAY];
     }
+}
+
+-(BOOL)checkIfIsBetweenSunsetAndSunrise{
+    int sunrise = [[self.sunriseSunset objectForKey:@"sunrise"] intValue];
+    int sunset =  [[self.sunriseSunset objectForKey:@"sunset"] intValue];
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    if (sunset <= now && sunrise >= now) {
+        return YES;
+    }
+    return NO;
 }
 
 @end
