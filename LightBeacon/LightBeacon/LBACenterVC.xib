@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LBACenterVC">
             <connections>
+                <outlet property="favsButton" destination="ggD-CU-k1F" id="53s-pi-bWJ"/>
                 <outlet property="settingsButton" destination="R9F-qU-Dpv" id="bVa-Lk-xQL"/>
                 <outlet property="view" destination="iN0-l3-epB" id="XCc-s8-CNh"/>
             </connections>
@@ -28,7 +29,11 @@
                                     <action selector="settingsButtonTapped:" destination="-1" id="bG8-DT-Q4R"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem key="rightBarButtonItem" systemItem="add" id="ggD-CU-k1F"/>
+                            <barButtonItem key="rightBarButtonItem" tag="1" systemItem="add" id="ggD-CU-k1F">
+                                <connections>
+                                    <action selector="favsButtonTapped:" destination="-1" id="frj-YS-ChG"/>
+                                </connections>
+                            </barButtonItem>
                         </navigationItem>
                     </items>
                 </navigationBar>

@@ -25,7 +25,6 @@
 @property (nonatomic) LBACenterVC *centerVC;
 @property (nonatomic) LBALeftVC *leftVC;
 @property (nonatomic) LBARightVC *rightVC;
-@property (nonatomic) BOOL showingLeftPanel;
 @end
 
 @implementation LBAMainVC
@@ -45,6 +44,9 @@
     [self.centerVC didMoveToParentViewController:self];
 }
 
+
+#pragma mark - LBACenterVC Delegate
+
 -(void)moveCenterPanelToTheRight{
     UIView *childView = [self getLeftView];
     [self.view sendSubviewToBack:childView];
@@ -59,7 +61,16 @@
 }
 
 -(void)moveRightPanelToTheLeft{
+    UIView *childView = [self getRightView];
+    [self.view addSubview:childView];
     
+    [UIView animateWithDuration:0.8 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.8 options:0 animations:^{
+        self.rightVC.view.frame = CGRectMake(75, 0, self.view.frame.size.width, self.view.frame.size.height);
+    } completion:^(BOOL finished) {
+        if (finished) {
+            self.centerVC.favsButton.tag = 0;
+        }
+    }];
 }
 
 -(void)moveCenterPanelToOriginalPosition{
@@ -75,8 +86,17 @@
 }
 
 -(void)moveRightPanelToOriginalPosition{
-    
+    [UIView animateWithDuration:SLIDE_TIMING delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        self.rightVC.view.frame = CGRectMake(self.rightVC.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
+    }
+                     completion:^(BOOL finished) {
+                         if (finished) {
+                             [self resetMainView];
+                         }
+                     }];
 }
+
+#pragma mark - HELPERS
 
 -(UIView *)getLeftView{
     if (self.leftVC == nil) {
@@ -92,24 +112,41 @@
         self.leftVC.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     }
     
-    self.showingLeftPanel = YES;
-    
-    [self showCenterViewWithShadow:YES withOffset:-2];
+    [self showViewWithShadow:YES andView:self.centerVC.view withOffset:-2];
     
     UIView *view = self.leftVC.view;
     return view;
 }
 
--(void)showCenterViewWithShadow:(BOOL)value withOffset:(double)offset {
-    if (value) {
-        [self.centerVC.view.layer setCornerRadius:CORNER_RADIUS];
-        [self.centerVC.view.layer setShadowColor:[UIColor blackColor].CGColor];
-        [self.centerVC.view.layer setShadowOpacity:0.8];
-        [self.centerVC.view.layer setShadowOffset:CGSizeMake(offset, offset)];
+-(UIView *)getRightView{
+    if (self.rightVC == nil) {
+        self.rightVC = [[LBARightVC alloc] initWithNibName:@"LBARightVC" bundle:nil];
+        self.rightVC.view.tag = RIGHT_PANEL_TAG;
         
+        [self.view addSubview: self.rightVC.view];
+        self.rightVC.delegate = self.centerVC;
+        
+        [self addChildViewController:self.rightVC];
+        [self.rightVC didMoveToParentViewController:self];
+        
+        self.rightVC.view.frame = CGRectMake(self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
+    }
+    
+    [self showViewWithShadow:YES andView:self.rightVC.view withOffset:-2];
+    
+    UIView *view = self.rightVC.view;
+    return view;
+}
+
+-(void)showViewWithShadow:(BOOL)value andView:(UIView *)view withOffset:(double)offset {
+    if (value) {
+        [view.layer setCornerRadius:CORNER_RADIUS];
+        [view.layer setShadowColor:[UIColor blackColor].CGColor];
+        [view.layer setShadowOpacity:0.8];
+        [view.layer setShadowOffset:CGSizeMake(offset, offset)];
     } else {
-        [self.centerVC.view.layer setCornerRadius:0.0f];
-        [self.centerVC.view.layer setShadowOffset:CGSizeMake(offset, offset)];
+        [view.layer setCornerRadius:0.0f];
+        [view.layer setShadowOffset:CGSizeMake(offset, offset)];
     }
 }
 
@@ -119,16 +156,15 @@
         [self.leftVC.view removeFromSuperview];
         self.leftVC = nil;
         self.centerVC.settingsButton.tag = 1;
-        self.showingLeftPanel = NO;
     }
     if (self.rightVC != nil) {
         [self.rightVC.view removeFromSuperview];
         self.rightVC = nil;
-//        self.centerVC.rightButton.tag = 1;
-//        self.showingRightPanel = NO;
+        self.centerVC.favsButton.tag = 1;
     }
     // remove view shadows
-    [self showCenterViewWithShadow:NO withOffset:0];
+    [self showViewWithShadow:NO andView:self.centerVC.view withOffset:0];
+    self.centerVC.settingsButton.enabled = YES;
 }
 
 @end

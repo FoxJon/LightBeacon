@@ -8,6 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol LBARightVCDelegate <NSObject>
+
+@optional
+- (void)handleDoneButtonTap;
+
+@end
+
 @interface LBARightVC : UIViewController
+
+@property id<LBARightVCDelegate> delegate;
 
 @end
