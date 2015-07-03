@@ -27,6 +27,7 @@
 
 @property (nonatomic) BOOL lightIsOn;
 @property (nonatomic) BOOL delayTimerIsOn;
+@property (nonatomic) BOOL placeManagerIsMonitoring;
 @property (nonatomic) UIColor *liteTintColor;
 @property (nonatomic) UIColor *darkTintColor;
 @property (nonatomic) UIColor *whiteTintColor;
@@ -121,6 +122,8 @@ NSUserDefaults *defaults;
     }
     if ([CLLocationManager locationServicesEnabled]) {
         [self.locationManager startUpdatingLocation];
+    } else {
+        [self showLocationServicesAlert];
     }
 }
 
@@ -140,6 +143,11 @@ NSUserDefaults *defaults;
                 NSNumber *sunset = weatherDictionary[@"daily"][@"data"][0][@"sunsetTime"];
                 NSNumber *sunrise = weatherDictionary[@"daily"][@"data"][1][@"sunriseTime"];
                 self.sunriseSunset = @{@"sunrise":sunrise, @"sunset":sunset};
+                
+                if (!self.placeManagerIsMonitoring) {
+                    [GMBLPlaceManager startMonitoring];
+                    self.placeManagerIsMonitoring = YES;
+                }
             };
         }];
         [task resume];
@@ -154,7 +162,11 @@ NSUserDefaults *defaults;
     
     self.placeManager = [GMBLPlaceManager new];
     self.placeManager.delegate = self;
-    [GMBLPlaceManager startMonitoring];
+    
+    if (!self.sunriseSunsetSwitch.on && !self.placeManagerIsMonitoring) {
+        [GMBLPlaceManager startMonitoring];
+        self.placeManagerIsMonitoring = YES;
+    }
 }
 
 
@@ -306,6 +318,7 @@ NSUserDefaults *defaults;
         self.lightIsOn = NO;
         self.autoSwitch.on = NO;
         [GMBLPlaceManager stopMonitoring];
+        self.placeManagerIsMonitoring = NO;
     }
     [self setTintColors];
     [self changeBackgroundColor];
@@ -313,10 +326,14 @@ NSUserDefaults *defaults;
 
 - (IBAction)autoSwitch:(UISwitch *)sender {
     if (sender.on) {
-        [GMBLPlaceManager startMonitoring];
+        if ([CLLocationManager locationServicesEnabled] && !self.placeManagerIsMonitoring) {
+            [GMBLPlaceManager startMonitoring];
+            self.placeManagerIsMonitoring = YES;
+        }
         [self setTintColors];
     }else{
         [GMBLPlaceManager stopMonitoring];
+        self.placeManagerIsMonitoring = NO;
         [self setTintColors];
     }
 }
@@ -433,11 +450,11 @@ NSUserDefaults *defaults;
 - (IBAction)sunriseSunsetSwitch:(UISwitch *)sender {
     if (sender.on) {
         if ([CLLocationManager locationServicesEnabled]) {
+            [self setUpCoreLocation];
             [defaults setObject:@YES forKey:@"sunriseSunsetMode"];
         }else{
             self.sunriseSunsetSwitch.on = NO;
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Location Services Disabled" message:@"Please turn on location services in order to use this feature." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [alert show];
+            [self showLocationServicesAlert];
         }
     }else{
         [defaults setObject:@NO forKey:@"sunriseSunsetMode"];
@@ -567,13 +584,18 @@ NSUserDefaults *defaults;
 }
 
 -(BOOL)checkIfIsBetweenSunsetAndSunrise{
-    int sunrise = [[self.sunriseSunset objectForKey:@"sunrise"] intValue];
     int sunset =  [[self.sunriseSunset objectForKey:@"sunset"] intValue];
-    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    int sunrise = [[self.sunriseSunset objectForKey:@"sunrise"] intValue];
+    NSTimeInterval now = (int)[[NSDate date] timeIntervalSince1970];
     if (sunset <= now && sunrise >= now) {
         return YES;
     }
     return NO;
+}
+
+-(void)showLocationServicesAlert{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Location Services Disabled" message:@"Please turn on location services in order to use this feature." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    [alert show];
 }
 
 @end
