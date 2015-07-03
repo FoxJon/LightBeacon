@@ -20,7 +20,12 @@
     NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Keys" ofType:@"plist"]];
     NSString *GimbalAPIKey = [dictionary objectForKey:@"GimbalAPIKey"];
     [Gimbal setAPIKey:GimbalAPIKey options:nil];
-    // Override point for customization after application launch.
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.viewController = [[LBAMainVC alloc] initWithNibName:@"LBAMainVC" bundle:nil];
+    self.window.rootViewController = self.viewController;
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 
@@ -127,5 +132,6 @@
         }
     }
 }
+
 
 @end
