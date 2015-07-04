@@ -11,7 +11,7 @@
 @protocol LBARightVCDelegate <NSObject>
 
 @optional
-- (void)handleDoneButtonTap;
+- (void)handleCloseButtonTap;
 
 @end
 

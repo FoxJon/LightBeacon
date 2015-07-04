@@ -19,8 +19,8 @@
 }
 
 
-- (IBAction)doneButtonTapped:(UIBarButtonItem *)sender {
-    [self.delegate handleDoneButtonTap];
+- (IBAction)closeButtonTapped:(UIBarButtonItem *)sender {
+    [self.delegate handleCloseButtonTap];
 }
 
 @end

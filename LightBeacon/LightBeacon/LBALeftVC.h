@@ -8,6 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol LBALeftVCDelegate <NSObject>
+
+-(void)setSunriseSunsetSwitchStatus:(BOOL)status;
+-(void)setEntrySliderValue:(int)value;
+-(void)setExitSliderValue:(int)value;
+-(void)setExitDelaySliderValue:(int)value;
+
+@end
+
 @interface LBALeftVC : UIViewController
+
+@property id<LBALeftVCDelegate> delegate;
 
 @end

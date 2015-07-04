@@ -36,6 +36,7 @@
 
 - (void)setUpContainerView{
     self.centerVC = [[LBACenterVC alloc] initWithNibName:@"LBACenterVC" bundle:nil];
+    self.centerVC.view.backgroundColor = [UIColor blackColor];
     self.centerVC.view.tag = CENTER_TAG;
     self.centerVC.delegate = self;
     self.centerVC.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
@@ -86,6 +87,7 @@
 }
 
 -(void)moveRightPanelToOriginalPosition{
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
     [UIView animateWithDuration:SLIDE_TIMING delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.rightVC.view.frame = CGRectMake(self.rightVC.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
     }

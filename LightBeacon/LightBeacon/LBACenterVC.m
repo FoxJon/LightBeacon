@@ -7,23 +7,18 @@
 //
 
 #import "LBACenterVC.h"
-
-@interface LBACenterVC ()
-
 #import "LBALogManager.h"
 #import "LBAColorConstants.h"
 #import "LBARectangleView.h"
-#import "LBASettingsTab.h"
 #import "LBAPlusSign.h"
 #import "LBAMinusSign.h"
 #import <Gimbal/Gimbal.h>
 #import <CoreLocation/CoreLocation.h>
+#import "LBADefaultsManager.h"
+#import "LBAAlert.h"
+#import "LBALocationManager.h"
 
-#define LIGHT_ON_THRESHOLD @"Light_On_Threshold"
-#define LIGHT_OFF_THRESHOLD @"Light_Off_Threshold"
-#define USER_LIGHT_OFF_DELAY @"User_light_Off_Delay"
-
-@interface LBACenterVC () <GMBLPlaceManagerDelegate, CLLocationManagerDelegate>
+@interface LBACenterVC () <GMBLPlaceManagerDelegate, LBALocationManagerDelegate>
 @property (nonatomic) GMBLPlaceManager *placeManager;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) NSMutableString *log;
@@ -36,14 +31,11 @@
 @property (nonatomic) UIColor *whiteTintColor;
 @property (nonatomic) NSDictionary *currentLocation;
 @property (nonatomic) NSDictionary *sunriseSunset;
+@property (nonatomic) BOOL sunriseSunsetSwitchIsOn;
+@property (weak, nonatomic) IBOutlet UIView *centerContainerView;
 
 // User configurable properties
 @property (nonatomic) BOOL userLightOffTimerIsOn;
-@property (nonatomic) NSInteger entryThreshold;
-@property (weak, nonatomic) IBOutlet UISlider *entrySlider;
-@property (nonatomic) NSInteger exitThreshold;
-@property (weak, nonatomic) IBOutlet UISlider *exitSlider;
-@property (weak, nonatomic) IBOutlet UISlider *exitDelaySlider;
 @property (nonatomic) int redColor;
 @property (nonatomic) int greenColor;
 @property (nonatomic) int blueColor;
@@ -60,19 +52,15 @@
 @property (weak, nonatomic) IBOutlet UISwitch *autoSwitch;
 @property (weak, nonatomic) IBOutlet LBARectangleView *dimBox;
 @property (weak, nonatomic) IBOutlet UILabel *lowBatteryLabel;
-@property (weak, nonatomic) IBOutlet UIView *mainViewContainer;
-@property (weak, nonatomic) IBOutlet UIView *mainView;
-@property (weak, nonatomic) IBOutlet UIView *settingsView;
-@property (weak, nonatomic) IBOutlet UISwitch *sunriseSunsetSwitch;
+@property (nonatomic) int entrySliderValue;
+@property (nonatomic) int exitSliderValue;
+@property (nonatomic) int exitDelaySliderValue;
 
 //Labels
 @property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
 @property (weak, nonatomic) IBOutlet UILabel *redLabel;
 @property (weak, nonatomic) IBOutlet UILabel *greenLabel;
 @property (weak, nonatomic) IBOutlet UILabel *blueLabel;
-@property (weak, nonatomic) IBOutlet UILabel *entryLabel;
-@property (weak, nonatomic) IBOutlet UILabel *exitLabel;
-@property (weak, nonatomic) IBOutlet UILabel *exitDelayLabel;
 
 @end
 
@@ -84,7 +72,7 @@ NSUserDefaults *defaults;
     [super viewDidLoad];
     [self.navigationController setNavigationBarHidden:YES];
     [self setUpConfigurations];
-    [self setUpUserDefaults];
+    [LBADefaultsManager setUpDefaults];
     [self setTintColors];
     [self changeBackgroundColor];
     [self setUpVerticalSlider];
@@ -93,7 +81,7 @@ NSUserDefaults *defaults;
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:NO];
     
-    [self setUpCoreLocation];
+    [[LBALocationManager sharedManager] startUpdatingLocation];
     
     self.log = [@""mutableCopy];
     self.lowBatteryLabel.hidden = YES;
@@ -115,21 +103,8 @@ NSUserDefaults *defaults;
 }
 
 
-- (void)setUpCoreLocation{
-    if (!self.locationManager) {
-        self.locationManager = [CLLocationManager new];
-        self.locationManager.delegate = self;
-    }
-    if ([CLLocationManager locationServicesEnabled]) {
-        [self.locationManager startUpdatingLocation];
-    } else {
-        [self showLocationServicesAlert];
-    }
-}
-
-
 - (void)getSunriseSunset{
-    if (self.sunriseSunsetSwitch.on && [CLLocationManager locationServicesEnabled]) {
+    if (self.sunriseSunsetSwitchIsOn && [CLLocationManager locationServicesEnabled]) {
         NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Keys" ofType:@"plist"]];
         NSString *forecastIOAPIKey = [dictionary objectForKey:@"ForecastAPIKey"];
         NSURL *baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.forecast.io/forecast/%@/", forecastIOAPIKey]];
@@ -163,7 +138,7 @@ NSUserDefaults *defaults;
     self.placeManager = [GMBLPlaceManager new];
     self.placeManager.delegate = self;
     
-    if (!self.sunriseSunsetSwitch.on && !self.placeManagerIsMonitoring) {
+    if (!self.sunriseSunsetSwitchIsOn && !self.placeManagerIsMonitoring) {
         [GMBLPlaceManager startMonitoring];
         self.placeManagerIsMonitoring = YES;
     }
@@ -234,28 +209,6 @@ NSUserDefaults *defaults;
     return _alpha;
 }
 
-- (void)setUpUserDefaults{
-    defaults = [NSUserDefaults standardUserDefaults];
-    if (defaults == nil){
-        defaults = [NSUserDefaults standardUserDefaults];
-    }
-    if (![defaults objectForKey:LIGHT_ON_THRESHOLD]){
-        NSDictionary *lightDefaults = @{LIGHT_ON_THRESHOLD:@80, LIGHT_OFF_THRESHOLD:@90, USER_LIGHT_OFF_DELAY:@20, @"sunriseSunsetMode": @YES};
-        [defaults registerDefaults:lightDefaults];
-    };
-    
-    self.entrySlider.value = fabs([[defaults objectForKey:LIGHT_ON_THRESHOLD] floatValue]);
-    self.entryLabel.text = [NSString stringWithFormat:@"-%i", (int)self.entrySlider.value];
-    self.exitSlider.value = fabs([[defaults objectForKey:LIGHT_OFF_THRESHOLD] floatValue]);
-    self.exitLabel.text = [NSString stringWithFormat:@"-%i", (int)self.exitSlider.value];
-    self.exitDelaySlider.value = [[defaults objectForKey:USER_LIGHT_OFF_DELAY] intValue];
-    self.exitDelayLabel.text = [NSString stringWithFormat:@"%is", (int)self.exitDelaySlider.value];
-    if ([[defaults objectForKey:@"sunriseSunsetMode"] isEqual: @YES]) {
-        self.sunriseSunsetSwitch.on = YES;
-    }else{
-        self.sunriseSunsetSwitch.on = NO;
-    }
-}
 
 #pragma mark - GMBL PLACE MANAGER DELEGATE METHODS
 - (void)placeManager:(GMBLPlaceManager *)manager didBeginVisit:(GMBLVisit *)visit{
@@ -271,14 +224,14 @@ NSUserDefaults *defaults;
 
 
 - (void)placeManager:(GMBLPlaceManager *)manager didReceiveBeaconSighting:(GMBLBeaconSighting *)sighting forVisits:(NSArray *)visits{
-    if ([self checkIfIsBetweenSunsetAndSunrise] == NO && self.sunriseSunsetSwitch.on) {
+    if ([self checkIfIsBetweenSunsetAndSunrise] == NO && self.sunriseSunsetSwitchIsOn) {
         return;
     }else{
         NSString * sightingLog = [LBALogManager createDeveloperLogsWithSighting:sighting];
         [self updateLogWithString:sightingLog];
         self.distanceLabel.text = [NSString stringWithFormat:@"%ld", (long)sighting.RSSI];
         if (!self.lightIsOn && !self.delayTimerIsOn) {
-            if ((int)labs(sighting.RSSI) < self.entrySlider.value){
+            if ((int)labs(sighting.RSSI) < self.entrySliderValue){
                 if (sighting.beacon.batteryLevel == GMBLBatteryLevelLow) {
                     self.lowBatteryLabel.hidden = NO;
                 }
@@ -289,7 +242,7 @@ NSUserDefaults *defaults;
             }
         }
         if (self.lightIsOn && !self.delayTimerIsOn && !self.userLightOffTimerIsOn) {
-            if ((int)labs(sighting.RSSI) > self.entrySlider.value){
+            if ((int)labs(sighting.RSSI) > self.entrySliderValue){
                 [self startUserLightOffTimer];
                 [self setTintColors];
             }
@@ -297,14 +250,10 @@ NSUserDefaults *defaults;
     }
 }
 
-#pragma mark - CLLOCATION DELEGATE
+#pragma mark - LBALocation DELEGATE
 
--(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
-    CLLocation* location = [locations lastObject];
-    self.currentLocation = @{@"currentLat":[NSString stringWithFormat:@"%+.6f", location.coordinate.latitude], @"currentLng":[NSString stringWithFormat:@"%+.6f", location.coordinate.longitude]};
-    
-    [self.locationManager stopUpdatingLocation];
-    
+- (void)setCurrentLocation:(NSDictionary *)currentLocation{
+    self.currentLocation = currentLocation;
     [self getSunriseSunset];
 }
 
@@ -360,29 +309,6 @@ NSUserDefaults *defaults;
     [self updateUserBackgroundColorWithRedColor:0 green:0 blue:0 alpha:sender.value];
 }
 
-- (IBAction)entrySliderMoved:(UISlider *)sender {
-    if (sender.value >= self.exitSlider.value) {
-        self.exitSlider.value = self.entrySlider.value + 1;
-        self.exitLabel.text = [NSString stringWithFormat:@"-%i", (int)self.exitSlider.value];
-    }
-    self.entryLabel.text = [NSString stringWithFormat:@"-%i", (int)self.entrySlider.value];
-    [defaults setObject:@(-[NSNumber numberWithFloat:self.entrySlider.value].doubleValue) forKey:LIGHT_ON_THRESHOLD];
-}
-
-- (IBAction)exitSliderMoved:(UISlider *)sender {
-    if (sender.value <= self.entrySlider.value) {
-        self.entrySlider.value = sender.value - 1;
-        self.entryLabel.text = [NSString stringWithFormat:@"-%i", (int)self.entrySlider.value];
-    }
-    self.exitLabel.text = [NSString stringWithFormat:@"-%i", (int)self.exitSlider.value];
-    [defaults setObject:@(-[NSNumber numberWithFloat:self.exitSlider.value].doubleValue) forKey:LIGHT_OFF_THRESHOLD];
-}
-
-- (IBAction)exitDelaySliderMoved:(id)sender {
-    self.exitDelayLabel.text = [NSString stringWithFormat:@"%is", (int)self.exitDelaySlider.value];
-    [defaults setObject:[NSNumber numberWithFloat:self.exitDelaySlider.value] forKey:LIGHT_OFF_THRESHOLD];
-}
-
 - (IBAction)redMinusButton:(UIButton *)sender {
     [self adjustRedValueWithOperator:@"-"];
 }
@@ -407,59 +333,6 @@ NSUserDefaults *defaults;
     [self adjustBlueValueWithOperator:@"+"];
 }
 
-- (IBAction)entryMinusButton:(UIButton *)sender {
-    [self adjustEntryValueWithOperator:@"-"];
-}
-
-- (IBAction)entryPlusButton:(UIButton *)sender {
-    [self adjustEntryValueWithOperator:@"+"];
-}
-
-- (IBAction)exitMinusButton:(UIButton *)sender {
-    [self adjustExitValueWithOperator:@"-"];
-}
-
-- (IBAction)exitPlusButton:(UIButton *)sender {
-    [self adjustExitValueWithOperator:@"+"];
-}
-
-- (IBAction)exitDelayMinusButton:(UIButton *)sender {
-    [self adjustExitDelayValueWithOperator:@"-"];
-}
-
-- (IBAction)exitDelayPlusButton:(UIButton *)sender {
-    [self adjustExitDelayValueWithOperator:@"+"];
-}
-
-- (IBAction)settingsButtonTapped:(UIBarButtonItem *)sender {
-    if (self.mainViewContainer.frame.origin.x == 0) {
-        self.mainViewContainer.translatesAutoresizingMaskIntoConstraints = YES;
-        [UIView animateWithDuration:0.8 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.5 options:0 animations:^{
-            self.mainViewContainer.frame = CGRectMake(self.mainViewContainer.frame.size.width - 90, 20, self.mainViewContainer.frame.size.width, self.mainViewContainer.frame.size.height);
-            
-        } completion:nil];
-    }else{
-        [UIView animateWithDuration:0.4 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:0 animations:^{
-            self.mainViewContainer.frame = CGRectMake(0, 20, self.mainViewContainer.frame.size.width, self.mainViewContainer.frame.size.height);
-        } completion:^(BOOL finished) {
-            self.mainViewContainer.translatesAutoresizingMaskIntoConstraints = NO;
-        }];
-    }
-}
-
-- (IBAction)sunriseSunsetSwitch:(UISwitch *)sender {
-    if (sender.on) {
-        if ([CLLocationManager locationServicesEnabled]) {
-            [self setUpCoreLocation];
-            [defaults setObject:@YES forKey:@"sunriseSunsetMode"];
-        }else{
-            self.sunriseSunsetSwitch.on = NO;
-            [self showLocationServicesAlert];
-        }
-    }else{
-        [defaults setObject:@NO forKey:@"sunriseSunsetMode"];
-    }
-}
 
 #pragma mark - HELPERS
 
@@ -482,7 +355,7 @@ NSUserDefaults *defaults;
         if (alpha > 0.0) {
             self.alpha = alpha;
         }
-        self.mainView.backgroundColor = [UIColor colorWithRed:self.redColor / 255.0 green:self.greenColor / 255.0 blue:self.blueColor / 255.0 alpha:self.alpha];
+        self.centerContainerView.backgroundColor = [UIColor colorWithRed:self.redColor / 255.0 green:self.greenColor / 255.0 blue:self.blueColor / 255.0 alpha:self.alpha];
     }
 }
 
@@ -496,7 +369,7 @@ NSUserDefaults *defaults;
 
 - (void)startUserLightOffTimer{
     self.userLightOffTimerIsOn = YES;
-    [self performSelector:@selector(turnOffUserLightOffTimer) withObject:nil afterDelay:(int)self.exitDelaySlider.value];
+    [self performSelector:@selector(turnOffUserLightOffTimer) withObject:nil afterDelay:(int)self.exitDelaySliderValue];
 }
 
 
@@ -519,7 +392,7 @@ NSUserDefaults *defaults;
         int green = [self.greenLabel.text intValue] / 255.0;
         int blue = [self.blueLabel.text intValue] / 255.0;
         float alpha = self.alpha;
-        self.mainView.backgroundColor = self.lightIsOn ? [UIColor colorWithRed:red green:green blue:blue alpha:alpha] : [UIColor colorWithRed:0.098f green:0.098f blue:0.098f alpha:1.0f];
+        self.centerContainerView.backgroundColor = self.lightIsOn ? [UIColor colorWithRed:red green:green blue:blue alpha:alpha] : [UIColor colorWithRed:0.098f green:0.098f blue:0.098f alpha:1.0f];
     }];
 }
 
@@ -553,36 +426,6 @@ NSUserDefaults *defaults;
     }
 }
 
--(void)adjustEntryValueWithOperator:(NSString *)operator{
-    int entryValue = abs([self.entryLabel.text intValue]);
-    entryValue = [operator isEqualToString:@"+"] ? (entryValue += 1) : (entryValue -= 1);
-    if (entryValue >= 20 && entryValue <= 99) {
-        self.entrySlider.value = entryValue;
-        self.entryLabel.text = [NSString stringWithFormat:@"-%d",entryValue];
-        [defaults setObject:@(-[NSNumber numberWithFloat:self.entrySlider.value].doubleValue) forKey:LIGHT_ON_THRESHOLD];
-    }
-}
-
--(void)adjustExitValueWithOperator:(NSString *)operator{
-    int exitValue = abs([self.exitLabel.text intValue]);
-    exitValue = [operator isEqualToString:@"+"] ? (exitValue += 1) : (exitValue -= 1);
-    if (exitValue >= 21 && exitValue <= 100) {
-        self.exitSlider.value = exitValue;
-        self.exitLabel.text = [NSString stringWithFormat:@"-%d",exitValue];
-        [defaults setObject:@(-[NSNumber numberWithFloat:self.exitSlider.value].doubleValue) forKey:LIGHT_OFF_THRESHOLD];
-    }
-}
-
--(void)adjustExitDelayValueWithOperator:(NSString *)operator{
-    int exitDelayValue = abs([self.exitDelayLabel.text intValue]);
-    exitDelayValue = [operator isEqualToString:@"+"] ? (exitDelayValue += 1) : (exitDelayValue -= 1);
-    if (exitDelayValue >= 0 && exitDelayValue <= 300) {
-        self.exitDelaySlider.value = exitDelayValue;
-        self.exitDelayLabel.text = [NSString stringWithFormat:@"%ds",exitDelayValue];
-        [defaults setObject:[NSNumber numberWithFloat:self.exitDelaySlider.value] forKey:USER_LIGHT_OFF_DELAY];
-    }
-}
-
 -(BOOL)checkIfIsBetweenSunsetAndSunrise{
     int sunset =  [[self.sunriseSunset objectForKey:@"sunset"] intValue];
     int sunrise = [[self.sunriseSunset objectForKey:@"sunrise"] intValue];
@@ -593,22 +436,53 @@ NSUserDefaults *defaults;
     return NO;
 }
 
--(void)showLocationServicesAlert{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Location Services Disabled" message:@"Please turn on location services in order to use this feature." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    [alert show];
-}
-
 #pragma mark - ACTIONS
+
+- (IBAction)settingsButtonTapped:(UIBarButtonItem *)sender {
+    switch (sender.tag) {
+        case 0:{
+            [self.delegate moveCenterPanelToOriginalPosition];
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+            break;
+        }
+        case 1: {
+            [self.delegate moveCenterPanelToTheRight];
+            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+            break;
+        }
+        default:
+            break;
+    }
+}
 
 - (IBAction)favsButtonTapped:(UIBarButtonItem *)sender {
     [self.delegate moveRightPanelToTheLeft];
     self.settingsButton.enabled = NO;
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
 }
 
 #pragma mark - LBARightVCDelegate
 
-- (void)handleDoneButtonTap{
+- (void)handleCloseButtonTap{
     [self.delegate moveRightPanelToOriginalPosition];
 }
+
+#pragma mark - LBALeftVCDelegate
+- (void)setSunriseSunsetSwitchStatus:(BOOL)status{
+    self.sunriseSunsetSwitchIsOn = status;
+}
+
+- (void)setEntrySliderValue:(int)entrySliderValue{
+    self.entrySliderValue = entrySliderValue;
+}
+
+- (void)setExitSliderValue:(int)exitSliderValue{
+    self.exitSliderValue = exitSliderValue;
+}
+
+- (void)setExitDelaySliderValue:(int)exitDelaySliderValue{
+    self.exitDelaySliderValue = exitDelaySliderValue;
+}
+
 
 @end

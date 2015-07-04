@@ -16,7 +16,8 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rBA-lo-rSW">
-                    <rect key="frame" x="0.0" y="10" width="600" height="44"/>
+                    <rect key="frame" x="0.0" y="12" width="600" height="44"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="kjW-EZ-vQr"/>
                     </constraints>
@@ -25,16 +26,22 @@
                     </textAttributes>
                     <items>
                         <navigationItem title="Favorites" id="va6-jh-Mah">
-                            <barButtonItem key="leftBarButtonItem" systemItem="done" id="PC8-Pa-nHo">
+                            <barButtonItem key="leftBarButtonItem" title="Close" id="PC8-Pa-nHo">
+                                <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <action selector="doneButtonTapped:" destination="-1" id="o9o-1X-umx"/>
+                                    <action selector="closeButtonTapped:" destination="-1" id="dwh-je-B9z"/>
                                 </connections>
                             </barButtonItem>
                         </navigationItem>
                     </items>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="barPosition">
+                            <integer key="value" value="3"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                 </navigationBar>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="1hC-Bm-C3j">
-                    <rect key="frame" x="0.0" y="54" width="600" height="546"/>
+                    <rect key="frame" x="0.0" y="56" width="600" height="544"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <color key="sectionIndexBackgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
@@ -46,7 +53,7 @@
                 <constraint firstAttribute="trailing" secondItem="1hC-Bm-C3j" secondAttribute="trailing" id="Qgc-yt-aY3"/>
                 <constraint firstAttribute="trailing" secondItem="rBA-lo-rSW" secondAttribute="trailing" id="fTN-fc-JwT"/>
                 <constraint firstItem="rBA-lo-rSW" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="fh1-Dg-Roc"/>
-                <constraint firstItem="rBA-lo-rSW" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="g3K-s9-0xg"/>
+                <constraint firstItem="rBA-lo-rSW" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="12" id="g3K-s9-0xg"/>
                 <constraint firstItem="1hC-Bm-C3j" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="oO3-sU-8Hu"/>
             </constraints>
         </view>

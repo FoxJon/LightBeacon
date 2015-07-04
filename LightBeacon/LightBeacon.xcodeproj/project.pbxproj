@@ -15,6 +15,9 @@
 		B0009C1F1B46339400B12175 /* LBALeftVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B0009C1E1B46339400B12175 /* LBALeftVC.m */; };
 		B0009C221B4633AA00B12175 /* LBARightVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B0009C211B4633AA00B12175 /* LBARightVC.m */; };
 		B0009C2A1B465D9900B12175 /* LBACenterVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0009C291B465D9900B12175 /* LBACenterVC.xib */; };
+		B0009C2D1B47110100B12175 /* LBADefaultsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0009C2C1B47110100B12175 /* LBADefaultsManager.m */; };
+		B0009C341B471A3800B12175 /* LBAAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = B0009C331B471A3800B12175 /* LBAAlert.m */; };
+		B0009C371B472AFA00B12175 /* LBALocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0009C361B472AFA00B12175 /* LBALocationManager.m */; };
 		B032BCEF1B2BCF72003AC098 /* LBARectangleView.m in Sources */ = {isa = PBXBuildFile; fileRef = B032BCEE1B2BCF72003AC098 /* LBARectangleView.m */; };
 		B032BCF31B2BD25A003AC098 /* LBASettingsTab.m in Sources */ = {isa = PBXBuildFile; fileRef = B032BCF21B2BD25A003AC098 /* LBASettingsTab.m */; };
 		B032BCF91B2BE0EE003AC098 /* LBAPlusSign.m in Sources */ = {isa = PBXBuildFile; fileRef = B032BCF81B2BE0EE003AC098 /* LBAPlusSign.m */; };
@@ -22,7 +25,6 @@
 		B09D90A71B233F1F00C2653B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B09D90A61B233F1F00C2653B /* main.m */; };
 		B09D90AA1B233F1F00C2653B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B09D90A91B233F1F00C2653B /* AppDelegate.m */; };
 		B09D90AD1B233F1F00C2653B /* LightBeacon.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B09D90AB1B233F1F00C2653B /* LightBeacon.xcdatamodeld */; };
-		B09D90B01B233F1F00C2653B /* LBAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B09D90AF1B233F1F00C2653B /* LBAViewController.m */; };
 		B09D90B51B233F1F00C2653B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B09D90B41B233F1F00C2653B /* Images.xcassets */; };
 		B09D90B81B233F1F00C2653B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B09D90B61B233F1F00C2653B /* LaunchScreen.xib */; };
 		B09D90C41B233F1F00C2653B /* LightBeaconTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B09D90C31B233F1F00C2653B /* LightBeaconTests.m */; };
@@ -60,6 +62,12 @@
 		B0009C201B4633AA00B12175 /* LBARightVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBARightVC.h; sourceTree = "<group>"; };
 		B0009C211B4633AA00B12175 /* LBARightVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBARightVC.m; sourceTree = "<group>"; };
 		B0009C291B465D9900B12175 /* LBACenterVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LBACenterVC.xib; sourceTree = "<group>"; };
+		B0009C2B1B47110100B12175 /* LBADefaultsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBADefaultsManager.h; sourceTree = "<group>"; };
+		B0009C2C1B47110100B12175 /* LBADefaultsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBADefaultsManager.m; sourceTree = "<group>"; };
+		B0009C321B471A3800B12175 /* LBAAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBAAlert.h; sourceTree = "<group>"; };
+		B0009C331B471A3800B12175 /* LBAAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBAAlert.m; sourceTree = "<group>"; };
+		B0009C351B472AFA00B12175 /* LBALocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBALocationManager.h; sourceTree = "<group>"; };
+		B0009C361B472AFA00B12175 /* LBALocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBALocationManager.m; sourceTree = "<group>"; };
 		B00311071B2C80E90049AE9A /* LBAColorConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBAColorConstants.h; sourceTree = "<group>"; };
 		B032BCED1B2BCF72003AC098 /* LBARectangleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBARectangleView.h; sourceTree = "<group>"; };
 		B032BCEE1B2BCF72003AC098 /* LBARectangleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBARectangleView.m; sourceTree = "<group>"; };
@@ -75,8 +83,6 @@
 		B09D90A81B233F1F00C2653B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B09D90A91B233F1F00C2653B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		B09D90AC1B233F1F00C2653B /* LightBeacon.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LightBeacon.xcdatamodel; sourceTree = "<group>"; };
-		B09D90AE1B233F1F00C2653B /* LBAViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBAViewController.h; sourceTree = "<group>"; };
-		B09D90AF1B233F1F00C2653B /* LBAViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBAViewController.m; sourceTree = "<group>"; };
 		B09D90B41B233F1F00C2653B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B09D90B71B233F1F00C2653B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		B09D90BD1B233F1F00C2653B /* LightBeaconTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LightBeaconTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -172,6 +178,8 @@
 				B0D4B95C1B24898D00713A26 /* Model */,
 				B09D90A41B233F1F00C2653B /* Supporting Files */,
 				B00311071B2C80E90049AE9A /* LBAColorConstants.h */,
+				B0009C321B471A3800B12175 /* LBAAlert.h */,
+				B0009C331B471A3800B12175 /* LBAAlert.m */,
 			);
 			path = LightBeacon;
 			sourceTree = "<group>";
@@ -224,6 +232,10 @@
 				B0D4B9631B248A6700713A26 /* LBAGimbalManager.m */,
 				B0FCFD001B2521410034FD4E /* LBALogManager.h */,
 				B0FCFD011B2521410034FD4E /* LBALogManager.m */,
+				B0009C2B1B47110100B12175 /* LBADefaultsManager.h */,
+				B0009C2C1B47110100B12175 /* LBADefaultsManager.m */,
+				B0009C351B472AFA00B12175 /* LBALocationManager.h */,
+				B0009C361B472AFA00B12175 /* LBALocationManager.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -231,8 +243,6 @@
 		B0D4B9601B2489C900713A26 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				B09D90AE1B233F1F00C2653B /* LBAViewController.h */,
-				B09D90AF1B233F1F00C2653B /* LBAViewController.m */,
 				B0009C171B46334A00B12175 /* LBAMainVC.h */,
 				B0009C181B46334A00B12175 /* LBAMainVC.m */,
 				B0009C1A1B46337D00B12175 /* LBACenterVC.h */,
@@ -364,19 +374,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				B0EB69A51B3F18980031B9D4 /* LBASettingsBoxView.m in Sources */,
+				B0009C341B471A3800B12175 /* LBAAlert.m in Sources */,
 				B0009C221B4633AA00B12175 /* LBARightVC.m in Sources */,
 				B032BCF31B2BD25A003AC098 /* LBASettingsTab.m in Sources */,
+				B0009C2D1B47110100B12175 /* LBADefaultsManager.m in Sources */,
 				B032BCEF1B2BCF72003AC098 /* LBARectangleView.m in Sources */,
 				B09D90AA1B233F1F00C2653B /* AppDelegate.m in Sources */,
 				B0009C1C1B46337D00B12175 /* LBACenterVC.m in Sources */,
 				B032BCFC1B2BE10A003AC098 /* LBAMinusSign.m in Sources */,
 				B0E8D2721B4075B3009683A2 /* LBASettingsPlusSign.m in Sources */,
+				B0009C371B472AFA00B12175 /* LBALocationManager.m in Sources */,
 				B0D4B9641B248A6700713A26 /* LBAGimbalManager.m in Sources */,
 				B09D90AD1B233F1F00C2653B /* LightBeacon.xcdatamodeld in Sources */,
 				B0009C1F1B46339400B12175 /* LBALeftVC.m in Sources */,
 				B032BCF91B2BE0EE003AC098 /* LBAPlusSign.m in Sources */,
 				B0E8D2751B4075C4009683A2 /* LBASettingsMinusSign.m in Sources */,
-				B09D90B01B233F1F00C2653B /* LBAViewController.m in Sources */,
 				B0009C191B46334A00B12175 /* LBAMainVC.m in Sources */,
 				B0FCFD021B2521410034FD4E /* LBALogManager.m in Sources */,
 				B09D90A71B233F1F00C2653B /* main.m in Sources */,
