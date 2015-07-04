@@ -22,9 +22,10 @@
 
 @end
 
-@interface LBACenterVC : UIViewController
+@interface LBACenterVC : UIViewController <LBARightVCDelegate, LBALeftVCDelegate>
 
 @property id<LBACenterVCDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *settingsButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *favsButton;
 
 @end
