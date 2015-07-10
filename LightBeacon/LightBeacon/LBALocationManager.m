@@ -7,6 +7,7 @@
 
 #import "LBALocationManager.h"
 #import "LBAAlert.h"
+#import "LBACenterVC.h"
 #import <CoreLocation/CoreLocation.h>
 
 @interface LBALocationManager () <CLLocationManagerDelegate>
@@ -28,6 +29,7 @@
 -(instancetype)init{
     if((self = [super init])){
         self.locationManager = [CLLocationManager new];
+        self.locationManager.delegate = self;
     }
     return self;
 }
@@ -46,7 +48,7 @@
     
     [self.locationManager stopUpdatingLocation];
     
-    [self.delegate setCurrentLocation:self.currentLocation];
+    [self.delegate updateCurrentLocation:self.currentLocation];
 }
 
 @end

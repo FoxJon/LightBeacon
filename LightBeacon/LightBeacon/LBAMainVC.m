@@ -106,7 +106,7 @@
         self.leftVC.view.tag = LEFT_PANEL_TAG;
         
         [self.view addSubview: self.leftVC.view];
-//        self.leftVC.delegate = self.centerVC;
+        self.leftVC.delegate = self.centerVC;
         
         [self addChildViewController:self.leftVC];
         [self.leftVC didMoveToParentViewController:self];

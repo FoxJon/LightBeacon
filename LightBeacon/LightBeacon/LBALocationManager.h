@@ -10,7 +10,7 @@
 
 @protocol LBALocationManagerDelegate <NSObject>
 
-- (void)setCurrentLocation:(NSDictionary *)location;
+- (void)updateCurrentLocation:(NSDictionary *)location;
 
 @end
 

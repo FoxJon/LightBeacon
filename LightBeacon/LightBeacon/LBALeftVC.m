@@ -10,139 +10,266 @@
 #import "LBADefaultsManager.h"
 #import "LBAAlert.h"
 #import "LBALocationManager.h"
+#import "LBASettingsTVCell.h"
+#import "LBASunriseTVCell.h"
+#import "LBASettingsMinusSign.h"
+#import "LBASettingsPlusSign.h"
+#import "LBAConstants.h"
 #import <CoreLocation/CoreLocation.h>
 
-#define LIGHT_ON_THRESHOLD @"Light_On_Threshold"
-#define LIGHT_OFF_THRESHOLD @"Light_Off_Threshold"
-#define USER_LIGHT_OFF_DELAY @"User_light_Off_Delay"
+#define ENTRY_TAG 1
+#define EXIT_TAG 2
+#define EXIT_DELAY_TAG 3
 
-@interface LBALeftVC ()
+@interface LBALeftVC () <UITableViewDelegate, UITableViewDataSource>
 
-@property (nonatomic) NSInteger entryThreshold;
-@property (weak, nonatomic) IBOutlet UISlider *entrySlider;
-@property (nonatomic) NSInteger exitThreshold;
-@property (weak, nonatomic) IBOutlet UISlider *exitSlider;
-@property (weak, nonatomic) IBOutlet UISlider *exitDelaySlider;
-@property (weak, nonatomic) IBOutlet UISwitch *sunriseSunsetSwitch;
-@property (weak, nonatomic) IBOutlet UILabel *entryLabel;
-@property (weak, nonatomic) IBOutlet UILabel *exitLabel;
-@property (weak, nonatomic) IBOutlet UILabel *exitDelayLabel;
-
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic) LBASunriseTVCell *sunriseCell;
+@property (nonatomic) LBASettingsTVCell *entryCell;
+@property (nonatomic) LBASettingsTVCell *exitCell;
+@property (nonatomic) LBASettingsTVCell *exitDelayCell;
 @end
 
 @implementation LBALeftVC
+{
+    NSUserDefaults *defaults;
+}
 
 - (void)viewDidLoad {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [super viewDidLoad];
-    self.entrySlider.value = fabs([[defaults objectForKey:LIGHT_ON_THRESHOLD] floatValue]);
-    self.entryLabel.text = [NSString stringWithFormat:@"-%i", (int)self.entrySlider.value];
-    self.exitSlider.value = fabs([[defaults objectForKey:LIGHT_OFF_THRESHOLD] floatValue]);
-    self.exitLabel.text = [NSString stringWithFormat:@"-%i", (int)self.exitSlider.value];
-    self.exitDelaySlider.value = [[defaults objectForKey:USER_LIGHT_OFF_DELAY] intValue];
-    self.exitDelayLabel.text = [NSString stringWithFormat:@"%is", (int)self.exitDelaySlider.value];
-    if ([[defaults objectForKey:@"sunriseSunsetMode"] isEqual: @YES]) {
-        self.sunriseSunsetSwitch.on = YES;
-        [self.delegate setSunriseSunsetSwitchStatus:YES];
-    }else{
-        self.sunriseSunsetSwitch.on = NO;
-        [self.delegate setSunriseSunsetSwitchStatus:NO];
+    self.tableView.layoutMargins = UIEdgeInsetsZero;
+    defaults = [NSUserDefaults standardUserDefaults];
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return 4;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell = [UITableViewCell new];
+    NSInteger row = indexPath.row;
+    
+    switch (row) {
+        case 0:{
+            self.sunriseCell = [self setUpCell:cell WithIdentifier:@"SunriseCell" andNibName:@"LBASunriseCell" forTableview:tableView];
+            [self.sunriseCell.sunriseSunsetSwitch addTarget:self action:@selector(sunriseSwitch:) forControlEvents:UIControlEventValueChanged];
+            
+            if ([defaults boolForKey:SUNRISE_SUNSET_MODE]) {
+                self.sunriseCell.sunriseSunsetSwitch.on = YES;
+            }else{
+                self.sunriseCell.sunriseSunsetSwitch.on = NO;
+            }
+            
+            self.sunriseCell.layoutMargins = UIEdgeInsetsZero;
+            return self.sunriseCell;
+            break;
+        }
+        case 1:{
+            self.entryCell = [self setUpCell:cell WithIdentifier:@"SettingsCell" andNibName:@"LBASettingsCell" forTableview:tableView];
+            self.entryCell.titleLabel.text = @"Entry Threshold";
+            self.entryCell.thresholdSlider.minimumValue = 20;
+            self.entryCell.thresholdSlider.maximumValue = 98;
+            
+            [self setUpSlider:self.entryCell.thresholdSlider withTag:ENTRY_TAG];
+            
+            self.entryCell.thresholdValue.text = [NSString stringWithFormat:@"-%i", (int)self.entryCell.thresholdSlider.value];
+            
+            [self setUpOperatorButtonsWithMinusButton:self.entryCell.thresholdMinusButton andPlusButton:self.entryCell.thresholdPlusButton withTag:ENTRY_TAG];
+            
+            self.entryCell.layoutMargins = UIEdgeInsetsZero;
+            
+            return self.entryCell;
+            break;
+        }
+        case 2:{
+            self.exitCell = [self setUpCell:self.exitCell WithIdentifier:@"SettingsCell" andNibName:@"LBASettingsCell" forTableview:tableView];
+            self.exitCell.titleLabel.text = @"Exit Threshold";
+            self.exitCell.thresholdSlider.minimumValue = 21;
+            self.exitCell.thresholdSlider.maximumValue = 99;
+            
+            [self setUpSlider:self.exitCell.thresholdSlider withTag:EXIT_TAG];
+            
+            self.exitCell.thresholdValue.text = [NSString stringWithFormat:@"-%i", (int)self.exitCell.thresholdSlider.value];
+            
+            [self setUpOperatorButtonsWithMinusButton:self.exitCell.thresholdMinusButton andPlusButton:self.exitCell.thresholdPlusButton withTag:EXIT_TAG];
+            
+            self.exitCell.layoutMargins = UIEdgeInsetsZero;
+            
+            return self.exitCell;
+            break;
+        }
+        case 3:{
+            self.exitDelayCell = [self setUpCell:self.exitDelayCell WithIdentifier:@"SettingsCell" andNibName:@"LBASettingsCell" forTableview:tableView];
+            self.exitDelayCell.titleLabel.text = @"Exit Delay";
+            self.exitDelayCell.thresholdSlider.minimumValue = 0;
+            self.exitDelayCell.thresholdSlider.maximumValue = 300;
+            
+            [self setUpSlider:self.exitDelayCell.thresholdSlider withTag:EXIT_DELAY_TAG];
+
+            self.exitDelayCell.thresholdValue.text = [NSString stringWithFormat:@"%is", (int)self.exitDelayCell.thresholdSlider.value];
+            
+            [self setUpOperatorButtonsWithMinusButton:self.exitDelayCell.thresholdMinusButton andPlusButton:self.exitDelayCell.thresholdPlusButton withTag:EXIT_DELAY_TAG];
+            
+            self.exitDelayCell.layoutMargins = UIEdgeInsetsZero;
+            
+            return self.exitDelayCell;
+            break;
+        }
+        default:
+            break;
     }
+    return cell;
 }
 
-- (IBAction)entrySliderMoved:(UISlider *)sender {
-    if (sender.value >= self.exitSlider.value) {
-        self.exitSlider.value = self.entrySlider.value + 1;
-        self.exitLabel.text = [NSString stringWithFormat:@"-%i", (int)self.exitSlider.value];
-    }
-    self.entryLabel.text = [NSString stringWithFormat:@"-%i", (int)self.entrySlider.value];
-    [[NSUserDefaults standardUserDefaults] setObject:@(-[NSNumber numberWithFloat:self.entrySlider.value].doubleValue) forKey:LIGHT_ON_THRESHOLD];
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 78;
 }
 
-- (IBAction)exitSliderMoved:(UISlider *)sender {
-    if (sender.value <= self.entrySlider.value) {
-        self.entrySlider.value = sender.value - 1;
-        self.entryLabel.text = [NSString stringWithFormat:@"-%i", (int)self.entrySlider.value];
-    }
-    self.exitLabel.text = [NSString stringWithFormat:@"-%i", (int)self.exitSlider.value];
-    [[NSUserDefaults standardUserDefaults] setObject:@(-[NSNumber numberWithFloat:self.exitSlider.value].doubleValue) forKey:LIGHT_OFF_THRESHOLD];
+-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    UIView *footer = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 0)];
+    return footer;
 }
 
-- (IBAction)exitDelaySliderMoved:(id)sender {
-    self.exitDelayLabel.text = [NSString stringWithFormat:@"%is", (int)self.exitDelaySlider.value];
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:self.exitDelaySlider.value] forKey:LIGHT_OFF_THRESHOLD];
-}
+#pragma mark - ACTIONS
 
-- (IBAction)entryMinusButton:(UIButton *)sender {
-    [self adjustEntryValueWithOperator:@"-"];
-}
-
-- (IBAction)entryPlusButton:(UIButton *)sender {
-    [self adjustEntryValueWithOperator:@"+"];
-}
-
-- (IBAction)exitMinusButton:(UIButton *)sender {
-    [self adjustExitValueWithOperator:@"-"];
-}
-
-- (IBAction)exitPlusButton:(UIButton *)sender {
-    [self adjustExitValueWithOperator:@"+"];
-}
-
-- (IBAction)exitDelayMinusButton:(UIButton *)sender {
-    [self adjustExitDelayValueWithOperator:@"-"];
-}
-
-- (IBAction)exitDelayPlusButton:(UIButton *)sender {
-    [self adjustExitDelayValueWithOperator:@"+"];
-}
-
-- (IBAction)sunriseSunsetSwitch:(UISwitch *)sender {
+- (IBAction)sunriseSwitch:(UISwitch *)sender{
     if (sender.on) {
         if ([CLLocationManager locationServicesEnabled]) {
             [[LBALocationManager sharedManager] startUpdatingLocation];
-            [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"sunriseSunsetMode"];
+            [defaults setBool:YES forKey:SUNRISE_SUNSET_MODE];
         }else{
-            self.sunriseSunsetSwitch.on = NO;
+            [defaults setBool:NO forKey:SUNRISE_SUNSET_MODE];
             [[LBAAlert sharedAlert] withTitle:@"Location Services Disabled" message:@"Please turn on location services in order to use this feature."];
-
         }
     }else{
-        [[NSUserDefaults standardUserDefaults] setObject:@NO forKey:@"sunriseSunsetMode"];
+        [defaults setBool:NO forKey:SUNRISE_SUNSET_MODE];
     }
 }
 
--(void)adjustEntryValueWithOperator:(NSString *)operator{
-    int entryValue = abs([self.entryLabel.text intValue]);
-    entryValue = [operator isEqualToString:@"+"] ? (entryValue += 1) : (entryValue -= 1);
-    if (entryValue >= 20 && entryValue <= 99) {
-        self.entrySlider.value = entryValue;
-        self.entryLabel.text = [NSString stringWithFormat:@"-%d",entryValue];
-        [[NSUserDefaults standardUserDefaults] setObject:@(-[NSNumber numberWithFloat:self.entrySlider.value].doubleValue) forKey:LIGHT_ON_THRESHOLD];
-        [self.delegate setEntrySliderValue:self.entrySlider.value];
+
+- (IBAction)sliderMoved:(UISlider *)sender{
+    switch (sender.tag) {
+        case 1:{
+            if (sender.value >= self.exitCell.thresholdSlider.value) {
+                self.exitCell.thresholdSlider.value = sender.value + 1;
+                self.exitCell.thresholdValue.text = [NSString stringWithFormat:@"-%i", (int)self.exitCell.thresholdSlider.value];
+                [defaults setFloat:self.exitCell.thresholdSlider.value forKey:LIGHT_OFF_THRESHOLD];
+                [self.delegate updateEntrySliderValue:self.exitCell.thresholdSlider.value];
+            }
+            self.entryCell.thresholdValue.text = [NSString stringWithFormat:@"-%i", (int)sender.value];
+            [defaults setFloat:sender.value forKey:LIGHT_ON_THRESHOLD];
+            [self.delegate updateEntrySliderValue:self.entryCell.thresholdSlider.value];
+            break;
+        }
+        case 2:{
+            if (sender.value <= self.entryCell.thresholdSlider.value) {
+                self.entryCell.thresholdSlider.value = sender.value - 1;
+                self.entryCell.thresholdValue.text = [NSString stringWithFormat:@"-%i", (int)self.entryCell.thresholdSlider.value];
+                [defaults setFloat:self.entryCell.thresholdSlider.value forKey:LIGHT_ON_THRESHOLD];
+                [self.delegate updateExitSliderValue:self.entryCell.thresholdSlider.value];
+            }
+            self.exitCell.thresholdValue.text = [NSString stringWithFormat:@"-%i", (int)sender.value];
+            [defaults setFloat:sender.value forKey:LIGHT_OFF_THRESHOLD];
+            [self.delegate updateExitSliderValue:self.exitCell.thresholdSlider.value];
+            break;
+        }
+        case 3:{
+            self.exitDelayCell.thresholdValue.text = [NSString stringWithFormat:@"%is", (int)sender.value];
+            [defaults setFloat:sender.value forKey:LIGHT_OFF_DELAY];
+            [self.delegate updateExitDelaySliderValue:self.exitDelayCell.thresholdSlider.value];
+        }
+        default:
+            break;
     }
 }
 
--(void)adjustExitValueWithOperator:(NSString *)operator{
-    int exitValue = abs([self.exitLabel.text intValue]);
-    exitValue = [operator isEqualToString:@"+"] ? (exitValue += 1) : (exitValue -= 1);
-    if (exitValue >= 21 && exitValue <= 100) {
-        self.exitSlider.value = exitValue;
-        self.exitLabel.text = [NSString stringWithFormat:@"-%d",exitValue];
-        [[NSUserDefaults standardUserDefaults] setObject:@(-[NSNumber numberWithFloat:self.exitSlider.value].doubleValue) forKey:LIGHT_OFF_THRESHOLD];
-        [self.delegate setExitSliderValue:self.exitSlider.value];
+-(IBAction)operatorTapped:(UIButton *)sender{
+    switch (sender.tag) {
+        case 1:{
+            int thresholdValue = abs([self.entryCell.thresholdValue.text intValue]);
+            NSString *myClass = NSStringFromClass([[sender superview] class]);
+            thresholdValue = [myClass isEqualToString:@"LBASettingsPlusSign"] ? (thresholdValue + 1) : (thresholdValue - 1);
+            if (thresholdValue >= 20 && thresholdValue <= 98) {
+                self.entryCell.thresholdSlider.value = thresholdValue;
+                self.entryCell.thresholdValue.text = [NSString stringWithFormat:@"-%d",thresholdValue];
+                [defaults setFloat:self.entryCell.thresholdSlider.value forKey:LIGHT_ON_THRESHOLD];
+                [self.delegate updateEntrySliderValue:self.entryCell.thresholdSlider.value];
+                if ([myClass isEqualToString:@"LBASettingsPlusSign"] && thresholdValue == (int)self.exitCell.thresholdSlider.value) {
+                    self.exitCell.thresholdSlider.value += 1;
+                    [defaults setFloat:self.exitCell.thresholdSlider.value forKey:LIGHT_OFF_THRESHOLD];
+                    self.exitCell.thresholdValue.text = [NSString stringWithFormat:@"-%d",(int)self.exitCell.thresholdSlider.value];
+                }
+            }
+        }
+            break;
+        case 2:{
+            int thresholdValue = abs([self.exitCell.thresholdValue.text intValue]);
+            NSString *myClass = NSStringFromClass([[sender superview] class]);
+            thresholdValue = [myClass isEqualToString:@"LBASettingsPlusSign"] ? (thresholdValue + 1) : (thresholdValue - 1);
+            if (thresholdValue >= 21 && thresholdValue <= 99) {
+                self.exitCell.thresholdSlider.value = thresholdValue;
+                self.exitCell.thresholdValue.text = [NSString stringWithFormat:@"-%d",thresholdValue];
+                [defaults setFloat:self.exitCell.thresholdSlider.value forKey:LIGHT_OFF_THRESHOLD];
+                [self.delegate updateExitSliderValue:self.exitCell.thresholdSlider.value];
+                if ([myClass isEqualToString:@"LBASettingsMinusSign"] && thresholdValue == (int)self.entryCell.thresholdSlider.value) {
+                    self.entryCell.thresholdSlider.value -= 1;
+                    [defaults setFloat:self.entryCell.thresholdSlider.value forKey:LIGHT_ON_THRESHOLD];
+                    self.entryCell.thresholdValue.text = [NSString stringWithFormat:@"-%d",(int)self.entryCell.thresholdSlider.value];
+                }
+            }
+            
+        }
+            break;
+        case 3:{
+            int value = abs([self.exitDelayCell.thresholdValue.text intValue]);
+            NSString *myClass = NSStringFromClass([[sender superview] class]);
+            value = [myClass isEqualToString:@"LBASettingsPlusSign"] ? (value + 1) : (value - 1);
+            if (value >= 0 && value <= 300) {
+                self.exitDelayCell.thresholdSlider.value = value;
+                self.exitDelayCell.thresholdValue.text = [NSString stringWithFormat:@"%ds",value];
+                [defaults setFloat:self.exitDelayCell.thresholdSlider.value forKey:LIGHT_OFF_DELAY];
+                [self.delegate updateExitDelaySliderValue:self.exitDelayCell.thresholdSlider.value];
+            }
+        }
+            break;
+        default:
+            break;
     }
 }
 
--(void)adjustExitDelayValueWithOperator:(NSString *)operator{
-    int exitDelayValue = abs([self.exitDelayLabel.text intValue]);
-    exitDelayValue = [operator isEqualToString:@"+"] ? (exitDelayValue += 1) : (exitDelayValue -= 1);
-    if (exitDelayValue >= 0 && exitDelayValue <= 300) {
-        self.exitDelaySlider.value = exitDelayValue;
-        self.exitDelayLabel.text = [NSString stringWithFormat:@"%ds",exitDelayValue];
-        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:self.exitDelaySlider.value] forKey:USER_LIGHT_OFF_DELAY];
-        [self.delegate setExitDelaySliderValue:self.exitDelaySlider.value];
+#pragma mark - HELPERS
+- (id)setUpCell:(id)cell WithIdentifier:(NSString *)identifier andNibName:(NSString *)nibName forTableview:(UITableView *)tableView{
+    cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    [tableView registerNib:[UINib nibWithNibName:nibName bundle:nil] forCellReuseIdentifier:identifier];
+    cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    return cell;
+}
+
+- (void)setUpSlider:(UISlider *)slider withTag:(int)tag{
+    [slider addTarget:self action:@selector(sliderMoved:) forControlEvents:UIControlEventValueChanged];
+    slider.tag = tag;
+    switch (tag) {
+        case 1:{
+            slider.value = [defaults floatForKey:LIGHT_ON_THRESHOLD];
+        }
+            break;
+        case 2:{
+            slider.value = [defaults floatForKey:LIGHT_OFF_THRESHOLD];
+        }
+            break;
+        case 3:{
+            slider.value = [defaults floatForKey:LIGHT_OFF_DELAY];
+        }
+        default:
+            break;
     }
+}
+
+- (void)setUpOperatorButtonsWithMinusButton:(UIButton *)minusButton andPlusButton:(UIButton *)plusButton withTag:(int)tag{
+    [minusButton addTarget:self action:@selector(operatorTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [plusButton addTarget:self action:@selector(operatorTapped:) forControlEvents:UIControlEventTouchUpInside];
+    minusButton.tag = tag;
+    plusButton.tag = tag;
 }
 
 @end
