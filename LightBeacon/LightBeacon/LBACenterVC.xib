@@ -21,7 +21,7 @@
                 <outlet property="lowBatteryLabel" destination="z0h-wK-Ftx" id="E87-NV-FQ4"/>
                 <outlet property="redLabel" destination="gYw-Zw-9Ld" id="21M-sM-Q6a"/>
                 <outlet property="redSlider" destination="GLg-XO-Fya" id="CPR-If-ZVY"/>
-                <outlet property="settingsButton" destination="R9F-qU-Dpv" id="DlB-2H-pOq"/>
+                <outlet property="settingsButton" destination="uCn-7k-ZLR" id="QQv-no-rGy"/>
                 <outlet property="view" destination="iN0-l3-epB" id="XCc-s8-CNh"/>
                 <outletCollection property="lightTintColorElements" destination="R09-Or-K2K" id="wfq-NV-q9I"/>
                 <outletCollection property="darkTintColorElements" destination="ZiS-Yd-x1K" id="9sy-Q3-4qy"/>
@@ -58,10 +58,30 @@
                     </constraints>
                     <items>
                         <navigationItem id="Lmy-q5-1gI">
-                            <barButtonItem key="leftBarButtonItem" tag="1" title="Item" id="R9F-qU-Dpv">
-                                <connections>
-                                    <action selector="settingsButtonTapped:" destination="-1" id="bG8-DT-Q4R"/>
-                                </connections>
+                            <barButtonItem key="leftBarButtonItem" style="plain" id="9oG-bn-7Oj">
+                                <view key="customView" contentMode="scaleToFill" id="gyL-xf-0FF" customClass="LBASettingsTab">
+                                    <rect key="frame" x="16" y="14" width="22" height="16"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uCn-7k-ZLR">
+                                            <rect key="frame" x="0.0" y="0.0" width="22" height="16"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <state key="normal">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="settingsButtonTapped:" destination="-1" eventType="touchUpInside" id="BpC-fH-tS2"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <constraints>
+                                        <constraint firstItem="uCn-7k-ZLR" firstAttribute="leading" secondItem="gyL-xf-0FF" secondAttribute="leading" id="7Pq-ti-kz0"/>
+                                        <constraint firstAttribute="bottom" secondItem="uCn-7k-ZLR" secondAttribute="bottom" id="Uhy-ni-td3"/>
+                                        <constraint firstItem="uCn-7k-ZLR" firstAttribute="top" secondItem="gyL-xf-0FF" secondAttribute="top" id="Vtu-9L-jZF"/>
+                                        <constraint firstAttribute="trailing" secondItem="uCn-7k-ZLR" secondAttribute="trailing" id="ZOv-PF-ao1"/>
+                                    </constraints>
+                                </view>
                             </barButtonItem>
                             <barButtonItem key="rightBarButtonItem" tag="1" systemItem="add" id="ggD-CU-k1F">
                                 <connections>
