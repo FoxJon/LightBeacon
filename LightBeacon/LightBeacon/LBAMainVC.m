@@ -52,7 +52,7 @@
     UIView *childView = [self getLeftView];
     [self.view sendSubviewToBack:childView];
     
-    [UIView animateWithDuration:0.8 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.8 options:0 animations:^{
+    [UIView animateWithDuration:0.4 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.8 options:0 animations:^{
         self.centerVC.view.frame = CGRectMake(self.view.frame.size.width - PANEL_WIDTH, 0, self.view.frame.size.width, self.view.frame.size.height);
     } completion:^(BOOL finished) {
         if (finished) {
@@ -65,7 +65,7 @@
     UIView *childView = [self getRightView];
     [self.view addSubview:childView];
     
-    [UIView animateWithDuration:0.8 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.8 options:0 animations:^{
+    [UIView animateWithDuration:0.4 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.8 options:0 animations:^{
         self.rightVC.view.frame = CGRectMake(75, 0, self.view.frame.size.width, self.view.frame.size.height);
     } completion:^(BOOL finished) {
         if (finished) {

@@ -333,6 +333,28 @@ NSUserDefaults *defaults;
     [self adjustBlueValueWithOperator:@"+"];
 }
 
+- (IBAction)settingsButtonTapped:(UIButton *)sender {
+    switch (sender.tag) {
+        case 0:{
+            [self.delegate moveCenterPanelToOriginalPosition];
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+            break;
+        }
+        case 1: {
+            [self.delegate moveCenterPanelToTheRight];
+            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+- (IBAction)favsButtonTapped:(UIBarButtonItem *)sender {
+    [self.delegate moveRightPanelToTheLeft];
+    self.settingsButton.enabled = NO;
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+}
 
 #pragma mark - HELPERS
 
@@ -436,30 +458,7 @@ NSUserDefaults *defaults;
     return NO;
 }
 
-#pragma mark - ACTIONS
 
-- (IBAction)settingsButtonTapped:(UIBarButtonItem *)sender {
-    switch (sender.tag) {
-        case 0:{
-            [self.delegate moveCenterPanelToOriginalPosition];
-            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
-            break;
-        }
-        case 1: {
-            [self.delegate moveCenterPanelToTheRight];
-            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-            break;
-        }
-        default:
-            break;
-    }
-}
-
-- (IBAction)favsButtonTapped:(UIBarButtonItem *)sender {
-    [self.delegate moveRightPanelToTheLeft];
-    self.settingsButton.enabled = NO;
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-}
 
 #pragma mark - LBARightVCDelegate
 
