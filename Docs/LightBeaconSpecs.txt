@@ -1,36 +1,28 @@
 BeaconLight
 
 Features:
-- detects when you enter the room.
-- able to adjust proximity detection
-- when light is off and you enter the room:
-	- check to see if time is between sunset and sunrise.
-		- use location services and weather app api to get sunrise and sunset times
-<<<<<<< Local Changes
+X detects when you enter the room.
+X able to adjust proximity detection
+X when light is off and you enter the room:
+	X check to see if time is between sunset and sunrise.
+		X use location services and weather app api to get sunrise and sunset times
 		X check to see that user has not disabled auto detect
 			X if not, turn on the light if light is not already on.
 X when user leaves the room:
-			- wait 30 seconds.turn off the light if light is not already off.
+			X wait to turn off light based on user defined delay time.
 X Able to dim lights
 - Able to create favorite light settings (core data)
 
 
 Settings:
-<<<<<<< Local Changes
 - Favorite Light Settings (ie. color and brightness) UITableView with label and a swatch (current color at the top)
-
-=======
-- Favorite Light Settings (ie. color and brightness, dim speed)
 X Auto detect light (ON/OFF)
->>>>>>> External Changes
-- Sunset/Sunrise Mode (ON/OFF)
-- Beacon entry detection range
-	- will auto adjust exit range so that exit range is never closer than entry range.
-- Beacon exit detection range
-	- will auto adjust entry range so that entry range is never further than exit range.
-<<<<<<< Local Changes
-- Dim speed (slider)
-- Light off delay (slider)
+X Sunset/Sunrise Mode (ON/OFF)
+X Beacon entry detection range
+	X will auto adjust exit range so that exit range is never closer than entry range.
+X Beacon exit detection range
+	X will auto adjust entry range so that entry range is never further than exit range.
+X Light off delay (slider)
 
 
 UX Elements:
@@ -40,27 +32,21 @@ X Proximity Label
 X Favorites button
 X RGB sliders (change view background color)
 X Dimmer sliders
-=======
 
 Functions:
->>>>>>> External Changes
 X Turn on/off light
-<<<<<<< Local Changes
 X Auto detect light (ON/OFF)
-=======
-		- Will need to use REST call to weather service.
-		- check to see that user has not disabled auto detect
-			- if not, turn on the light if light is not already on.
+		X Will need to use REST call to weather service.
+		X check to see that user has not disabled auto detect
+			X if not, turn on the light if light is not already on.
 when user leaves the room:
-		- check to see that user has not disabled auto detect
-			- wait 30 seconds.
-			- if not, turn off the light if light is not already off
+		X check to see that user has not disabled auto detect
+			X wait to turn off light based on user defined delay time.
 			
 Light features:
-- dimmer
-- RGB color sliders
-- auto detect switch
-- favorite settings (core data)>>>>>>> External Changes
-=======
+X dimmer
+X RGB color sliders
+X auto detect switch
+- favorite settings (core data)
 X RGB sliders
-X Dimmer sliders>>>>>>> External Changes
+X Dimmer sliders

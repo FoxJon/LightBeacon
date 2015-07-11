@@ -33,6 +33,8 @@
 		B09D90B81B233F1F00C2653B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B09D90B61B233F1F00C2653B /* LaunchScreen.xib */; };
 		B09D90C41B233F1F00C2653B /* LightBeaconTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B09D90C31B233F1F00C2653B /* LightBeaconTests.m */; };
 		B09D90CE1B239E3200C2653B /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B09D90CD1B239E3200C2653B /* libz.dylib */; };
+		B0CB51C21B51890700C4AC18 /* LBAFavsTVCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0CB51C11B51890700C4AC18 /* LBAFavsTVCell.xib */; };
+		B0CB51C51B518BC000C4AC18 /* LBAFavsTVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B0CB51C41B518BC000C4AC18 /* LBAFavsTVCell.m */; };
 		B0D4B9571B24758B00713A26 /* Gimbal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0D4B9561B24758B00713A26 /* Gimbal.framework */; };
 		B0D4B95B1B24837300713A26 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = B0D4B95A1B24837300713A26 /* Keys.plist */; };
 		B0E8D2721B4075B3009683A2 /* LBASettingsPlusSign.m in Sources */ = {isa = PBXBuildFile; fileRef = B0E8D2711B4075B3009683A2 /* LBASettingsPlusSign.m */; };
@@ -99,6 +101,9 @@
 		B09D90C21B233F1F00C2653B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B09D90C31B233F1F00C2653B /* LightBeaconTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LightBeaconTests.m; sourceTree = "<group>"; };
 		B09D90CD1B239E3200C2653B /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		B0CB51C11B51890700C4AC18 /* LBAFavsTVCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LBAFavsTVCell.xib; sourceTree = "<group>"; };
+		B0CB51C31B518BC000C4AC18 /* LBAFavsTVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBAFavsTVCell.h; sourceTree = "<group>"; };
+		B0CB51C41B518BC000C4AC18 /* LBAFavsTVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBAFavsTVCell.m; sourceTree = "<group>"; };
 		B0D4B9561B24758B00713A26 /* Gimbal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Gimbal.framework; sourceTree = "<group>"; };
 		B0D4B95A1B24837300713A26 /* Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		B0E8D2701B4075B3009683A2 /* LBASettingsPlusSign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBASettingsPlusSign.h; sourceTree = "<group>"; };
@@ -167,6 +172,8 @@
 				B066292C1B480C8000E2A855 /* LBASunriseCell.xib */,
 				B066292E1B48137C00E2A855 /* LBASunriseTVCell.h */,
 				B066292F1B48137C00E2A855 /* LBASunriseTVCell.m */,
+				B0CB51C31B518BC000C4AC18 /* LBAFavsTVCell.h */,
+				B0CB51C41B518BC000C4AC18 /* LBAFavsTVCell.m */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -174,6 +181,7 @@
 		B09D90981B233F1F00C2653B = {
 			isa = PBXGroup;
 			children = (
+				B0CB51C11B51890700C4AC18 /* LBAFavsTVCell.xib */,
 				B09D90A31B233F1F00C2653B /* LightBeacon */,
 				B09D90C01B233F1F00C2653B /* LightBeaconTests */,
 				B09D90A21B233F1F00C2653B /* Products */,
@@ -373,6 +381,7 @@
 				B0009C111B4632F300B12175 /* LBALeftVC.xib in Resources */,
 				B0009C2A1B465D9900B12175 /* LBACenterVC.xib in Resources */,
 				B066292D1B480C8000E2A855 /* LBASunriseCell.xib in Resources */,
+				B0CB51C21B51890700C4AC18 /* LBAFavsTVCell.xib in Resources */,
 				B0D4B95B1B24837300713A26 /* Keys.plist in Resources */,
 				B0009C131B46330000B12175 /* LBARightVC.xib in Resources */,
 				B06629281B47A52B00E2A855 /* LBASettingsCell.xib in Resources */,
@@ -401,6 +410,7 @@
 				B0009C341B471A3800B12175 /* LBAAlert.m in Sources */,
 				B0009C221B4633AA00B12175 /* LBARightVC.m in Sources */,
 				B032BCF31B2BD25A003AC098 /* LBASettingsTab.m in Sources */,
+				B0CB51C51B518BC000C4AC18 /* LBAFavsTVCell.m in Sources */,
 				B066292B1B47AE3000E2A855 /* LBASettingsTVCell.m in Sources */,
 				B0009C2D1B47110100B12175 /* LBADefaultsManager.m in Sources */,
 				B032BCEF1B2BCF72003AC098 /* LBARectangleView.m in Sources */,
