@@ -16,11 +16,11 @@
 #import <CoreLocation/CoreLocation.h>
 #import "LBADefaultsManager.h"
 #import "LBAAlert.h"
+#import "LBAConstants.h"
 #import "LBALocationManager.h"
 
 @interface LBACenterVC () <GMBLPlaceManagerDelegate, LBALocationManagerDelegate>
 @property (nonatomic) GMBLPlaceManager *placeManager;
-@property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) NSMutableString *log;
 
 @property (nonatomic) BOOL lightIsOn;
@@ -52,9 +52,9 @@
 @property (weak, nonatomic) IBOutlet UISwitch *autoSwitch;
 @property (weak, nonatomic) IBOutlet LBARectangleView *dimBox;
 @property (weak, nonatomic) IBOutlet UILabel *lowBatteryLabel;
-@property (nonatomic) int entrySliderValue;
-@property (nonatomic) int exitSliderValue;
-@property (nonatomic) int exitDelaySliderValue;
+@property (nonatomic) int entrySldrValue;
+@property (nonatomic) int exitSldrValue;
+@property (nonatomic) int exitDelaySldrValue;
 
 //Labels
 @property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
@@ -70,12 +70,14 @@ NSUserDefaults *defaults;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    defaults = [NSUserDefaults standardUserDefaults];
     [self.navigationController setNavigationBarHidden:YES];
-    [self setUpConfigurations];
     [LBADefaultsManager setUpDefaults];
+    [self setUpConfigurations];
     [self setTintColors];
     [self changeBackgroundColor];
     [self setUpVerticalSlider];
+    [LBALocationManager sharedManager].delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -97,7 +99,6 @@ NSUserDefaults *defaults;
     self.lightSwitch.thumbTintColor = self.whiteTintColor;
     self.autoSwitch.onTintColor = self.darkTintColor;
     self.autoSwitch.tintColor = self.liteTintColor;
-    self.autoSwitch.thumbTintColor = self.whiteTintColor;
     self.settingsButton.tintColor = self.liteTintColor;
     self.favsButton.tintColor = self.liteTintColor;
 }
@@ -115,8 +116,22 @@ NSUserDefaults *defaults;
             if (error == nil) {
                 NSData *data = [NSData dataWithContentsOfURL:location];
                 NSDictionary *weatherDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-                NSNumber *sunset = weatherDictionary[@"daily"][@"data"][0][@"sunsetTime"];
-                NSNumber *sunrise = weatherDictionary[@"daily"][@"data"][1][@"sunriseTime"];
+                
+                NSDate * today = [NSDate date];
+                NSCalendar * cal = [[NSCalendar alloc] initWithCalendarIdentifier: NSGregorianCalendar];
+                NSDateComponents * comps = [cal components:NSHourCalendarUnit fromDate:today];
+                
+                NSNumber *sunset;
+                NSNumber *sunrise;
+                
+                if ( [comps hour]>0 && [comps hour] < 12 ){
+                    NSNumber *twenty4Hrs = [NSNumber numberWithInt:60*60*24];
+                    sunset = @([weatherDictionary[@"daily"][@"data"][0][@"sunsetTime"] integerValue] - [twenty4Hrs integerValue]);
+                    sunrise = weatherDictionary[@"daily"][@"data"][0][@"sunriseTime"];
+                }else{
+                    sunset = weatherDictionary[@"daily"][@"data"][0][@"sunsetTime"];
+                    sunrise = weatherDictionary[@"daily"][@"data"][1][@"sunriseTime"];
+                }
                 self.sunriseSunset = @{@"sunrise":sunrise, @"sunset":sunset};
                 
                 if (!self.placeManagerIsMonitoring) {
@@ -131,12 +146,16 @@ NSUserDefaults *defaults;
 
 
 - (void)setUpConfigurations{
-    self.lightIsOn = NO;
+    self.lightSwitch.on = [defaults boolForKey:LIGHT_SWITCH_ON];
+    self.lightIsOn = self.lightSwitch.on;
+    self.autoSwitch.on = [defaults boolForKey:AUTO_LIGHT_ON];
     self.delayTimerIsOn = NO;
     self.userLightOffTimerIsOn = NO;
-    
     self.placeManager = [GMBLPlaceManager new];
     self.placeManager.delegate = self;
+    self.sunriseSunsetSwitchIsOn = [defaults boolForKey:SUNRISE_SUNSET_MODE];
+    self.entrySldrValue = [defaults floatForKey:LIGHT_ON_THRESHOLD];
+    self.exitSldrValue = [defaults floatForKey:LIGHT_OFF_THRESHOLD];
     
     if (!self.sunriseSunsetSwitchIsOn && !self.placeManagerIsMonitoring) {
         [GMBLPlaceManager startMonitoring];
@@ -224,37 +243,31 @@ NSUserDefaults *defaults;
 
 
 - (void)placeManager:(GMBLPlaceManager *)manager didReceiveBeaconSighting:(GMBLBeaconSighting *)sighting forVisits:(NSArray *)visits{
-    if ([self checkIfIsBetweenSunsetAndSunrise] == NO && self.sunriseSunsetSwitchIsOn) {
+    if ([defaults boolForKey:SUNRISE_SUNSET_MODE] && ![self checkIfIsBetweenSunsetAndSunrise]) {
         return;
     }else{
         NSString * sightingLog = [LBALogManager createDeveloperLogsWithSighting:sighting];
         [self updateLogWithString:sightingLog];
         self.distanceLabel.text = [NSString stringWithFormat:@"%ld", (long)sighting.RSSI];
         if (!self.lightIsOn && !self.delayTimerIsOn) {
-            if ((int)labs(sighting.RSSI) < self.entrySliderValue){
+            if ((int)labs(sighting.RSSI) < labs(self.entrySldrValue)){
                 if (sighting.beacon.batteryLevel == GMBLBatteryLevelLow) {
                     self.lowBatteryLabel.hidden = NO;
                 }
                 [self startDelay];
                 self.lightSwitch.on = YES;
+                self.lightIsOn = YES;
                 [self changeBackgroundColor];
                 [self setTintColors];
             }
         }
         if (self.lightIsOn && !self.delayTimerIsOn && !self.userLightOffTimerIsOn) {
-            if ((int)labs(sighting.RSSI) > self.entrySliderValue){
+            if ((int)labs(sighting.RSSI) > labs(self.entrySldrValue)){
                 [self startUserLightOffTimer];
                 [self setTintColors];
             }
         }
     }
-}
-
-#pragma mark - LBALocation DELEGATE
-
-- (void)setCurrentLocation:(NSDictionary *)currentLocation{
-    self.currentLocation = currentLocation;
-    [self getSunriseSunset];
 }
 
 #pragma mark - ACTIONS
@@ -263,11 +276,14 @@ NSUserDefaults *defaults;
     
     if (sender.on) {
         self.lightIsOn = YES;
+        [defaults setBool:YES forKey:LIGHT_SWITCH_ON];
     }else{
         self.lightIsOn = NO;
         self.autoSwitch.on = NO;
         [GMBLPlaceManager stopMonitoring];
         self.placeManagerIsMonitoring = NO;
+        [defaults setBool:NO forKey:LIGHT_SWITCH_ON];
+        [defaults setBool:NO forKey:AUTO_LIGHT_ON];
     }
     [self setTintColors];
     [self changeBackgroundColor];
@@ -280,10 +296,12 @@ NSUserDefaults *defaults;
             self.placeManagerIsMonitoring = YES;
         }
         [self setTintColors];
+        [defaults setBool:YES forKey:AUTO_LIGHT_ON];
     }else{
         [GMBLPlaceManager stopMonitoring];
         self.placeManagerIsMonitoring = NO;
         [self setTintColors];
+        [defaults setBool:NO forKey:AUTO_LIGHT_ON];
     }
 }
 
@@ -333,6 +351,28 @@ NSUserDefaults *defaults;
     [self adjustBlueValueWithOperator:@"+"];
 }
 
+- (IBAction)settingsButtonTapped:(UIButton *)sender {
+    switch (sender.tag) {
+        case 0:{
+            [self.delegate moveCenterPanelToOriginalPosition];
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+            break;
+        }
+        case 1: {
+            [self.delegate moveCenterPanelToTheRight];
+            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+- (IBAction)favsButtonTapped:(UIBarButtonItem *)sender {
+    [self.delegate moveRightPanelToTheLeft];
+    self.settingsButton.enabled = NO;
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+}
 
 #pragma mark - HELPERS
 
@@ -363,13 +403,13 @@ NSUserDefaults *defaults;
 - (void)startDelay{
     self.delayTimerIsOn = YES;
     NSTimer *timer = [NSTimer timerWithTimeInterval:10 target:self selector:@selector(lightSwitchOn) userInfo:nil repeats:NO];
-    [timer fire];
+    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
 }
 
 
 - (void)startUserLightOffTimer{
     self.userLightOffTimerIsOn = YES;
-    [self performSelector:@selector(turnOffUserLightOffTimer) withObject:nil afterDelay:(int)self.exitDelaySliderValue];
+    [self performSelector:@selector(turnOffUserLightOffTimer) withObject:nil afterDelay:(int)self.exitDelaySldrValue];
 }
 
 
@@ -436,29 +476,13 @@ NSUserDefaults *defaults;
     return NO;
 }
 
-#pragma mark - ACTIONS
 
-- (IBAction)settingsButtonTapped:(UIBarButtonItem *)sender {
-    switch (sender.tag) {
-        case 0:{
-            [self.delegate moveCenterPanelToOriginalPosition];
-            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
-            break;
-        }
-        case 1: {
-            [self.delegate moveCenterPanelToTheRight];
-            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-            break;
-        }
-        default:
-            break;
-    }
-}
 
-- (IBAction)favsButtonTapped:(UIBarButtonItem *)sender {
-    [self.delegate moveRightPanelToTheLeft];
-    self.settingsButton.enabled = NO;
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+#pragma mark - LBALocation DELEGATE
+
+- (void)updateCurrentLocation:(NSDictionary *)currentLocation{
+    self.currentLocation = currentLocation;
+    [self getSunriseSunset];
 }
 
 #pragma mark - LBARightVCDelegate
@@ -468,20 +492,17 @@ NSUserDefaults *defaults;
 }
 
 #pragma mark - LBALeftVCDelegate
-- (void)setSunriseSunsetSwitchStatus:(BOOL)status{
-    self.sunriseSunsetSwitchIsOn = status;
+
+- (void)updateEntrySliderValue:(int)entrySliderValue{
+    self.entrySldrValue = entrySliderValue;
 }
 
-- (void)setEntrySliderValue:(int)entrySliderValue{
-    self.entrySliderValue = entrySliderValue;
+- (void)updateExitSliderValue:(int)exitSliderValue{
+    self.exitSldrValue = exitSliderValue;
 }
 
-- (void)setExitSliderValue:(int)exitSliderValue{
-    self.exitSliderValue = exitSliderValue;
-}
-
-- (void)setExitDelaySliderValue:(int)exitDelaySliderValue{
-    self.exitDelaySliderValue = exitDelaySliderValue;
+- (void)updateExitDelaySliderValue:(int)exitDelaySliderValue{
+    self.exitDelaySldrValue = exitDelaySliderValue;
 }
 
 

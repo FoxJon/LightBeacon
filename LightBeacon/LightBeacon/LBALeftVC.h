@@ -10,10 +10,9 @@
 
 @protocol LBALeftVCDelegate <NSObject>
 
--(void)setSunriseSunsetSwitchStatus:(BOOL)status;
--(void)setEntrySliderValue:(int)value;
--(void)setExitSliderValue:(int)value;
--(void)setExitDelaySliderValue:(int)value;
+-(void)updateEntrySliderValue:(int)value;
+-(void)updateExitSliderValue:(int)value;
+-(void)updateExitDelaySliderValue:(int)value;
 
 @end
 
