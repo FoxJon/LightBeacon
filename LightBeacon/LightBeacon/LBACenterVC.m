@@ -74,6 +74,7 @@ NSUserDefaults *defaults;
     [super viewDidLoad];
     self.gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleCloseButtonTap)];
     [self.view addGestureRecognizer:self.gestureRecognizer];
+    self.gestureRecognizer.enabled = NO;
 
     defaults = [NSUserDefaults standardUserDefaults];
     [self.navigationController setNavigationBarHidden:YES];
@@ -364,13 +365,11 @@ NSUserDefaults *defaults;
     switch (sender.tag) {
         case 0:{
             [self.delegate moveCenterPanelToOriginalPosition];
-            self.gestureRecognizer.enabled = YES;
             [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
             break;
         }
         case 1: {
             [self.delegate moveCenterPanelToTheRight];
-            self.gestureRecognizer.enabled = NO;
             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
             break;
         }
@@ -381,6 +380,7 @@ NSUserDefaults *defaults;
 
 - (IBAction)favsButtonTapped:(UIBarButtonItem *)sender {
     [self.delegate moveRightPanelToTheLeft];
+    self.gestureRecognizer.enabled = YES;
     self.settingsButton.enabled = NO;
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
 }
@@ -503,6 +503,7 @@ NSUserDefaults *defaults;
 
 - (void)handleCloseButtonTap{
     [self.delegate moveRightPanelToOriginalPosition];
+    self.gestureRecognizer.enabled = NO;
 }
 
 - (void)handleEditButtonTap{
