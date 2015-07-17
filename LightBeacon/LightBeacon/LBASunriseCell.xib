@@ -31,7 +31,7 @@
                                     <constraint firstAttribute="height" constant="21" id="2q0-Xj-OgQ"/>
                                     <constraint firstAttribute="width" constant="117" id="742-eE-QDh"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="17"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -41,7 +41,7 @@
                                     <constraint firstAttribute="height" constant="33" id="edI-b1-l76"/>
                                     <constraint firstAttribute="width" constant="143" id="jge-mC-WhK"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="10"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>

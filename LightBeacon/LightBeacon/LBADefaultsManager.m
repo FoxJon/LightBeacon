@@ -22,6 +22,10 @@
         [defaults setBool:YES forKey:SUNRISE_SUNSET_MODE];
         [defaults setBool:YES forKey:AUTO_LIGHT_ON];
         [defaults setBool:NO forKey:LIGHT_SWITCH_ON];
+        [defaults setFloat:255 forKey:CURRENT_COLOR_RED];
+        [defaults setFloat:255 forKey:CURRENT_COLOR_GREEN];
+        [defaults setFloat:255 forKey:CURRENT_COLOR_BLUE];
+        [defaults setFloat:1 forKey:CURRENT_ALPHA];
     };
 }
 @end

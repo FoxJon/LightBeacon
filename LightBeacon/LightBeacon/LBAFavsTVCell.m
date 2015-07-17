@@ -11,13 +11,14 @@
 @implementation LBAFavsTVCell
 
 - (void)awakeFromNib {
-    // Initialization code
+    self.favsTextField.delegate = self;
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [self.favsTextField resignFirstResponder];
+    self.favsTextField.userInteractionEnabled = NO;
+    [self.delegate keyboardResigned];
+    return YES;
 }
 
 @end

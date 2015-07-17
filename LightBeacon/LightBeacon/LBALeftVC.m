@@ -23,7 +23,6 @@
 
 @interface LBALeftVC () <UITableViewDelegate, UITableViewDataSource>
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) LBASunriseTVCell *sunriseCell;
 @property (nonatomic) LBASettingsTVCell *entryCell;
 @property (nonatomic) LBASettingsTVCell *exitCell;
@@ -37,7 +36,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.tableView.layoutMargins = UIEdgeInsetsZero;
     defaults = [NSUserDefaults standardUserDefaults];
 }
 
@@ -130,6 +128,21 @@
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
     UIView *footer = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 0)];
     return footer;
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+    }
+    
+    if ([cell respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)]) {
+        [cell setPreservesSuperviewLayoutMargins:NO];
+    }
+    
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+    }
 }
 
 #pragma mark - ACTIONS
@@ -241,7 +254,6 @@
 
 #pragma mark - HELPERS
 - (id)setUpCell:(id)cell WithIdentifier:(NSString *)identifier andNibName:(NSString *)nibName forTableview:(UITableView *)tableView{
-    cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     [tableView registerNib:[UINib nibWithNibName:nibName bundle:nil] forCellReuseIdentifier:identifier];
     cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     return cell;

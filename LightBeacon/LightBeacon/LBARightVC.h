@@ -12,6 +12,11 @@
 
 @optional
 - (void)handleCloseButtonTap;
+- (void)handleEditButtonTap;
+- (void)handleDoneButtonTap;
+-(void)changeBackgroundColorToColor:(UIColor *)color;
+
+
 
 @end
 
