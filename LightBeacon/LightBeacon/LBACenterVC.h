@@ -15,6 +15,8 @@
 @optional
 -(void)moveCenterPanelToTheRight;
 -(void)moveRightPanelToTheLeft;
+-(void)moveRightPanelToFullLeft;
+-(void)moveRightPanelFromFullLeft;
 
 @required
 -(void)moveCenterPanelToOriginalPosition;

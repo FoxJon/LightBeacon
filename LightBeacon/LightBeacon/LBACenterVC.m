@@ -33,6 +33,8 @@
 @property (nonatomic) NSDictionary *sunriseSunset;
 @property (nonatomic) BOOL sunriseSunsetSwitchIsOn;
 @property (weak, nonatomic) IBOutlet UIView *centerContainerView;
+@property (nonatomic) UITapGestureRecognizer *gestureRecognizer;
+
 
 // User configurable properties
 @property (nonatomic) BOOL userLightOffTimerIsOn;
@@ -70,6 +72,9 @@ NSUserDefaults *defaults;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleCloseButtonTap)];
+    [self.view addGestureRecognizer:self.gestureRecognizer];
+
     defaults = [NSUserDefaults standardUserDefaults];
     [self.navigationController setNavigationBarHidden:YES];
     [LBADefaultsManager setUpDefaults];
@@ -100,7 +105,7 @@ NSUserDefaults *defaults;
     self.autoSwitch.onTintColor = self.darkTintColor;
     self.autoSwitch.tintColor = self.liteTintColor;
     self.settingsButton.tintColor = self.liteTintColor;
-    self.favsButton.tintColor = self.liteTintColor;
+    self.favsButton.tintColor = [UIColor darkGrayColor];
 }
 
 
@@ -306,25 +311,29 @@ NSUserDefaults *defaults;
 }
 
 - (IBAction)redSliderMoved:(UISlider *)sender {
-    int value = sender.value;
-    self.redLabel.text = [NSString stringWithFormat:@"%d",value];
+    float value = sender.value;
+    self.redLabel.text = [NSString stringWithFormat:@"%d",(int)value];
     [self updateUserBackgroundColorWithRedColor:value green:0 blue:0 alpha:0];
+    [defaults setFloat:value forKey:CURRENT_COLOR_RED];
 }
 
 - (IBAction)greenSliderMoved:(UISlider *)sender {
-    int value = sender.value;
-    self.greenLabel.text = [NSString stringWithFormat:@"%d",value];
+    float value = sender.value;
+    self.greenLabel.text = [NSString stringWithFormat:@"%d",(int)value];
     [self updateUserBackgroundColorWithRedColor:0 green:value blue:0 alpha:0];
+    [defaults setFloat:value forKey:CURRENT_COLOR_GREEN];
 }
 
 - (IBAction)blueSliderMoved:(UISlider *)sender {
-    int value = sender.value;
-    self.blueLabel.text = [NSString stringWithFormat:@"%d",value];
+    float value = sender.value;
+    self.blueLabel.text = [NSString stringWithFormat:@"%d",(int)value];
     [self updateUserBackgroundColorWithRedColor:0 green:0 blue:value alpha:0];
+    [defaults setFloat:value forKey:CURRENT_COLOR_BLUE];
 }
 
 - (IBAction)dimmerValueChanged:(UISlider *)sender {
     [self updateUserBackgroundColorWithRedColor:0 green:0 blue:0 alpha:sender.value];
+    [defaults setFloat:sender.value forKey:CURRENT_ALPHA];
 }
 
 - (IBAction)redMinusButton:(UIButton *)sender {
@@ -355,11 +364,13 @@ NSUserDefaults *defaults;
     switch (sender.tag) {
         case 0:{
             [self.delegate moveCenterPanelToOriginalPosition];
+            self.gestureRecognizer.enabled = YES;
             [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
             break;
         }
         case 1: {
             [self.delegate moveCenterPanelToTheRight];
+            self.gestureRecognizer.enabled = NO;
             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
             break;
         }
@@ -443,6 +454,7 @@ NSUserDefaults *defaults;
         self.redSlider.value = redValue;
         self.redLabel.text = [NSString stringWithFormat:@"%d",redValue];
         [self updateUserBackgroundColorWithRedColor:redValue green:0 blue:0 alpha:0];
+        [defaults setFloat:self.redSlider.value forKey:CURRENT_COLOR_RED];
     }
 }
 
@@ -453,6 +465,7 @@ NSUserDefaults *defaults;
         self.greenSlider.value = greenValue;
         self.greenLabel.text = [NSString stringWithFormat:@"%d",greenValue];
         [self updateUserBackgroundColorWithRedColor:0 green:greenValue blue:0 alpha:0];
+        [defaults setFloat:self.greenSlider.value forKey:CURRENT_COLOR_GREEN];
     }
 }
 
@@ -463,6 +476,7 @@ NSUserDefaults *defaults;
         self.blueSlider.value = blueValue;
         self.blueLabel.text = [NSString stringWithFormat:@"%d",blueValue];
         [self updateUserBackgroundColorWithRedColor:0 green:0 blue:blueValue alpha:0];
+        [defaults setFloat:self.blueSlider.value forKey:CURRENT_COLOR_BLUE];
     }
 }
 
@@ -491,6 +505,29 @@ NSUserDefaults *defaults;
     [self.delegate moveRightPanelToOriginalPosition];
 }
 
+- (void)handleEditButtonTap{
+    [self.delegate moveRightPanelToFullLeft];
+}
+
+- (void)handleDoneButtonTap{
+    [self.delegate moveRightPanelFromFullLeft];
+}
+
+-(void)changeBackgroundColorToColor:(UIColor *)color{
+    const CGFloat* components = CGColorGetComponents(color.CGColor);
+    
+    [UIView animateWithDuration:0.4 animations:^{
+        self.centerContainerView.backgroundColor = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:CGColorGetAlpha(color.CGColor)];
+    }];
+    self.redLabel.text = [NSString stringWithFormat:@"%d", (int)(components[0] * 255)];
+    self.redSlider.value = components[0] * 255;
+    self.greenLabel.text = [NSString stringWithFormat:@"%d", (int)(components[1] * 255)];
+    self.greenSlider.value = components[1] * 255;
+    self.blueLabel.text = [NSString stringWithFormat:@"%d", (int)(components[2] * 255)];
+    self.blueSlider.value = components[2] * 255;
+    self.dimmerSlider.value = CGColorGetAlpha(color.CGColor);
+}
+
 #pragma mark - LBALeftVCDelegate
 
 - (void)updateEntrySliderValue:(int)entrySliderValue{
@@ -504,6 +541,5 @@ NSUserDefaults *defaults;
 - (void)updateExitDelaySliderValue:(int)exitDelaySliderValue{
     self.exitDelaySldrValue = exitDelaySliderValue;
 }
-
 
 @end

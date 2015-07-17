@@ -74,6 +74,18 @@
     }];
 }
 
+-(void)moveRightPanelToFullLeft{
+    [UIView animateWithDuration:0.6 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.4 options:0 animations:^{
+        self.rightVC.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    } completion:nil];
+}
+
+-(void)moveRightPanelFromFullLeft{
+    [UIView animateWithDuration:0.6 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.4 options:0 animations:^{
+        self.rightVC.view.frame = CGRectMake(75, 0, self.view.frame.size.width, self.view.frame.size.height);
+    } completion:nil];
+}
+
 -(void)moveCenterPanelToOriginalPosition{
     self.centerVC.settingsButton.tag = 0;
     [UIView animateWithDuration:0.4 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:0 animations:^{

@@ -16,5 +16,10 @@
 #define AUTO_LIGHT_ON @"Auto_Light_On"
 #define LIGHT_SWITCH_ON @"Light_On"
 #define DIMMER_VALUE @"Dimmer_Value"
+#define CURRENT_COLOR_RED @"Current_Color_Red"
+#define CURRENT_COLOR_GREEN @"Current_Color_Green"
+#define CURRENT_COLOR_BLUE @"Current_Color_Blue"
+#define CURRENT_ALPHA @"Current_Alpha"
+#define FAVORITES_ARRAY @"Favorites_Array"
 
 #endif
