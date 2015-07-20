@@ -245,7 +245,7 @@
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                     <connections>
-                                        <action selector="redMinusButton:" destination="-1" eventType="touchUpInside" id="AaG-47-WRj"/>
+                                        <action selector="redMinusButton:" destination="-1" eventType="touchUpInside" id="oj2-G4-FEo"/>
                                     </connections>
                                 </button>
                             </subviews>

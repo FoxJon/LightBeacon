@@ -18,6 +18,8 @@
 #import "LBAAlert.h"
 #import "LBAConstants.h"
 #import "LBALocationManager.h"
+#import "User.h"
+#import "LBACoreDataManager.h"
 
 @interface LBACenterVC () <GMBLPlaceManagerDelegate, LBALocationManagerDelegate>
 @property (nonatomic) GMBLPlaceManager *placeManager;
@@ -34,7 +36,7 @@
 @property (nonatomic) BOOL sunriseSunsetSwitchIsOn;
 @property (weak, nonatomic) IBOutlet UIView *centerContainerView;
 @property (nonatomic) UITapGestureRecognizer *gestureRecognizer;
-
+@property (nonatomic) User *user;
 
 // User configurable properties
 @property (nonatomic) BOOL userLightOffTimerIsOn;
@@ -68,21 +70,27 @@
 
 @implementation LBACenterVC
 
-NSUserDefaults *defaults;
-
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.navigationController setNavigationBarHidden:YES];
+    
     self.gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleCloseButtonTap)];
     [self.view addGestureRecognizer:self.gestureRecognizer];
+    self.gestureRecognizer.enabled = NO;
 
-    defaults = [NSUserDefaults standardUserDefaults];
-    [self.navigationController setNavigationBarHidden:YES];
-    [LBADefaultsManager setUpDefaults];
-    [self setUpConfigurations];
+    [[LBADefaultsManager sharedManager] setUpDefaults];
+    self.user = [User fetchCurrentUser];
+    
+    [self setUpUserConfigurations];
     [self setTintColors];
     [self changeBackgroundColor];
     [self setUpVerticalSlider];
     [LBALocationManager sharedManager].delegate = self;
+    
+    if (self.autoSwitch) {
+        [GMBLPlaceManager startMonitoring];
+        self.placeManagerIsMonitoring = YES;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -108,6 +116,13 @@ NSUserDefaults *defaults;
     self.favsButton.tintColor = [UIColor darkGrayColor];
 }
 
+-(void)viewDidAppear:(BOOL)animated{
+    [self changeBackgroundColor];
+}
+
+-(void)dealloc{
+    [self saveContext];
+}
 
 - (void)getSunriseSunset{
     if (self.sunriseSunsetSwitchIsOn && [CLLocationManager locationServicesEnabled]) {
@@ -150,17 +165,28 @@ NSUserDefaults *defaults;
 }
 
 
-- (void)setUpConfigurations{
-    self.lightSwitch.on = [defaults boolForKey:LIGHT_SWITCH_ON];
+- (void)setUpUserConfigurations{
+    self.lightSwitch.on = [self.user.lightSwitchOn boolValue];
     self.lightIsOn = self.lightSwitch.on;
-    self.autoSwitch.on = [defaults boolForKey:AUTO_LIGHT_ON];
+    self.autoSwitch.on = [self.user.autoLightOn boolValue];
     self.delayTimerIsOn = NO;
     self.userLightOffTimerIsOn = NO;
     self.placeManager = [GMBLPlaceManager new];
     self.placeManager.delegate = self;
-    self.sunriseSunsetSwitchIsOn = [defaults boolForKey:SUNRISE_SUNSET_MODE];
-    self.entrySldrValue = [defaults floatForKey:LIGHT_ON_THRESHOLD];
-    self.exitSldrValue = [defaults floatForKey:LIGHT_OFF_THRESHOLD];
+    self.sunriseSunsetSwitchIsOn = [self.user.sunriseSunsetMode boolValue];
+    self.entrySldrValue = [self.user.lightOnThreshold floatValue];
+    self.exitSldrValue = [self.user.lightOffThreshold floatValue];
+    self.redColor = [self.user.red floatValue];
+    self.redSlider.value = [self.user.red floatValue];
+    self.redLabel.text = [NSString stringWithFormat:@"%d", [self.user.red intValue]];
+    self.greenColor = [self.user.green floatValue];
+    self.greenSlider.value = [self.user.green floatValue];
+    self.greenLabel.text = [NSString stringWithFormat:@"%d", [self.user.green intValue]];
+    self.blueColor = [self.user.blue floatValue];
+    self.blueSlider.value = [self.user.blue floatValue];
+    self.blueLabel.text = [NSString stringWithFormat:@"%d", [self.user.blue intValue]];
+    self.alpha = [self.user.alpha floatValue];
+    self.dimmerSlider.value = [self.user.dimmerValue floatValue];
     
     if (!self.sunriseSunsetSwitchIsOn && !self.placeManagerIsMonitoring) {
         [GMBLPlaceManager startMonitoring];
@@ -205,34 +231,6 @@ NSUserDefaults *defaults;
     return _log;
 }
 
--(int)redColor{
-    if (!_redColor) {
-        _redColor = [self.redLabel.text intValue];
-    }
-    return _redColor;
-}
-
--(int)greenColor{
-    if (!_greenColor) {
-        _greenColor = [self.greenLabel.text intValue];
-    }
-    return _greenColor;
-}
-
--(int)blueColor{
-    if (!_blueColor) {
-        _blueColor = [self.blueLabel.text intValue];
-    }
-    return _blueColor;
-}
-
--(float)alpha{
-    if (!_alpha) {
-        _alpha = self.dimmerSlider.value;
-    }
-    return _alpha;
-}
-
 
 #pragma mark - GMBL PLACE MANAGER DELEGATE METHODS
 - (void)placeManager:(GMBLPlaceManager *)manager didBeginVisit:(GMBLVisit *)visit{
@@ -248,7 +246,7 @@ NSUserDefaults *defaults;
 
 
 - (void)placeManager:(GMBLPlaceManager *)manager didReceiveBeaconSighting:(GMBLBeaconSighting *)sighting forVisits:(NSArray *)visits{
-    if ([defaults boolForKey:SUNRISE_SUNSET_MODE] && ![self checkIfIsBetweenSunsetAndSunrise]) {
+    if (self.user.sunriseSunsetMode && ![self checkIfIsBetweenSunsetAndSunrise]) {
         return;
     }else{
         NSString * sightingLog = [LBALogManager createDeveloperLogsWithSighting:sighting];
@@ -281,14 +279,14 @@ NSUserDefaults *defaults;
     
     if (sender.on) {
         self.lightIsOn = YES;
-        [defaults setBool:YES forKey:LIGHT_SWITCH_ON];
+        self.user.lightSwitchOn = [NSNumber numberWithBool:YES];
     }else{
         self.lightIsOn = NO;
         self.autoSwitch.on = NO;
         [GMBLPlaceManager stopMonitoring];
         self.placeManagerIsMonitoring = NO;
-        [defaults setBool:NO forKey:LIGHT_SWITCH_ON];
-        [defaults setBool:NO forKey:AUTO_LIGHT_ON];
+        self.user.lightSwitchOn = [NSNumber numberWithBool:NO];
+        self.user.autoLightOn = [NSNumber numberWithBool:NO];
     }
     [self setTintColors];
     [self changeBackgroundColor];
@@ -301,39 +299,37 @@ NSUserDefaults *defaults;
             self.placeManagerIsMonitoring = YES;
         }
         [self setTintColors];
-        [defaults setBool:YES forKey:AUTO_LIGHT_ON];
+        self.user.autoLightOn = [NSNumber numberWithBool:YES];
     }else{
         [GMBLPlaceManager stopMonitoring];
         self.placeManagerIsMonitoring = NO;
         [self setTintColors];
-        [defaults setBool:NO forKey:AUTO_LIGHT_ON];
+        self.user.autoLightOn = [NSNumber numberWithBool:NO];
     }
 }
 
 - (IBAction)redSliderMoved:(UISlider *)sender {
-    float value = sender.value;
-    self.redLabel.text = [NSString stringWithFormat:@"%d",(int)value];
-    [self updateUserBackgroundColorWithRedColor:value green:0 blue:0 alpha:0];
-    [defaults setFloat:value forKey:CURRENT_COLOR_RED];
+    self.redLabel.text = [NSString stringWithFormat:@"%d",(int)sender.value];
+    [self updateUserBackgroundColorWithRedColor:sender.value green:0 blue:0 alpha:0];
+    self.user.red = [NSNumber numberWithFloat:sender.value];
 }
 
 - (IBAction)greenSliderMoved:(UISlider *)sender {
-    float value = sender.value;
-    self.greenLabel.text = [NSString stringWithFormat:@"%d",(int)value];
-    [self updateUserBackgroundColorWithRedColor:0 green:value blue:0 alpha:0];
-    [defaults setFloat:value forKey:CURRENT_COLOR_GREEN];
+    self.greenLabel.text = [NSString stringWithFormat:@"%d",(int)sender.value];
+    [self updateUserBackgroundColorWithRedColor:0 green:sender.value blue:0 alpha:0];
+    self.user.green = [NSNumber numberWithFloat:sender.value];
 }
 
 - (IBAction)blueSliderMoved:(UISlider *)sender {
-    float value = sender.value;
-    self.blueLabel.text = [NSString stringWithFormat:@"%d",(int)value];
-    [self updateUserBackgroundColorWithRedColor:0 green:0 blue:value alpha:0];
-    [defaults setFloat:value forKey:CURRENT_COLOR_BLUE];
+    self.blueLabel.text = [NSString stringWithFormat:@"%d",(int)sender.value];
+    [self updateUserBackgroundColorWithRedColor:0 green:0 blue:sender.value alpha:0];
+    self.user.blue = [NSNumber numberWithFloat:sender.value];
 }
 
 - (IBAction)dimmerValueChanged:(UISlider *)sender {
     [self updateUserBackgroundColorWithRedColor:0 green:0 blue:0 alpha:sender.value];
-    [defaults setFloat:sender.value forKey:CURRENT_ALPHA];
+    self.user.alpha = [NSNumber numberWithFloat:sender.value];
+    self.user.dimmerValue = [NSNumber numberWithFloat:sender.value];
 }
 
 - (IBAction)redMinusButton:(UIButton *)sender {
@@ -364,13 +360,11 @@ NSUserDefaults *defaults;
     switch (sender.tag) {
         case 0:{
             [self.delegate moveCenterPanelToOriginalPosition];
-            self.gestureRecognizer.enabled = YES;
             [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
             break;
         }
         case 1: {
             [self.delegate moveCenterPanelToTheRight];
-            self.gestureRecognizer.enabled = NO;
             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
             break;
         }
@@ -380,7 +374,9 @@ NSUserDefaults *defaults;
 }
 
 - (IBAction)favsButtonTapped:(UIBarButtonItem *)sender {
+    [self saveContext];
     [self.delegate moveRightPanelToTheLeft];
+    self.gestureRecognizer.enabled = YES;
     self.settingsButton.enabled = NO;
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
 }
@@ -439,9 +435,9 @@ NSUserDefaults *defaults;
 
 - (void)changeBackgroundColor{
     [UIView animateWithDuration:1.0 animations:^{
-        int red = [self.redLabel.text intValue] / 255.0;
-        int green = [self.greenLabel.text intValue] / 255.0;
-        int blue = [self.blueLabel.text intValue] / 255.0;
+        float red = [self.redLabel.text intValue] / 255.0;
+        float green = [self.greenLabel.text intValue] / 255.0;
+        float blue = [self.blueLabel.text intValue] / 255.0;
         float alpha = self.alpha;
         self.centerContainerView.backgroundColor = self.lightIsOn ? [UIColor colorWithRed:red green:green blue:blue alpha:alpha] : [UIColor colorWithRed:0.098f green:0.098f blue:0.098f alpha:1.0f];
     }];
@@ -454,7 +450,8 @@ NSUserDefaults *defaults;
         self.redSlider.value = redValue;
         self.redLabel.text = [NSString stringWithFormat:@"%d",redValue];
         [self updateUserBackgroundColorWithRedColor:redValue green:0 blue:0 alpha:0];
-        [defaults setFloat:self.redSlider.value forKey:CURRENT_COLOR_RED];
+        self.user.red = [NSNumber numberWithFloat:self.redSlider.value];
+
     }
 }
 
@@ -465,7 +462,7 @@ NSUserDefaults *defaults;
         self.greenSlider.value = greenValue;
         self.greenLabel.text = [NSString stringWithFormat:@"%d",greenValue];
         [self updateUserBackgroundColorWithRedColor:0 green:greenValue blue:0 alpha:0];
-        [defaults setFloat:self.greenSlider.value forKey:CURRENT_COLOR_GREEN];
+        self.user.green = [NSNumber numberWithFloat:self.greenSlider.value];
     }
 }
 
@@ -476,7 +473,7 @@ NSUserDefaults *defaults;
         self.blueSlider.value = blueValue;
         self.blueLabel.text = [NSString stringWithFormat:@"%d",blueValue];
         [self updateUserBackgroundColorWithRedColor:0 green:0 blue:blueValue alpha:0];
-        [defaults setFloat:self.blueSlider.value forKey:CURRENT_COLOR_BLUE];
+        self.user.blue = [NSNumber numberWithFloat:self.blueSlider.value];
     }
 }
 
@@ -490,8 +487,6 @@ NSUserDefaults *defaults;
     return NO;
 }
 
-
-
 #pragma mark - LBALocation DELEGATE
 
 - (void)updateCurrentLocation:(NSDictionary *)currentLocation{
@@ -503,6 +498,7 @@ NSUserDefaults *defaults;
 
 - (void)handleCloseButtonTap{
     [self.delegate moveRightPanelToOriginalPosition];
+    self.gestureRecognizer.enabled = NO;
 }
 
 - (void)handleEditButtonTap{
@@ -540,6 +536,11 @@ NSUserDefaults *defaults;
 
 - (void)updateExitDelaySliderValue:(int)exitDelaySliderValue{
     self.exitDelaySldrValue = exitDelaySliderValue;
+}
+
+#pragma mark - private methods
+- (void)saveContext{
+    [[LBACoreDataManager sharedManager]saveContextForEntity:@"User"];
 }
 
 @end
