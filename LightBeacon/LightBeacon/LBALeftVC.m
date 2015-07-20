@@ -7,7 +7,6 @@
 //
 
 #import "LBALeftVC.h"
-#import "LBADefaultsManager.h"
 #import "LBAAlert.h"
 #import "LBALocationManager.h"
 #import "LBASettingsTVCell.h"
@@ -15,6 +14,8 @@
 #import "LBASettingsMinusSign.h"
 #import "LBASettingsPlusSign.h"
 #import "LBAConstants.h"
+#import "LBACoreDataManager.h"
+#import "User.h"
 #import <CoreLocation/CoreLocation.h>
 
 #define ENTRY_TAG 1
@@ -27,18 +28,20 @@
 @property (nonatomic) LBASettingsTVCell *entryCell;
 @property (nonatomic) LBASettingsTVCell *exitCell;
 @property (nonatomic) LBASettingsTVCell *exitDelayCell;
+@property (nonatomic) User *user;
 @end
 
 @implementation LBALeftVC
-{
-    NSUserDefaults *defaults;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    defaults = [NSUserDefaults standardUserDefaults];
+    self.user = [User fetchCurrentUser];
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    [self saveContext];
+}
 
 #pragma mark - TABLEVIEW DATASOURCE
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -54,7 +57,7 @@
             self.sunriseCell = [self setUpCell:cell WithIdentifier:@"SunriseCell" andNibName:@"LBASunriseCell" forTableview:tableView];
             [self.sunriseCell.sunriseSunsetSwitch addTarget:self action:@selector(sunriseSwitch:) forControlEvents:UIControlEventValueChanged];
             
-            if ([defaults boolForKey:SUNRISE_SUNSET_MODE]) {
+            if (self.user.sunriseSunsetMode) {
                 self.sunriseCell.sunriseSunsetSwitch.on = YES;
             }else{
                 self.sunriseCell.sunriseSunsetSwitch.on = NO;
@@ -151,13 +154,13 @@
     if (sender.on) {
         if ([CLLocationManager locationServicesEnabled]) {
             [[LBALocationManager sharedManager] startUpdatingLocation];
-            [defaults setBool:YES forKey:SUNRISE_SUNSET_MODE];
+            self.user.sunriseSunsetMode = [NSNumber numberWithBool:YES];
         }else{
-            [defaults setBool:NO forKey:SUNRISE_SUNSET_MODE];
+            self.user.sunriseSunsetMode = [NSNumber numberWithBool:NO];
             [[LBAAlert sharedAlert] withTitle:@"Location Services Disabled" message:@"Please turn on location services in order to use this feature."];
         }
     }else{
-        [defaults setBool:NO forKey:SUNRISE_SUNSET_MODE];
+        self.user.sunriseSunsetMode = [NSNumber numberWithBool:NO];
     }
 }
 
@@ -168,11 +171,11 @@
             if (sender.value >= self.exitCell.thresholdSlider.value) {
                 self.exitCell.thresholdSlider.value = sender.value + 1;
                 self.exitCell.thresholdValue.text = [NSString stringWithFormat:@"-%i", (int)self.exitCell.thresholdSlider.value];
-                [defaults setFloat:self.exitCell.thresholdSlider.value forKey:LIGHT_OFF_THRESHOLD];
+                self.user.lightOffThreshold = [NSNumber numberWithFloat:self.exitCell.thresholdSlider.value];
                 [self.delegate updateEntrySliderValue:self.exitCell.thresholdSlider.value];
             }
             self.entryCell.thresholdValue.text = [NSString stringWithFormat:@"-%i", (int)sender.value];
-            [defaults setFloat:sender.value forKey:LIGHT_ON_THRESHOLD];
+            self.user.lightOnThreshold = [NSNumber numberWithFloat:sender.value];
             [self.delegate updateEntrySliderValue:self.entryCell.thresholdSlider.value];
             break;
         }
@@ -180,17 +183,17 @@
             if (sender.value <= self.entryCell.thresholdSlider.value) {
                 self.entryCell.thresholdSlider.value = sender.value - 1;
                 self.entryCell.thresholdValue.text = [NSString stringWithFormat:@"-%i", (int)self.entryCell.thresholdSlider.value];
-                [defaults setFloat:self.entryCell.thresholdSlider.value forKey:LIGHT_ON_THRESHOLD];
+                self.user.lightOnThreshold = [NSNumber numberWithFloat:self.entryCell.thresholdSlider.value];
                 [self.delegate updateExitSliderValue:self.entryCell.thresholdSlider.value];
             }
             self.exitCell.thresholdValue.text = [NSString stringWithFormat:@"-%i", (int)sender.value];
-            [defaults setFloat:sender.value forKey:LIGHT_OFF_THRESHOLD];
+            self.user.lightOffThreshold = [NSNumber numberWithFloat:sender.value];
             [self.delegate updateExitSliderValue:self.exitCell.thresholdSlider.value];
             break;
         }
         case 3:{
             self.exitDelayCell.thresholdValue.text = [NSString stringWithFormat:@"%is", (int)sender.value];
-            [defaults setFloat:sender.value forKey:LIGHT_OFF_DELAY];
+            self.user.lightOffDelay = [NSNumber numberWithFloat:sender.value];
             [self.delegate updateExitDelaySliderValue:self.exitDelayCell.thresholdSlider.value];
         }
         default:
@@ -207,11 +210,11 @@
             if (thresholdValue >= 20 && thresholdValue <= 98) {
                 self.entryCell.thresholdSlider.value = thresholdValue;
                 self.entryCell.thresholdValue.text = [NSString stringWithFormat:@"-%d",thresholdValue];
-                [defaults setFloat:self.entryCell.thresholdSlider.value forKey:LIGHT_ON_THRESHOLD];
+                self.user.lightOnThreshold = [NSNumber numberWithFloat:self.entryCell.thresholdSlider.value];
                 [self.delegate updateEntrySliderValue:self.entryCell.thresholdSlider.value];
                 if ([myClass isEqualToString:@"LBASettingsPlusSign"] && thresholdValue == (int)self.exitCell.thresholdSlider.value) {
                     self.exitCell.thresholdSlider.value += 1;
-                    [defaults setFloat:self.exitCell.thresholdSlider.value forKey:LIGHT_OFF_THRESHOLD];
+                    self.user.lightOffThreshold = [NSNumber numberWithFloat:self.exitCell.thresholdSlider.value];
                     self.exitCell.thresholdValue.text = [NSString stringWithFormat:@"-%d",(int)self.exitCell.thresholdSlider.value];
                 }
             }
@@ -224,11 +227,11 @@
             if (thresholdValue >= 21 && thresholdValue <= 99) {
                 self.exitCell.thresholdSlider.value = thresholdValue;
                 self.exitCell.thresholdValue.text = [NSString stringWithFormat:@"-%d",thresholdValue];
-                [defaults setFloat:self.exitCell.thresholdSlider.value forKey:LIGHT_OFF_THRESHOLD];
+                self.user.lightOffThreshold = [NSNumber numberWithFloat:self.exitCell.thresholdSlider.value];
                 [self.delegate updateExitSliderValue:self.exitCell.thresholdSlider.value];
                 if ([myClass isEqualToString:@"LBASettingsMinusSign"] && thresholdValue == (int)self.entryCell.thresholdSlider.value) {
                     self.entryCell.thresholdSlider.value -= 1;
-                    [defaults setFloat:self.entryCell.thresholdSlider.value forKey:LIGHT_ON_THRESHOLD];
+                    self.user.lightOnThreshold = [NSNumber numberWithFloat:self.entryCell.thresholdSlider.value];
                     self.entryCell.thresholdValue.text = [NSString stringWithFormat:@"-%d",(int)self.entryCell.thresholdSlider.value];
                 }
             }
@@ -242,7 +245,7 @@
             if (value >= 0 && value <= 300) {
                 self.exitDelayCell.thresholdSlider.value = value;
                 self.exitDelayCell.thresholdValue.text = [NSString stringWithFormat:@"%ds",value];
-                [defaults setFloat:self.exitDelayCell.thresholdSlider.value forKey:LIGHT_OFF_DELAY];
+                self.user.lightOffDelay = [NSNumber numberWithFloat:self.exitDelayCell.thresholdSlider.value];
                 [self.delegate updateExitDelaySliderValue:self.exitDelayCell.thresholdSlider.value];
             }
         }
@@ -264,15 +267,15 @@
     slider.tag = tag;
     switch (tag) {
         case 1:{
-            slider.value = [defaults floatForKey:LIGHT_ON_THRESHOLD];
+            slider.value = [self.user.lightOnThreshold floatValue];
         }
             break;
         case 2:{
-            slider.value = [defaults floatForKey:LIGHT_OFF_THRESHOLD];
+            slider.value = [self.user.lightOffThreshold floatValue];
         }
             break;
         case 3:{
-            slider.value = [defaults floatForKey:LIGHT_OFF_DELAY];
+            slider.value = [self.user.lightOffDelay floatValue];
         }
         default:
             break;
@@ -284,6 +287,11 @@
     [plusButton addTarget:self action:@selector(operatorTapped:) forControlEvents:UIControlEventTouchUpInside];
     minusButton.tag = tag;
     plusButton.tag = tag;
+}
+
+#pragma mark - PRIVATE METHODS
+- (void)saveContext{
+    [[LBACoreDataManager sharedManager]saveContextForEntity:@"User"];
 }
 
 @end

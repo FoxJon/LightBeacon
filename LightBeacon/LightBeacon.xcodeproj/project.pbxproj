@@ -18,6 +18,9 @@
 		B0009C2D1B47110100B12175 /* LBADefaultsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0009C2C1B47110100B12175 /* LBADefaultsManager.m */; };
 		B0009C341B471A3800B12175 /* LBAAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = B0009C331B471A3800B12175 /* LBAAlert.m */; };
 		B0009C371B472AFA00B12175 /* LBALocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0009C361B472AFA00B12175 /* LBALocationManager.m */; };
+		B003706E1B58BF6700194CCA /* Favorite.m in Sources */ = {isa = PBXBuildFile; fileRef = B003706D1B58BF6700194CCA /* Favorite.m */; };
+		B00370721B5B16F900194CCA /* LBACoreDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B00370711B5B16F900194CCA /* LBACoreDataManager.m */; };
+		B0283CF61B58AFEB00897D93 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = B0283CF51B58AFEB00897D93 /* User.m */; };
 		B032BCEF1B2BCF72003AC098 /* LBARectangleView.m in Sources */ = {isa = PBXBuildFile; fileRef = B032BCEE1B2BCF72003AC098 /* LBARectangleView.m */; };
 		B032BCF31B2BD25A003AC098 /* LBASettingsTab.m in Sources */ = {isa = PBXBuildFile; fileRef = B032BCF21B2BD25A003AC098 /* LBASettingsTab.m */; };
 		B032BCF91B2BE0EE003AC098 /* LBAPlusSign.m in Sources */ = {isa = PBXBuildFile; fileRef = B032BCF81B2BE0EE003AC098 /* LBAPlusSign.m */; };
@@ -74,6 +77,12 @@
 		B0009C351B472AFA00B12175 /* LBALocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBALocationManager.h; sourceTree = "<group>"; };
 		B0009C361B472AFA00B12175 /* LBALocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBALocationManager.m; sourceTree = "<group>"; };
 		B00311071B2C80E90049AE9A /* LBAColorConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBAColorConstants.h; sourceTree = "<group>"; };
+		B003706C1B58BF6700194CCA /* Favorite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Favorite.h; sourceTree = "<group>"; };
+		B003706D1B58BF6700194CCA /* Favorite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Favorite.m; sourceTree = "<group>"; };
+		B00370701B5B16F900194CCA /* LBACoreDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBACoreDataManager.h; sourceTree = "<group>"; };
+		B00370711B5B16F900194CCA /* LBACoreDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBACoreDataManager.m; sourceTree = "<group>"; };
+		B0283CF41B58AFEB00897D93 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = ../User.h; sourceTree = "<group>"; };
+		B0283CF51B58AFEB00897D93 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = ../User.m; sourceTree = "<group>"; };
 		B032BCED1B2BCF72003AC098 /* LBARectangleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBARectangleView.h; sourceTree = "<group>"; };
 		B032BCEE1B2BCF72003AC098 /* LBARectangleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBARectangleView.m; sourceTree = "<group>"; };
 		B032BCF11B2BD25A003AC098 /* LBASettingsTab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBASettingsTab.h; sourceTree = "<group>"; };
@@ -265,6 +274,8 @@
 				B0009C2C1B47110100B12175 /* LBADefaultsManager.m */,
 				B0009C351B472AFA00B12175 /* LBALocationManager.h */,
 				B0009C361B472AFA00B12175 /* LBALocationManager.m */,
+				B00370701B5B16F900194CCA /* LBACoreDataManager.h */,
+				B00370711B5B16F900194CCA /* LBACoreDataManager.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -288,6 +299,10 @@
 			isa = PBXGroup;
 			children = (
 				B09D90AB1B233F1F00C2653B /* LightBeacon.xcdatamodeld */,
+				B0283CF41B58AFEB00897D93 /* User.h */,
+				B0283CF51B58AFEB00897D93 /* User.m */,
+				B003706C1B58BF6700194CCA /* Favorite.h */,
+				B003706D1B58BF6700194CCA /* Favorite.m */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -411,6 +426,8 @@
 				B0009C221B4633AA00B12175 /* LBARightVC.m in Sources */,
 				B032BCF31B2BD25A003AC098 /* LBASettingsTab.m in Sources */,
 				B0CB51C51B518BC000C4AC18 /* LBAFavsTVCell.m in Sources */,
+				B00370721B5B16F900194CCA /* LBACoreDataManager.m in Sources */,
+				B0283CF61B58AFEB00897D93 /* User.m in Sources */,
 				B066292B1B47AE3000E2A855 /* LBASettingsTVCell.m in Sources */,
 				B0009C2D1B47110100B12175 /* LBADefaultsManager.m in Sources */,
 				B032BCEF1B2BCF72003AC098 /* LBARectangleView.m in Sources */,
@@ -426,6 +443,7 @@
 				B0009C191B46334A00B12175 /* LBAMainVC.m in Sources */,
 				B0FCFD021B2521410034FD4E /* LBALogManager.m in Sources */,
 				B09D90A71B233F1F00C2653B /* main.m in Sources */,
+				B003706E1B58BF6700194CCA /* Favorite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

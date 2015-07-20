@@ -10,6 +10,7 @@
 
 @interface LBADefaultsManager : NSObject
 
-+ (void)setUpDefaults;
++ (LBADefaultsManager *)sharedManager;
+- (void)setUpDefaults;
 
 @end

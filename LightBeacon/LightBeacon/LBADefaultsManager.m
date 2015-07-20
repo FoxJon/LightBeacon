@@ -8,24 +8,46 @@
 
 #import "LBADefaultsManager.h"
 #import "LBAConstants.h"
+#import "User.h"
+#import "LBACoreDataManager.h"
 
+@interface LBADefaultsManager ()
+@property (nonatomic) User *user;
+@end
 
 @implementation LBADefaultsManager
 
-+ (void)setUpDefaults{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if (![defaults floatForKey:LIGHT_ON_THRESHOLD]){
-        [defaults setFloat:80 forKey:LIGHT_ON_THRESHOLD];
-        [defaults setFloat:90 forKey:LIGHT_OFF_THRESHOLD];
-        [defaults setFloat:20 forKey:LIGHT_OFF_DELAY];
-        [defaults setFloat:1.0 forKey:DIMMER_VALUE];
-        [defaults setBool:YES forKey:SUNRISE_SUNSET_MODE];
-        [defaults setBool:YES forKey:AUTO_LIGHT_ON];
-        [defaults setBool:NO forKey:LIGHT_SWITCH_ON];
-        [defaults setFloat:255 forKey:CURRENT_COLOR_RED];
-        [defaults setFloat:255 forKey:CURRENT_COLOR_GREEN];
-        [defaults setFloat:255 forKey:CURRENT_COLOR_BLUE];
-        [defaults setFloat:1 forKey:CURRENT_ALPHA];
-    };
++ (LBADefaultsManager *)sharedManager{
+    static LBADefaultsManager *sharedManager;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedManager = [self new];
+    });
+    return sharedManager;
 }
+
+- (void)setUpDefaults{
+    NSMutableArray *mutableFetchResults = [[LBACoreDataManager sharedManager]fetchEntityWithName:@"User"];
+    
+    if (mutableFetchResults.count == 0) {
+        id object = [[LBACoreDataManager sharedManager]insertNewManagedObjectWithName:@"User"];
+        if ([object isKindOfClass:[User class]]) {
+            self.user = object;
+            self.user.lightOnThreshold = [NSNumber numberWithFloat:80];
+            self.user.lightOffThreshold = [NSNumber numberWithFloat:90];
+            self.user.lightOffDelay = [NSNumber numberWithFloat:20];
+            self.user.dimmerValue = [NSNumber numberWithFloat:1.0];
+            self.user.sunriseSunsetMode = [NSNumber numberWithBool:YES];
+            self.user.autoLightOn = [NSNumber numberWithBool:YES];
+            self.user.lightSwitchOn = [NSNumber numberWithBool:NO];
+            self.user.red = [NSNumber numberWithFloat:255];
+            self.user.green = [NSNumber numberWithFloat:255];
+            self.user.blue = [NSNumber numberWithFloat:255];
+            self.user.alpha = [NSNumber numberWithFloat:1];
+            
+            [[LBACoreDataManager sharedManager]saveContextForEntity:@"User"];
+        }
+    }
+}
+
 @end
