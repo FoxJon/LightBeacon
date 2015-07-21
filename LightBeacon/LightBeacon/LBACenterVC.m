@@ -8,7 +8,6 @@
 
 #import "LBACenterVC.h"
 #import "LBALogManager.h"
-#import "LBAColorConstants.h"
 #import "LBARectangleView.h"
 #import "LBAPlusSign.h"
 #import "LBAMinusSign.h"
@@ -16,10 +15,10 @@
 #import <CoreLocation/CoreLocation.h>
 #import "LBADefaultsManager.h"
 #import "LBAAlert.h"
-#import "LBAConstants.h"
 #import "LBALocationManager.h"
 #import "User.h"
 #import "LBACoreDataManager.h"
+#import "UIColor+LBAColors.h"
 
 @interface LBACenterVC () <GMBLPlaceManagerDelegate, LBALocationManagerDelegate>
 @property (nonatomic) GMBLPlaceManager *placeManager;
@@ -196,13 +195,13 @@
 
 
 - (void)setTintColors{
-    self.whiteTintColor = LIGHT_ON_WHITE_TINT_COLOR;
+    self.whiteTintColor = [UIColor lbaLightOnWhiteTintColor];
     if (self.lightIsOn) {
-        self.liteTintColor = LIGHT_ON_LITE_TINT_COLOR;
-        self.darkTintColor = LIGHT_ON_DARK_TINT_COLOR;
+        self.liteTintColor = [UIColor lbaLightOnLiteTintColor];
+        self.darkTintColor = [UIColor lbaLightOnDarkTintColor];
     }else{
-        self.liteTintColor = LIGHT_OFF_LITE_TINT_COLOR;
-        self.darkTintColor = LIGHT_OFF_DARK_TINT_COLOR;
+        self.liteTintColor = [UIColor lbaLightOffLiteTintColor];
+        self.darkTintColor = [UIColor lbaLightOffDarkTintColor];
     }
     if (!self.autoSwitch.on && self.lightSwitch.on) {
         self.autoSwitch.thumbTintColor = self.liteTintColor;
@@ -214,7 +213,7 @@
     if (self.autoSwitch.on & self.lightSwitch.on){
         self.autoSwitch.thumbTintColor = self.whiteTintColor;
         self.autoSwitch.tintColor = self.whiteTintColor;
-        self.autoSwitch.onTintColor = LIGHT_OFF_DARK_TINT_COLOR;
+        self.autoSwitch.onTintColor = [UIColor lbaLightOffDarkTintColor];
     }
 }
 

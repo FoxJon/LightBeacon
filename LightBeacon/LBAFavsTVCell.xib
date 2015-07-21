@@ -39,17 +39,33 @@
                                 <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="20"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                             </textField>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hXE-WR-9Ih">
+                                <rect key="frame" x="0.0" y="61" width="320" height="2"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="2" id="MaI-c1-Z9e"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.15686274509803921" green="0.15686274509803921" blue="0.15686274509803921" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="62" id="4jc-mf-Xt6"/>
                             <constraint firstItem="B6t-Dl-MRc" firstAttribute="leading" secondItem="A1X-gg-puc" secondAttribute="trailing" constant="8" id="8l4-vh-PHK"/>
+                            <constraint firstItem="hXE-WR-9Ih" firstAttribute="leading" secondItem="A1X-gg-puc" secondAttribute="trailing" id="9sQ-ND-jWF"/>
                             <constraint firstItem="A1X-gg-puc" firstAttribute="leading" secondItem="kMN-Hv-fo2" secondAttribute="leading" constant="8" id="Gbx-z0-OY7"/>
                             <constraint firstItem="A1X-gg-puc" firstAttribute="width" secondItem="kMN-Hv-fo2" secondAttribute="height" multiplier="22:31" id="I0w-eC-3mv"/>
+                            <constraint firstItem="hXE-WR-9Ih" firstAttribute="leading" secondItem="kMN-Hv-fo2" secondAttribute="leading" id="KAX-wV-E4Y"/>
+                            <constraint firstAttribute="trailing" secondItem="hXE-WR-9Ih" secondAttribute="trailing" id="QDa-pG-tyS"/>
                             <constraint firstItem="A1X-gg-puc" firstAttribute="top" secondItem="kMN-Hv-fo2" secondAttribute="top" constant="8" id="fx2-au-1B0"/>
+                            <constraint firstAttribute="bottom" secondItem="hXE-WR-9Ih" secondAttribute="bottom" constant="-1" id="gbV-5O-uZ0"/>
                             <constraint firstItem="A1X-gg-puc" firstAttribute="centerY" secondItem="B6t-Dl-MRc" secondAttribute="centerY" id="ohW-GW-Wgy"/>
                             <constraint firstAttribute="bottom" secondItem="A1X-gg-puc" secondAttribute="bottom" constant="8" id="u7T-pT-eVj"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="9sQ-ND-jWF"/>
+                            </mask>
+                        </variation>
                     </view>
                 </subviews>
                 <constraints>
