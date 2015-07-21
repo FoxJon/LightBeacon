@@ -9,8 +9,8 @@
 #import "LBARightVC.h"
 #import "LBAFavsTVCell.h"
 #import "LBACenterVC.h"
-#import "LBAConstants.h"
 #import "LBACoreDataManager.h"
+#import "LBARectangleView.h"
 #import "Favorite.h"
 #import "User.h"
 
@@ -25,6 +25,7 @@
 @property (nonatomic) UIColor *currentColor;
 @property (nonatomic) Favorite *favorite;
 @property (nonatomic) User *user;
+@property (weak, nonatomic) IBOutlet LBARectangleView *rectangleView;
 
 @end
 
@@ -37,6 +38,7 @@
     self.currentColor = [self getCurrentColor];
     self.currentColorSwatch.backgroundColor = self.currentColor;
     self.currentColorSwatch.layer.cornerRadius = self.currentColorSwatch.frame.size.width/2;
+    self.rectangleView.tintColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -46,6 +48,7 @@
 
 - (IBAction)closeButtonTapped:(UIBarButtonItem *)sender {
     [self.delegate handleCloseButtonTap];
+    [self saveContext];
 }
 
 - (IBAction)addToFavsButtonTapped:(UIButton *)sender {
@@ -79,6 +82,7 @@
     self.editButton.hidden = NO;
     self.doneButton.hidden = YES;
     [self.tableview reloadData];
+    [self saveContext];
 }
 
 #pragma mark - TABLEVIEW DATASOURCE
@@ -151,6 +155,7 @@
     [self.favoritesArray removeObjectAtIndex:fromIndexPath.row];
     [self.favoritesArray insertObject:temp atIndex:toIndexPath.row];
     [self.tableview reloadData];
+    [self saveContext];
 }
 
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{

@@ -7,7 +7,6 @@
 //
 
 #import "LBADefaultsManager.h"
-#import "LBAConstants.h"
 #import "User.h"
 #import "LBACoreDataManager.h"
 

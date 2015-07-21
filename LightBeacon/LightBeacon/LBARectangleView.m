@@ -7,7 +7,6 @@
 //
 
 #import "LBARectangleView.h"
-#import "LBAColorConstants.h"
 
 @implementation LBARectangleView
 

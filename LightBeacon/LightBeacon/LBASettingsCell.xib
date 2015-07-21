@@ -18,7 +18,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2AO-VQ-Sm4">
                         <rect key="frame" x="-6" y="0.0" width="394" height="75"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2hA-YA-UKo" customClass="LBASettingsBoxView">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2hA-YA-UKo" customClass="LBARectangleView">
                                 <rect key="frame" x="8" y="10" width="55" height="55"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-85" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="ge1-XQ-yE0">
@@ -43,7 +43,7 @@
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4AL-We-vC0" customClass="LBASettingsMinusSign">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4AL-We-vC0" customClass="LBAMinusSign">
                                 <rect key="frame" x="71" y="47" width="20" height="20"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zP4-5z-Zqz">
@@ -73,7 +73,7 @@
                                 <color key="minimumTrackTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="maximumTrackTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </slider>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dtl-tJ-MGC" customClass="LBASettingsPlusSign">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dtl-tJ-MGC" customClass="LBAPlusSign">
                                 <rect key="frame" x="199" y="47" width="20" height="20"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2yg-89-zeG">
@@ -95,9 +95,18 @@
                                     <constraint firstAttribute="bottom" secondItem="2yg-89-zeG" secondAttribute="bottom" constant="-10" id="sdG-cR-ssh"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2mf-4Q-nRf">
+                                <rect key="frame" x="0.0" y="74" width="394" height="2"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="2" id="soG-Zh-ZCT"/>
+                                </constraints>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.15686274509803921" green="0.15686274509803921" blue="0.15686274509803921" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.15686274509803921" green="0.19607843137254902" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="rgP-ik-Xvr" firstAttribute="top" secondItem="2mf-4Q-nRf" secondAttribute="bottom" constant="-1" id="2ey-Db-Dmp"/>
+                            <constraint firstAttribute="bottom" secondItem="2mf-4Q-nRf" secondAttribute="bottom" constant="-1" id="IgJ-gn-5rP"/>
                             <constraint firstAttribute="bottom" secondItem="2hA-YA-UKo" secondAttribute="bottom" constant="10" id="Jzu-hK-c1r"/>
                             <constraint firstItem="rgP-ik-Xvr" firstAttribute="leading" secondItem="4AL-We-vC0" secondAttribute="trailing" constant="8" id="K85-NB-QJu"/>
                             <constraint firstItem="KhN-1B-ybp" firstAttribute="centerY" secondItem="2hA-YA-UKo" secondAttribute="centerY" constant="-19" id="PR8-SR-2CR"/>
@@ -108,8 +117,15 @@
                             <constraint firstItem="dtl-tJ-MGC" firstAttribute="leading" secondItem="rgP-ik-Xvr" secondAttribute="trailing" constant="8" id="ZuS-4V-PXa"/>
                             <constraint firstItem="2hA-YA-UKo" firstAttribute="centerY" secondItem="rgP-ik-Xvr" secondAttribute="centerY" constant="-19" id="d2i-1E-5ph"/>
                             <constraint firstItem="dtl-tJ-MGC" firstAttribute="centerY" secondItem="rgP-ik-Xvr" secondAttribute="centerY" id="j2g-r5-b6v"/>
+                            <constraint firstAttribute="trailing" secondItem="2mf-4Q-nRf" secondAttribute="trailing" id="qqt-mY-0lg"/>
+                            <constraint firstItem="2mf-4Q-nRf" firstAttribute="leading" secondItem="2AO-VQ-Sm4" secondAttribute="leading" id="v1Z-a5-stV"/>
                             <constraint firstItem="KhN-1B-ybp" firstAttribute="leading" secondItem="4AL-We-vC0" secondAttribute="leading" id="xS5-5D-MY5"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="2ey-Db-Dmp"/>
+                            </mask>
+                        </variation>
                     </view>
                 </subviews>
                 <constraints>
@@ -121,6 +137,8 @@
             </tableViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <connections>
+                <outlet property="minusSign" destination="4AL-We-vC0" id="rNr-Ee-ctI"/>
+                <outlet property="plusSign" destination="dtl-tJ-MGC" id="ELz-nl-zuM"/>
                 <outlet property="thresholdMinusButton" destination="zP4-5z-Zqz" id="liP-Fv-q2s"/>
                 <outlet property="thresholdPlusButton" destination="2yg-89-zeG" id="oxF-Sx-3pl"/>
                 <outlet property="thresholdSlider" destination="rgP-ik-Xvr" id="IYs-vV-r9Q"/>

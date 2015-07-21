@@ -11,11 +11,9 @@
 #import "LBALocationManager.h"
 #import "LBASettingsTVCell.h"
 #import "LBASunriseTVCell.h"
-#import "LBASettingsMinusSign.h"
-#import "LBASettingsPlusSign.h"
-#import "LBAConstants.h"
 #import "LBACoreDataManager.h"
 #import "User.h"
+#import "UIColor+LBAColors.h"
 #import <CoreLocation/CoreLocation.h>
 
 #define ENTRY_TAG 1
@@ -72,6 +70,9 @@
             self.entryCell.titleLabel.text = @"Entry Threshold";
             self.entryCell.thresholdSlider.minimumValue = 20;
             self.entryCell.thresholdSlider.maximumValue = 98;
+            self.entryCell.minusSign.tintColor = [UIColor lightGrayColor];
+            self.entryCell.plusSign.tintColor = [UIColor lightGrayColor];
+            self.entryCell.rectangleView.tintColor = [UIColor lbaLightOffDarkTintColor];
             
             [self setUpSlider:self.entryCell.thresholdSlider withTag:ENTRY_TAG];
             
@@ -89,6 +90,9 @@
             self.exitCell.titleLabel.text = @"Exit Threshold";
             self.exitCell.thresholdSlider.minimumValue = 21;
             self.exitCell.thresholdSlider.maximumValue = 99;
+            self.exitCell.minusSign.tintColor = [UIColor lightGrayColor];
+            self.exitCell.plusSign.tintColor = [UIColor lightGrayColor];
+            self.exitCell.rectangleView.tintColor = [UIColor lbaLightOffDarkTintColor];
             
             [self setUpSlider:self.exitCell.thresholdSlider withTag:EXIT_TAG];
             
@@ -106,6 +110,9 @@
             self.exitDelayCell.titleLabel.text = @"Exit Delay";
             self.exitDelayCell.thresholdSlider.minimumValue = 0;
             self.exitDelayCell.thresholdSlider.maximumValue = 300;
+            self.exitDelayCell.minusSign.tintColor = [UIColor lightGrayColor];
+            self.exitDelayCell.plusSign.tintColor = [UIColor lightGrayColor];
+            self.exitDelayCell.rectangleView.tintColor = [UIColor lbaLightOffDarkTintColor];
             
             [self setUpSlider:self.exitDelayCell.thresholdSlider withTag:EXIT_DELAY_TAG];
 
@@ -206,13 +213,13 @@
         case 1:{
             int thresholdValue = abs([self.entryCell.thresholdValue.text intValue]);
             NSString *myClass = NSStringFromClass([[sender superview] class]);
-            thresholdValue = [myClass isEqualToString:@"LBASettingsPlusSign"] ? (thresholdValue + 1) : (thresholdValue - 1);
+            thresholdValue = [myClass isEqualToString:@"LBAPlusSign"] ? (thresholdValue + 1) : (thresholdValue - 1);
             if (thresholdValue >= 20 && thresholdValue <= 98) {
                 self.entryCell.thresholdSlider.value = thresholdValue;
                 self.entryCell.thresholdValue.text = [NSString stringWithFormat:@"-%d",thresholdValue];
                 self.user.lightOnThreshold = [NSNumber numberWithFloat:self.entryCell.thresholdSlider.value];
                 [self.delegate updateEntrySliderValue:self.entryCell.thresholdSlider.value];
-                if ([myClass isEqualToString:@"LBASettingsPlusSign"] && thresholdValue == (int)self.exitCell.thresholdSlider.value) {
+                if ([myClass isEqualToString:@"LBAPlusSign"] && thresholdValue == (int)self.exitCell.thresholdSlider.value) {
                     self.exitCell.thresholdSlider.value += 1;
                     self.user.lightOffThreshold = [NSNumber numberWithFloat:self.exitCell.thresholdSlider.value];
                     self.exitCell.thresholdValue.text = [NSString stringWithFormat:@"-%d",(int)self.exitCell.thresholdSlider.value];
@@ -223,13 +230,13 @@
         case 2:{
             int thresholdValue = abs([self.exitCell.thresholdValue.text intValue]);
             NSString *myClass = NSStringFromClass([[sender superview] class]);
-            thresholdValue = [myClass isEqualToString:@"LBASettingsPlusSign"] ? (thresholdValue + 1) : (thresholdValue - 1);
+            thresholdValue = [myClass isEqualToString:@"LBAPlusSign"] ? (thresholdValue + 1) : (thresholdValue - 1);
             if (thresholdValue >= 21 && thresholdValue <= 99) {
                 self.exitCell.thresholdSlider.value = thresholdValue;
                 self.exitCell.thresholdValue.text = [NSString stringWithFormat:@"-%d",thresholdValue];
                 self.user.lightOffThreshold = [NSNumber numberWithFloat:self.exitCell.thresholdSlider.value];
                 [self.delegate updateExitSliderValue:self.exitCell.thresholdSlider.value];
-                if ([myClass isEqualToString:@"LBASettingsMinusSign"] && thresholdValue == (int)self.entryCell.thresholdSlider.value) {
+                if ([myClass isEqualToString:@"LBAMinusSign"] && thresholdValue == (int)self.entryCell.thresholdSlider.value) {
                     self.entryCell.thresholdSlider.value -= 1;
                     self.user.lightOnThreshold = [NSNumber numberWithFloat:self.entryCell.thresholdSlider.value];
                     self.entryCell.thresholdValue.text = [NSString stringWithFormat:@"-%d",(int)self.entryCell.thresholdSlider.value];
@@ -241,7 +248,7 @@
         case 3:{
             int value = abs([self.exitDelayCell.thresholdValue.text intValue]);
             NSString *myClass = NSStringFromClass([[sender superview] class]);
-            value = [myClass isEqualToString:@"LBASettingsPlusSign"] ? (value + 1) : (value - 1);
+            value = [myClass isEqualToString:@"LBAPlusSign"] ? (value + 1) : (value - 1);
             if (value >= 0 && value <= 300) {
                 self.exitDelayCell.thresholdSlider.value = value;
                 self.exitDelayCell.thresholdValue.text = [NSString stringWithFormat:@"%ds",value];
