@@ -36,7 +36,7 @@
 - (void)deleteManagedObject:(id)object{
     NSManagedObjectContext *context = [self getContext];
     NSManagedObject *objectToDelete = object;
-    [context deleteObject:object];
+    [context deleteObject:objectToDelete];
 }
 
 

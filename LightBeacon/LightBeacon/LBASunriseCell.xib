@@ -24,6 +24,11 @@
                                     <constraint firstAttribute="height" constant="31" id="NPK-Nd-8em"/>
                                 </constraints>
                                 <color key="onTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="NPK-Nd-8em"/>
+                                    </mask>
+                                </variation>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sunset/Sunrise" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="117" translatesAutoresizingMaskIntoConstraints="NO" id="p8Q-DI-L33">
                                 <rect key="frame" x="65" y="11" width="117" height="21"/>

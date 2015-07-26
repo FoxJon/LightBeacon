@@ -38,7 +38,7 @@
                                     <action selector="closeButtonTapped:" destination="-1" id="dwh-je-B9z"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem key="rightBarButtonItem" style="plain" id="sXC-KI-LyR">
+                            <barButtonItem key="rightBarButtonItem" id="sXC-KI-LyR">
                                 <view key="customView" contentMode="scaleToFill" id="ZfY-D1-C8U">
                                     <rect key="frame" x="0.0" y="0.0" width="133" height="33"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>

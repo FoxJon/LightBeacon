@@ -15,8 +15,6 @@
 #define LEFT_PANEL_TAG 2
 #define RIGHT_PANEL_TAG 3
 
-#define CORNER_RADIUS 4
-
 #define SLIDE_TIMING .25
 #define PANEL_WIDTH 90
 
@@ -36,7 +34,6 @@
 
 - (void)setUpContainerView{
     self.centerVC = [[LBACenterVC alloc] initWithNibName:@"LBACenterVC" bundle:nil];
-    self.centerVC.view.backgroundColor = [UIColor blackColor];
     self.centerVC.view.tag = CENTER_TAG;
     self.centerVC.delegate = self;
     self.centerVC.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
@@ -154,7 +151,6 @@
 
 -(void)showViewWithShadow:(BOOL)value andView:(UIView *)view withOffset:(double)offset {
     if (value) {
-        [view.layer setCornerRadius:CORNER_RADIUS];
         [view.layer setShadowColor:[UIColor blackColor].CGColor];
         [view.layer setShadowOpacity:0.8];
         [view.layer setShadowOffset:CGSizeMake(offset, offset)];

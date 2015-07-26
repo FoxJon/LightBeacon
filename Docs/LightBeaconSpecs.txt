@@ -11,11 +11,13 @@ X when light is off and you enter the room:
 X when user leaves the room:
 			X wait to turn off light based on user defined delay time.
 X Able to dim lights
-- Able to create favorite light settings (core data)
+X Able to create favorite light settings (core data)
+- Crashlytics
+- Google Analytics
 
 
 Settings:
-- Favorite Light Settings (ie. color and brightness) UITableView with label and a swatch (current color at the top)
+X Favorite Light Settings (ie. color and brightness) UITableView with label and a swatch (current color at the top)
 X Auto detect light (ON/OFF)
 X Sunset/Sunrise Mode (ON/OFF)
 X Beacon entry detection range
@@ -47,6 +49,9 @@ Light features:
 X dimmer
 X RGB color sliders
 X auto detect switch
-- favorite settings (core data)
+X favorite settings (core data)
 X RGB sliders
 X Dimmer sliders
+
+TESTING:
+- Test core location settings - Turning location services on and off

@@ -239,8 +239,9 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lhi-oT-PaL" userLabel="Red Minus Sign" customClass="LBAMinusSign">
                             <rect key="frame" x="129" y="367" width="20" height="20"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rtE-7d-Hee" userLabel="Red Minus Button">
-                                    <rect key="frame" x="100" y="100" width="30" height="30"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rtE-7d-Hee" userLabel="Red Minus Button">
+                                    <rect key="frame" x="-10" y="-10" width="40" height="40"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <state key="normal">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
@@ -251,8 +252,12 @@
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
+                                <constraint firstItem="rtE-7d-Hee" firstAttribute="leading" secondItem="lhi-oT-PaL" secondAttribute="leading" constant="-10" id="7mx-9l-Go4"/>
+                                <constraint firstItem="rtE-7d-Hee" firstAttribute="top" secondItem="lhi-oT-PaL" secondAttribute="top" constant="-10" id="PCq-gu-2LC"/>
                                 <constraint firstAttribute="height" constant="20" id="ewZ-0Q-8Tj"/>
+                                <constraint firstAttribute="bottom" secondItem="rtE-7d-Hee" secondAttribute="bottom" constant="-10" id="lsz-fh-9Qb"/>
                                 <constraint firstAttribute="width" constant="20" id="mRJ-GN-Wpd"/>
+                                <constraint firstAttribute="trailing" secondItem="rtE-7d-Hee" secondAttribute="trailing" constant="-10" id="pY2-rQ-xn4"/>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ag4-LI-67i" userLabel="Green Minus Sign" customClass="LBAMinusSign">
@@ -260,6 +265,7 @@
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cVa-Io-e2z" userLabel="Green Minus Button">
                                     <rect key="frame" x="-10" y="-10" width="40" height="40"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <state key="normal">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
@@ -283,6 +289,7 @@
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ijk-pU-fHC" userLabel="Blue Minus Button">
                                     <rect key="frame" x="-10" y="-10" width="40" height="40"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <state key="normal">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
@@ -327,6 +334,7 @@
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="idO-sJ-ESQ" userLabel="Red Plus Button">
                                     <rect key="frame" x="-10" y="-10" width="40" height="40"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <state key="normal">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
@@ -350,6 +358,7 @@
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GFy-TM-CRI" userLabel="Green Plus Button">
                                     <rect key="frame" x="-10" y="-10" width="40" height="40"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <state key="normal">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
@@ -424,6 +433,7 @@
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JtZ-Bj-eJV" userLabel="Blue Plus Button">
                                     <rect key="frame" x="-10" y="-10" width="40" height="40"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <state key="normal">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
@@ -522,7 +532,7 @@
                     </variation>
                 </view>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="3eW-t1-pHv" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="4h8-wo-hCq"/>
                 <constraint firstItem="Zbb-tu-jAr" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="6UI-bX-dLu"/>
