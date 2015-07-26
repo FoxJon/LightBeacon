@@ -9,16 +9,14 @@
 #import "LBACenterVC.h"
 #import "LBALogManager.h"
 #import "LBARectangleView.h"
-#import "LBAPlusSign.h"
-#import "LBAMinusSign.h"
-#import <Gimbal/Gimbal.h>
-#import <CoreLocation/CoreLocation.h>
-#import "LBADefaultsManager.h"
 #import "LBAAlert.h"
-#import "LBALocationManager.h"
 #import "User.h"
+#import "LBADefaultsManager.h"
+#import "LBALocationManager.h"
 #import "LBACoreDataManager.h"
 #import "UIColor+LBAColors.h"
+#import <Gimbal/Gimbal.h>
+#import <CoreLocation/CoreLocation.h>
 
 @interface LBACenterVC () <GMBLPlaceManagerDelegate, LBALocationManagerDelegate>
 @property (nonatomic) GMBLPlaceManager *placeManager;
@@ -27,12 +25,12 @@
 @property (nonatomic) BOOL lightIsOn;
 @property (nonatomic) BOOL delayTimerIsOn;
 @property (nonatomic) BOOL placeManagerIsMonitoring;
+@property (nonatomic) BOOL sunriseSunsetSwitchIsOn;
 @property (nonatomic) UIColor *liteTintColor;
 @property (nonatomic) UIColor *darkTintColor;
 @property (nonatomic) UIColor *whiteTintColor;
 @property (nonatomic) NSDictionary *currentLocation;
 @property (nonatomic) NSDictionary *sunriseSunset;
-@property (nonatomic) BOOL sunriseSunsetSwitchIsOn;
 @property (weak, nonatomic) IBOutlet UIView *centerContainerView;
 @property (nonatomic) UITapGestureRecognizer *gestureRecognizer;
 @property (nonatomic) User *user;
@@ -79,12 +77,14 @@
 
     [[LBADefaultsManager sharedManager] setUpDefaults];
     self.user = [User fetchCurrentUser];
-    
     [self setUpUserConfigurations];
     [self setTintColors];
     [self changeBackgroundColor];
     [self setUpVerticalSlider];
     [LBALocationManager sharedManager].delegate = self;
+    
+    self.placeManager = [GMBLPlaceManager new];
+    self.placeManager.delegate = self;
     
     if (self.autoSwitch) {
         [GMBLPlaceManager startMonitoring];
@@ -116,6 +116,7 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:YES];
     [self changeBackgroundColor];
 }
 
@@ -170,8 +171,6 @@
     self.autoSwitch.on = [self.user.autoLightOn boolValue];
     self.delayTimerIsOn = NO;
     self.userLightOffTimerIsOn = NO;
-    self.placeManager = [GMBLPlaceManager new];
-    self.placeManager.delegate = self;
     self.sunriseSunsetSwitchIsOn = [self.user.sunriseSunsetMode boolValue];
     self.entrySldrValue = [self.user.lightOnThreshold floatValue];
     self.exitSldrValue = [self.user.lightOffThreshold floatValue];
@@ -434,9 +433,9 @@
 
 - (void)changeBackgroundColor{
     [UIView animateWithDuration:1.0 animations:^{
-        float red = [self.redLabel.text intValue] / 255.0;
-        float green = [self.greenLabel.text intValue] / 255.0;
-        float blue = [self.blueLabel.text intValue] / 255.0;
+        float red = self.redSlider.value / 255.0;
+        float green = self.greenSlider.value / 255.0;
+        float blue = self.blueSlider.value / 255.0;
         float alpha = self.alpha;
         self.centerContainerView.backgroundColor = self.lightIsOn ? [UIColor colorWithRed:red green:green blue:blue alpha:alpha] : [UIColor colorWithRed:0.098f green:0.098f blue:0.098f alpha:1.0f];
     }];
