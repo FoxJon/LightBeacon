@@ -26,6 +26,7 @@
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
+                                        <exclude reference="4Ty-lV-m2K"/>
                                         <exclude reference="f75-r5-EGf"/>
                                     </mask>
                                 </variation>
@@ -63,6 +64,7 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="4jc-mf-Xt6"/>
                                 <exclude reference="9sQ-ND-jWF"/>
                             </mask>
                         </variation>
