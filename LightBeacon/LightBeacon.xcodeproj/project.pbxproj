@@ -37,10 +37,18 @@
 		B09D90B81B233F1F00C2653B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B09D90B61B233F1F00C2653B /* LaunchScreen.xib */; };
 		B09D90C41B233F1F00C2653B /* LightBeaconTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B09D90C31B233F1F00C2653B /* LightBeaconTests.m */; };
 		B09D90CE1B239E3200C2653B /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B09D90CD1B239E3200C2653B /* libz.dylib */; };
+		B0BABBAC1B65385A00F77935 /* HueSDK_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0BABBAB1B65385A00F77935 /* HueSDK_iOS.framework */; };
 		B0CB51C21B51890700C4AC18 /* LBAFavsTVCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0CB51C11B51890700C4AC18 /* LBAFavsTVCell.xib */; };
 		B0CB51C51B518BC000C4AC18 /* LBAFavsTVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B0CB51C41B518BC000C4AC18 /* LBAFavsTVCell.m */; };
 		B0D4B9571B24758B00713A26 /* Gimbal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0D4B9561B24758B00713A26 /* Gimbal.framework */; };
 		B0D4B95B1B24837300713A26 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = B0D4B95A1B24837300713A26 /* Keys.plist */; };
+		B0D8A3101B6538C700DD3D87 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D8A3071B6538C700DD3D87 /* DDAbstractDatabaseLogger.m */; };
+		B0D8A3111B6538C700DD3D87 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D8A3091B6538C700DD3D87 /* DDASLLogger.m */; };
+		B0D8A3121B6538C700DD3D87 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D8A30B1B6538C700DD3D87 /* DDFileLogger.m */; };
+		B0D8A3131B6538C700DD3D87 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D8A30D1B6538C700DD3D87 /* DDLog.m */; };
+		B0D8A3141B6538C700DD3D87 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D8A30F1B6538C700DD3D87 /* DDTTYLogger.m */; };
+		B0D8A31A1B6538F200DD3D87 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D8A3171B6538F200DD3D87 /* ContextFilterLogFormatter.m */; };
+		B0D8A31B1B6538F200DD3D87 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D8A3191B6538F200DD3D87 /* DispatchQueueLogFormatter.m */; };
 		B0E8D2771B40A65C009683A2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E8D2761B40A65C009683A2 /* CoreLocation.framework */; };
 		B0FCFD021B2521410034FD4E /* LBALogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0FCFD011B2521410034FD4E /* LBALogManager.m */; };
 /* End PBXBuildFile section */
@@ -108,11 +116,26 @@
 		B09D90C21B233F1F00C2653B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B09D90C31B233F1F00C2653B /* LightBeaconTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LightBeaconTests.m; sourceTree = "<group>"; };
 		B09D90CD1B239E3200C2653B /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		B0BABBAB1B65385A00F77935 /* HueSDK_iOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HueSDK_iOS.framework; sourceTree = "<group>"; };
 		B0CB51C11B51890700C4AC18 /* LBAFavsTVCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LBAFavsTVCell.xib; path = ../LBAFavsTVCell.xib; sourceTree = "<group>"; };
 		B0CB51C31B518BC000C4AC18 /* LBAFavsTVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBAFavsTVCell.h; sourceTree = "<group>"; };
 		B0CB51C41B518BC000C4AC18 /* LBAFavsTVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBAFavsTVCell.m; sourceTree = "<group>"; };
 		B0D4B9561B24758B00713A26 /* Gimbal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Gimbal.framework; sourceTree = "<group>"; };
 		B0D4B95A1B24837300713A26 /* Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
+		B0D8A3061B6538C700DD3D87 /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
+		B0D8A3071B6538C700DD3D87 /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
+		B0D8A3081B6538C700DD3D87 /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDASLLogger.h; sourceTree = "<group>"; };
+		B0D8A3091B6538C700DD3D87 /* DDASLLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDASLLogger.m; sourceTree = "<group>"; };
+		B0D8A30A1B6538C700DD3D87 /* DDFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDFileLogger.h; sourceTree = "<group>"; };
+		B0D8A30B1B6538C700DD3D87 /* DDFileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDFileLogger.m; sourceTree = "<group>"; };
+		B0D8A30C1B6538C700DD3D87 /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDLog.h; sourceTree = "<group>"; };
+		B0D8A30D1B6538C700DD3D87 /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDLog.m; sourceTree = "<group>"; };
+		B0D8A30E1B6538C700DD3D87 /* DDTTYLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTTYLogger.h; sourceTree = "<group>"; };
+		B0D8A30F1B6538C700DD3D87 /* DDTTYLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTTYLogger.m; sourceTree = "<group>"; };
+		B0D8A3161B6538F200DD3D87 /* ContextFilterLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContextFilterLogFormatter.h; sourceTree = "<group>"; };
+		B0D8A3171B6538F200DD3D87 /* ContextFilterLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextFilterLogFormatter.m; sourceTree = "<group>"; };
+		B0D8A3181B6538F200DD3D87 /* DispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispatchQueueLogFormatter.h; sourceTree = "<group>"; };
+		B0D8A3191B6538F200DD3D87 /* DispatchQueueLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispatchQueueLogFormatter.m; sourceTree = "<group>"; };
 		B0E8D2761B40A65C009683A2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B0FCFD001B2521410034FD4E /* LBALogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBALogManager.h; sourceTree = "<group>"; };
 		B0FCFD011B2521410034FD4E /* LBALogManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBALogManager.m; sourceTree = "<group>"; };
@@ -125,6 +148,7 @@
 			files = (
 				B0E8D2771B40A65C009683A2 /* CoreLocation.framework in Frameworks */,
 				B0D4B9571B24758B00713A26 /* Gimbal.framework in Frameworks */,
+				B0BABBAC1B65385A00F77935 /* HueSDK_iOS.framework in Frameworks */,
 				B09D90CE1B239E3200C2653B /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -240,11 +264,31 @@
 		B09D90D11B23A0F800C2653B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B0BABBAD1B65387000F77935 /* Lumberjack */,
+				B0BABBAB1B65385A00F77935 /* HueSDK_iOS.framework */,
 				B0E8D2761B40A65C009683A2 /* CoreLocation.framework */,
 				B09D90CD1B239E3200C2653B /* libz.dylib */,
 				B0D4B9561B24758B00713A26 /* Gimbal.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B0BABBAD1B65387000F77935 /* Lumberjack */ = {
+			isa = PBXGroup;
+			children = (
+				B0D8A3061B6538C700DD3D87 /* DDAbstractDatabaseLogger.h */,
+				B0D8A3071B6538C700DD3D87 /* DDAbstractDatabaseLogger.m */,
+				B0D8A3081B6538C700DD3D87 /* DDASLLogger.h */,
+				B0D8A3091B6538C700DD3D87 /* DDASLLogger.m */,
+				B0D8A30A1B6538C700DD3D87 /* DDFileLogger.h */,
+				B0D8A30B1B6538C700DD3D87 /* DDFileLogger.m */,
+				B0D8A30C1B6538C700DD3D87 /* DDLog.h */,
+				B0D8A30D1B6538C700DD3D87 /* DDLog.m */,
+				B0D8A30E1B6538C700DD3D87 /* DDTTYLogger.h */,
+				B0D8A30F1B6538C700DD3D87 /* DDTTYLogger.m */,
+				B0D8A3151B6538DC00DD3D87 /* Extensions */,
+			);
+			name = Lumberjack;
 			sourceTree = "<group>";
 		};
 		B0D4B95C1B24898D00713A26 /* Model */ = {
@@ -291,6 +335,17 @@
 				B003706D1B58BF6700194CCA /* Favorite.m */,
 			);
 			name = Data;
+			sourceTree = "<group>";
+		};
+		B0D8A3151B6538DC00DD3D87 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				B0D8A3161B6538F200DD3D87 /* ContextFilterLogFormatter.h */,
+				B0D8A3171B6538F200DD3D87 /* ContextFilterLogFormatter.m */,
+				B0D8A3181B6538F200DD3D87 /* DispatchQueueLogFormatter.h */,
+				B0D8A3191B6538F200DD3D87 /* DispatchQueueLogFormatter.m */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -413,16 +468,23 @@
 				B0CB51C51B518BC000C4AC18 /* LBAFavsTVCell.m in Sources */,
 				B00370721B5B16F900194CCA /* LBACoreDataManager.m in Sources */,
 				B0283CF61B58AFEB00897D93 /* User.m in Sources */,
+				B0D8A3101B6538C700DD3D87 /* DDAbstractDatabaseLogger.m in Sources */,
+				B0D8A3111B6538C700DD3D87 /* DDASLLogger.m in Sources */,
 				B066292B1B47AE3000E2A855 /* LBASettingsTVCell.m in Sources */,
 				B0009C2D1B47110100B12175 /* LBADefaultsManager.m in Sources */,
 				B032BCEF1B2BCF72003AC098 /* LBARectangleView.m in Sources */,
+				B0D8A3141B6538C700DD3D87 /* DDTTYLogger.m in Sources */,
+				B0D8A31B1B6538F200DD3D87 /* DispatchQueueLogFormatter.m in Sources */,
 				B09D90AA1B233F1F00C2653B /* AppDelegate.m in Sources */,
 				B0009C1C1B46337D00B12175 /* LBACenterVC.m in Sources */,
+				B0D8A31A1B6538F200DD3D87 /* ContextFilterLogFormatter.m in Sources */,
 				B032BCFC1B2BE10A003AC098 /* LBAMinusSign.m in Sources */,
 				B003707D1B5DE64100194CCA /* UIColor+LBAColors.m in Sources */,
 				B0009C371B472AFA00B12175 /* LBALocationManager.m in Sources */,
 				B09D90AD1B233F1F00C2653B /* LightBeacon.xcdatamodeld in Sources */,
 				B0009C1F1B46339400B12175 /* LBALeftVC.m in Sources */,
+				B0D8A3121B6538C700DD3D87 /* DDFileLogger.m in Sources */,
+				B0D8A3131B6538C700DD3D87 /* DDLog.m in Sources */,
 				B032BCF91B2BE0EE003AC098 /* LBAPlusSign.m in Sources */,
 				B0009C191B46334A00B12175 /* LBAMainVC.m in Sources */,
 				B0FCFD021B2521410034FD4E /* LBALogManager.m in Sources */,
@@ -554,6 +616,7 @@
 				INFOPLIST_FILE = LightBeacon/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -571,6 +634,7 @@
 				INFOPLIST_FILE = LightBeacon/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

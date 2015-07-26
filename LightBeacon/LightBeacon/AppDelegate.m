@@ -10,7 +10,7 @@
 #import <Gimbal/Gimbal.h>
 
 @interface AppDelegate ()
-
+@property PHBridgeSearching *phBridgeSearching;
 @end
 
 @implementation AppDelegate
@@ -23,6 +23,18 @@
     NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Keys" ofType:@"plist"]];
     NSString *GimbalAPIKey = [dictionary objectForKey:@"GimbalAPIKey"];
     [Gimbal setAPIKey:GimbalAPIKey options:nil];
+    
+    self.phHueSdk = [PHHueSDK new];
+    [self.phHueSdk enableLogging:YES];
+    [self.phHueSdk startUpSDK];
+    
+    self.phBridgeSearching = [[PHBridgeSearching alloc]initWithUpnpSearch:YES andPortalSearch:YES andIpAdressSearch:YES];
+    
+    [self.phBridgeSearching startSearchWithCompletionHandler:^(NSDictionary *bridgesFound) {
+        NSLog(@"BRIDGE: %@", bridgesFound);
+        //        self.phHueSdk [setBridgeToUseWithId: ipAddress: ];
+    }];
+
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.viewController = [[LBAMainVC alloc] initWithNibName:@"LBAMainVC" bundle:nil];
