@@ -14,7 +14,7 @@
                 <outlet property="dimBox" destination="eXa-aF-q1x" id="RME-P8-vWm"/>
                 <outlet property="dimmerSlider" destination="6IH-An-bNz" id="aM6-IX-9ca"/>
                 <outlet property="distanceLabel" destination="R09-Or-K2K" id="t35-T9-BGn"/>
-                <outlet property="favsButton" destination="ggD-CU-k1F" id="q1W-9F-3UF"/>
+                <outlet property="favsButton" destination="RaW-ix-2oS" id="ctc-TD-hNd"/>
                 <outlet property="greenLabel" destination="Eth-3j-OkM" id="Is9-jb-b6L"/>
                 <outlet property="greenSlider" destination="XRF-J8-LgT" id="Qph-HE-Htk"/>
                 <outlet property="lightSwitch" destination="klj-Be-mye" id="F0p-Hn-Q5E"/>
@@ -83,10 +83,9 @@
                                     </constraints>
                                 </view>
                             </barButtonItem>
-                            <barButtonItem key="rightBarButtonItem" tag="1" systemItem="add" id="ggD-CU-k1F">
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            <barButtonItem key="rightBarButtonItem" title="Item" id="RaW-ix-2oS">
                                 <connections>
-                                    <action selector="favsButtonTapped:" destination="-1" id="v6c-O5-Haf"/>
+                                    <action selector="favsButtonTapped:" destination="-1" id="uMS-7q-hhw"/>
                                 </connections>
                             </barButtonItem>
                         </navigationItem>

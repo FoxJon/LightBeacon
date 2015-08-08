@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 #import "LBAMainVC.h"
+#import <HueSDK_iOS/HueSDK.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -18,6 +19,8 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic)  LBAMainVC *viewController;
+
+@property (nonatomic) PHHueSDK *phHueSDK;
 
 
 - (void)saveContext;
