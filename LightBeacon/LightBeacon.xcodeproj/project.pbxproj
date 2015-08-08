@@ -49,6 +49,7 @@
 		B0D8A3141B6538C700DD3D87 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D8A30F1B6538C700DD3D87 /* DDTTYLogger.m */; };
 		B0D8A31A1B6538F200DD3D87 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D8A3171B6538F200DD3D87 /* ContextFilterLogFormatter.m */; };
 		B0D8A31B1B6538F200DD3D87 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D8A3191B6538F200DD3D87 /* DispatchQueueLogFormatter.m */; };
+		B0D8A31E1B68486000DD3D87 /* LBAHueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D8A31D1B68486000DD3D87 /* LBAHueManager.m */; };
 		B0E8D2771B40A65C009683A2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E8D2761B40A65C009683A2 /* CoreLocation.framework */; };
 		B0FCFD021B2521410034FD4E /* LBALogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0FCFD011B2521410034FD4E /* LBALogManager.m */; };
 /* End PBXBuildFile section */
@@ -136,6 +137,8 @@
 		B0D8A3171B6538F200DD3D87 /* ContextFilterLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextFilterLogFormatter.m; sourceTree = "<group>"; };
 		B0D8A3181B6538F200DD3D87 /* DispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispatchQueueLogFormatter.h; sourceTree = "<group>"; };
 		B0D8A3191B6538F200DD3D87 /* DispatchQueueLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispatchQueueLogFormatter.m; sourceTree = "<group>"; };
+		B0D8A31C1B68486000DD3D87 /* LBAHueManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBAHueManager.h; sourceTree = "<group>"; };
+		B0D8A31D1B68486000DD3D87 /* LBAHueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBAHueManager.m; sourceTree = "<group>"; };
 		B0E8D2761B40A65C009683A2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B0FCFD001B2521410034FD4E /* LBALogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBALogManager.h; sourceTree = "<group>"; };
 		B0FCFD011B2521410034FD4E /* LBALogManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBALogManager.m; sourceTree = "<group>"; };
@@ -302,6 +305,8 @@
 				B0009C361B472AFA00B12175 /* LBALocationManager.m */,
 				B00370701B5B16F900194CCA /* LBACoreDataManager.h */,
 				B00370711B5B16F900194CCA /* LBACoreDataManager.m */,
+				B0D8A31C1B68486000DD3D87 /* LBAHueManager.h */,
+				B0D8A31D1B68486000DD3D87 /* LBAHueManager.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -467,6 +472,7 @@
 				B032BCF31B2BD25A003AC098 /* LBASettingsTab.m in Sources */,
 				B0CB51C51B518BC000C4AC18 /* LBAFavsTVCell.m in Sources */,
 				B00370721B5B16F900194CCA /* LBACoreDataManager.m in Sources */,
+				B0D8A31E1B68486000DD3D87 /* LBAHueManager.m in Sources */,
 				B0283CF61B58AFEB00897D93 /* User.m in Sources */,
 				B0D8A3101B6538C700DD3D87 /* DDAbstractDatabaseLogger.m in Sources */,
 				B0D8A3111B6538C700DD3D87 /* DDASLLogger.m in Sources */,

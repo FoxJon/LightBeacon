@@ -20,7 +20,7 @@
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic)  LBAMainVC *viewController;
 
-@property (nonatomic) PHHueSDK *phHueSdk;
+@property (nonatomic) PHHueSDK *phHueSDK;
 
 
 - (void)saveContext;

@@ -10,15 +10,4 @@
 
 @implementation LBAFavsTVCell
 
-- (void)awakeFromNib {
-    self.favsTextField.delegate = self;
-}
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField{
-    [self.favsTextField resignFirstResponder];
-    self.favsTextField.userInteractionEnabled = NO;
-    [self.delegate keyboardResigned];
-    return YES;
-}
-
 @end

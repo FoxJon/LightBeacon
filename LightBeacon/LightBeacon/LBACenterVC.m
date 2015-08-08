@@ -15,12 +15,16 @@
 #import "LBALocationManager.h"
 #import "LBACoreDataManager.h"
 #import "UIColor+LBAColors.h"
+#import "LBAHueManager.h"
 #import <Gimbal/Gimbal.h>
 #import <CoreLocation/CoreLocation.h>
+#import <HueSDK_iOS/HueSDK.h>
 
 @interface LBACenterVC () <GMBLPlaceManagerDelegate, LBALocationManagerDelegate>
 @property (nonatomic) GMBLPlaceManager *placeManager;
 @property (nonatomic) NSMutableString *log;
+@property (nonatomic) PHBridgeResourcesCache *cache;
+@property (nonatomic) PHLight *light;
 
 @property (nonatomic) BOOL lightIsOn;
 @property (nonatomic) BOOL delayTimerIsOn;
@@ -86,10 +90,16 @@
     self.placeManager = [GMBLPlaceManager new];
     self.placeManager.delegate = self;
     
+    self.cache = [PHBridgeResourcesReader readBridgeResourcesCache];
+    self.light = [self.cache.lights objectForKey:@"3"];
+    
     if (self.autoSwitch) {
         [GMBLPlaceManager startMonitoring];
         self.placeManagerIsMonitoring = YES;
     }
+    
+    self.favsButton.title = @"\u2661";
+    [self.favsButton setTitleTextAttributes:@{ NSFontAttributeName: [UIFont fontWithName:@"Helvetica-Bold" size:24.0],NSForegroundColorAttributeName: [UIColor darkGrayColor]} forState:UIControlStateNormal];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -260,6 +270,7 @@
                 self.lightIsOn = YES;
                 [self changeBackgroundColor];
                 [self setTintColors];
+                [[LBAHueManager sharedManager] updateLightState:YES forLight:self.light];
             }
         }
         if (self.lightIsOn && !self.delayTimerIsOn && !self.userLightOffTimerIsOn) {
@@ -278,8 +289,10 @@
     if (sender.on) {
         self.lightIsOn = YES;
         self.user.lightSwitchOn = [NSNumber numberWithBool:YES];
+        [[LBAHueManager sharedManager] updateLightState:YES forLight:self.light];
     }else{
         self.lightIsOn = NO;
+        [[LBAHueManager sharedManager] updateLightState:NO forLight:self.light];
         self.autoSwitch.on = NO;
         [GMBLPlaceManager stopMonitoring];
         self.placeManagerIsMonitoring = NO;
@@ -401,6 +414,9 @@
             self.alpha = alpha;
         }
         self.centerContainerView.backgroundColor = [UIColor colorWithRed:self.redColor / 255.0 green:self.greenColor / 255.0 blue:self.blueColor / 255.0 alpha:self.alpha];
+        
+        int brightness = 254 * self.alpha;
+        [[LBAHueManager sharedManager] updateLightState:[UIColor colorWithRed:self.redColor / 255.0 green:self.greenColor / 255.0 blue:self.blueColor / 255.0 alpha:self.alpha] andBrightness:brightness forLight:self.light];
     }
 }
 
@@ -427,6 +443,7 @@
 - (void)turnOffUserLightOffTimer{
     self.lightIsOn = NO;
     self.lightSwitch.on = NO;
+    [[LBAHueManager sharedManager] updateLightState:NO forLight:self.light];
     self.userLightOffTimerIsOn = NO;
     [self changeBackgroundColor];
 }
@@ -438,6 +455,12 @@
         float blue = self.blueSlider.value / 255.0;
         float alpha = self.alpha;
         self.centerContainerView.backgroundColor = self.lightIsOn ? [UIColor colorWithRed:red green:green blue:blue alpha:alpha] : [UIColor colorWithRed:0.098f green:0.098f blue:0.098f alpha:1.0f];
+        if (self.lightIsOn) {
+            int brightness = 254 * self.alpha;
+            [[LBAHueManager sharedManager] updateLightState:[UIColor colorWithRed:self.redColor / 255.0 green:self.greenColor / 255.0 blue:self.blueColor / 255.0 alpha:self.alpha] andBrightness:brightness forLight:self.light];
+        }else{
+            [[LBAHueManager sharedManager] updateLightState:NO forLight:self.light];
+        }
     }];
 }
 
@@ -513,13 +536,20 @@
     [UIView animateWithDuration:0.4 animations:^{
         self.centerContainerView.backgroundColor = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:CGColorGetAlpha(color.CGColor)];
     }];
+    int brightness = 254 * CGColorGetAlpha(color.CGColor);
+    [[LBAHueManager sharedManager] updateLightState:[UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:CGColorGetAlpha(color.CGColor)] andBrightness:brightness forLight:self.light];
+    
     self.redLabel.text = [NSString stringWithFormat:@"%d", (int)(components[0] * 255)];
     self.redSlider.value = components[0] * 255;
+    self.redColor = self.redSlider.value;
     self.greenLabel.text = [NSString stringWithFormat:@"%d", (int)(components[1] * 255)];
     self.greenSlider.value = components[1] * 255;
+    self.greenColor = self.greenSlider.value;
     self.blueLabel.text = [NSString stringWithFormat:@"%d", (int)(components[2] * 255)];
     self.blueSlider.value = components[2] * 255;
+    self.blueColor = self.blueSlider.value;
     self.dimmerSlider.value = CGColorGetAlpha(color.CGColor);
+    self.alpha = self.dimmerSlider.value;
 }
 
 #pragma mark - LBALeftVCDelegate

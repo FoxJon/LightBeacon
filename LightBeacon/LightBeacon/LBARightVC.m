@@ -14,7 +14,7 @@
 #import "Favorite.h"
 #import "User.h"
 
-@interface LBARightVC () <UITableViewDelegate, UITableViewDataSource, LBAFavsTVCellProtocol>
+@interface LBARightVC () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableview;
 @property (nonatomic) LBAFavsTVCell *favsCell;
 @property (weak, nonatomic) IBOutlet UIView *currentColorSwatch;
@@ -26,6 +26,7 @@
 @property (nonatomic) Favorite *favorite;
 @property (nonatomic) User *user;
 @property (weak, nonatomic) IBOutlet LBARectangleView *rectangleView;
+@property (nonatomic) NSInteger currentSelectedIndexRow;
 
 @end
 
@@ -48,10 +49,11 @@
 
 - (IBAction)closeButtonTapped:(UIBarButtonItem *)sender {
     [self.delegate handleCloseButtonTap];
-    [self saveContext];
+    [self saveFavorite];
 }
 
 - (IBAction)addToFavsButtonTapped:(UIButton *)sender {
+    self.currentSelectedIndexRow = 0;
     self.favorite = [[LBACoreDataManager sharedManager]insertNewManagedObjectWithName:@"Favorite"];
     self.favorite.name = @"";
     self.favorite.red = self.user.red;
@@ -69,6 +71,7 @@
 }
 
 - (IBAction)editButtonTapped:(UIButton *)sender {
+    [self saveFavorite];
     [self.tableview setEditing:YES animated:YES];
     [self.delegate handleEditButtonTap];
     self.editButton.hidden = YES;
@@ -82,7 +85,7 @@
     self.editButton.hidden = NO;
     self.doneButton.hidden = YES;
     [self.tableview reloadData];
-    [self saveContext];
+    [self saveFavorite];
 }
 
 #pragma mark - TABLEVIEW DATASOURCE
@@ -94,7 +97,7 @@
     self.favsCell = [LBAFavsTVCell new];
     [tableView registerNib:[UINib nibWithNibName:@"LBAFavsTVCell" bundle:nil] forCellReuseIdentifier:@"FavsCell"];
     self.favsCell = [tableView dequeueReusableCellWithIdentifier:@"FavsCell"];
-    
+    self.favsCell.favsTextField.delegate = self;
     self.favorite = (Favorite *)[self.favoritesArray objectAtIndex:indexPath.row];
     self.favsCell.favsTextField.text = self.favorite.name;
     self.favsCell.favsTextField.autocapitalizationType = UITextAutocapitalizationTypeWords;
@@ -113,8 +116,6 @@
     self.favsCell.cellSwatchBackgroundColor = [UIColor colorWithRed:red/255.0f green:green/255.0f blue:blue/255.0f alpha:alpha];
     self.favsCell.favsSwatch.backgroundColor = self.favsCell.cellSwatchBackgroundColor;
     self.favsCell.favsSwatch.layer.cornerRadius = 20;
-
-    if (indexPath.row == 0) {self.favsCell.delegate = self;}
     
     return self.favsCell;
 }
@@ -135,14 +136,15 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    LBAFavsTVCell *cell = (LBAFavsTVCell *)[tableView cellForRowAtIndexPath:indexPath];
-    cell.favsSwatch.backgroundColor = cell.cellSwatchBackgroundColor;
+    self.currentSelectedIndexRow = indexPath.row;
+    self.favsCell = (LBAFavsTVCell *)[tableView cellForRowAtIndexPath:indexPath];
+    self.favsCell.favsSwatch.backgroundColor = self.favsCell.cellSwatchBackgroundColor;
     
     UIView *bgColorView = [[UIView alloc] init];
     bgColorView.backgroundColor = [UIColor colorWithWhite:255.0 alpha:0.3];
-    [cell setSelectedBackgroundView:bgColorView];
+    [self.favsCell setSelectedBackgroundView:bgColorView];
     
-    [self.delegate changeBackgroundColorToColor:cell.cellSwatchBackgroundColor];
+    [self.delegate changeBackgroundColorToColor:self.favsCell.cellSwatchBackgroundColor];
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
@@ -151,6 +153,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+    self.currentSelectedIndexRow = toIndexPath.row;
     NSMutableDictionary *temp = self.favoritesArray[fromIndexPath.row];
     [self.favoritesArray removeObjectAtIndex:fromIndexPath.row];
     [self.favoritesArray insertObject:temp atIndex:toIndexPath.row];
@@ -171,13 +174,21 @@
     return 62;
 }
 
-#pragma mark - LBAFavsTVCell Delegate
--(void)keyboardResigned{
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    LBAFavsTVCell *cell = (LBAFavsTVCell *)[self.tableview cellForRowAtIndexPath:indexPath];
-    self.favorite.name = cell.favsTextField.text;
-    [self.tableview reloadData];
-    [self saveContext];
+-(BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [textField resignFirstResponder];
+    [self saveFavorite];
+    return NO;
+}
+
+#pragma mark - UITextField Delegate
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    NSIndexPath *indexPath = [self getTextFieldIndexPath:textField];
+    self.currentSelectedIndexRow = indexPath.row;
+}
+
+-(BOOL)textFieldShouldEndEditing:(UITextField *)textField{
+    [self saveFavoriteWithName:textField];
+    return YES;
 }
 
 #pragma mark - HELPERS
@@ -189,9 +200,32 @@
     return [UIColor colorWithRed:red/255.0f green:green/255.0f blue:blue/255.0f alpha:alpha];
 }
 
+- (NSIndexPath *)getTextFieldIndexPath:(UITextField *)textField
+{
+    CGPoint point = [textField.superview convertPoint:textField.frame.origin toView:self.tableview];
+    NSIndexPath * indexPath = [self.tableview indexPathForRowAtPoint:point];
+    return indexPath;
+}
+
 #pragma mark - PRIVATE METHODS
 - (void)saveContext{
     [[LBACoreDataManager sharedManager]saveContextForEntity:@"Favorite"];
+}
+
+-(void)saveFavorite{
+    [self saveFavoriteWithName:nil];
+}
+
+-(void)saveFavoriteWithName:(UITextField *)name{
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.currentSelectedIndexRow inSection:0];
+    self.favsCell = (LBAFavsTVCell *)[self.tableview cellForRowAtIndexPath:indexPath];
+    self.favorite = (Favorite *)[self.favoritesArray objectAtIndex:indexPath.row];
+    if (name) {
+        self.favorite.name = name.text;
+    }
+    [self.tableview reloadData];
+    [self saveContext];
+    
 }
 
 @end
