@@ -55,7 +55,7 @@
             self.sunriseCell = [self setUpCell:cell WithIdentifier:@"SunriseCell" andNibName:@"LBASunriseCell" forTableview:tableView];
             [self.sunriseCell.sunriseSunsetSwitch addTarget:self action:@selector(sunriseSwitch:) forControlEvents:UIControlEventValueChanged];
             
-            if ([self.user.sunriseSunsetMode isEqualToNumber:@1]) {
+            if ([self.user.sunriseSunsetMode isEqualToNumber:[NSNumber numberWithBool:YES]]) {
                 self.sunriseCell.sunriseSunsetSwitch.on = YES;
             }else{
                 self.sunriseCell.sunriseSunsetSwitch.on = NO;
@@ -161,13 +161,13 @@
     if (sender.on) {
         if ([CLLocationManager locationServicesEnabled]) {
             [[LBALocationManager sharedManager] startUpdatingLocation];
-            self.user.sunriseSunsetMode = @1;
+            self.user.sunriseSunsetMode = [NSNumber numberWithBool:YES];
         }else{
-            self.user.sunriseSunsetMode = @0;
+            self.user.sunriseSunsetMode = [NSNumber numberWithBool:NO];
             [[LBAAlert sharedAlert] withTitle:@"Location Services Disabled" message:@"Please turn on location services in order to use this feature."];
         }
     }else{
-        self.user.sunriseSunsetMode = @0;
+        self.user.sunriseSunsetMode = [NSNumber numberWithBool:NO];
     }
 }
 

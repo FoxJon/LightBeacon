@@ -213,7 +213,9 @@
 }
 
 -(void)saveFavorite{
-    [self saveFavoriteWithName:nil];
+    if (self.favoritesArray.count > 0) {
+        [self saveFavoriteWithName:nil];
+    }
 }
 
 -(void)saveFavoriteWithName:(UITextField *)name{
