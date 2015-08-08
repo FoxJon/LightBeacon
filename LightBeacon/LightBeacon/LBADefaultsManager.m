@@ -36,7 +36,7 @@
             self.user.lightOffThreshold = [NSNumber numberWithFloat:90];
             self.user.lightOffDelay = [NSNumber numberWithFloat:20];
             self.user.dimmerValue = [NSNumber numberWithFloat:1.0];
-            self.user.sunriseSunsetMode = [NSNumber numberWithBool:YES];
+            self.user.sunriseSunsetMode = [NSNumber numberWithBool:NO];
             self.user.autoLightOn = [NSNumber numberWithBool:YES];
             self.user.lightSwitchOn = [NSNumber numberWithBool:NO];
             self.user.red = [NSNumber numberWithFloat:255];

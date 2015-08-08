@@ -254,7 +254,7 @@
 
 
 - (void)placeManager:(GMBLPlaceManager *)manager didReceiveBeaconSighting:(GMBLBeaconSighting *)sighting forVisits:(NSArray *)visits{
-    if (self.user.sunriseSunsetMode && ![self checkIfIsBetweenSunsetAndSunrise]) {
+    if (self.user.sunriseSunsetMode == [NSNumber numberWithBool:YES] && ![self checkIfIsBetweenSunsetAndSunrise]) {
         return;
     }else{
         NSString * sightingLog = [LBALogManager createDeveloperLogsWithSighting:sighting];
