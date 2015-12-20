@@ -21,11 +21,13 @@
 		B003706E1B58BF6700194CCA /* Favorite.m in Sources */ = {isa = PBXBuildFile; fileRef = B003706D1B58BF6700194CCA /* Favorite.m */; };
 		B00370721B5B16F900194CCA /* LBACoreDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B00370711B5B16F900194CCA /* LBACoreDataManager.m */; };
 		B003707D1B5DE64100194CCA /* UIColor+LBAColors.m in Sources */ = {isa = PBXBuildFile; fileRef = B003707C1B5DE64100194CCA /* UIColor+LBAColors.m */; };
-		B0283CF61B58AFEB00897D93 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = B0283CF51B58AFEB00897D93 /* User.m */; };
 		B032BCEF1B2BCF72003AC098 /* LBARectangleView.m in Sources */ = {isa = PBXBuildFile; fileRef = B032BCEE1B2BCF72003AC098 /* LBARectangleView.m */; };
 		B032BCF31B2BD25A003AC098 /* LBASettingsTab.m in Sources */ = {isa = PBXBuildFile; fileRef = B032BCF21B2BD25A003AC098 /* LBASettingsTab.m */; };
 		B032BCF91B2BE0EE003AC098 /* LBAPlusSign.m in Sources */ = {isa = PBXBuildFile; fileRef = B032BCF81B2BE0EE003AC098 /* LBAPlusSign.m */; };
 		B032BCFC1B2BE10A003AC098 /* LBAMinusSign.m in Sources */ = {isa = PBXBuildFile; fileRef = B032BCFB1B2BE10A003AC098 /* LBAMinusSign.m */; };
+		B05CCB531B76C880003F0E37 /* LBABridgeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B05CCB511B76C880003F0E37 /* LBABridgeVC.m */; };
+		B05CCB541B76C880003F0E37 /* LBABridgeVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = B05CCB521B76C880003F0E37 /* LBABridgeVC.xib */; };
+		B05CCB901B77C093003F0E37 /* SpinnerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B05CCB8F1B77C093003F0E37 /* SpinnerView.xib */; };
 		B06629281B47A52B00E2A855 /* LBASettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B06629271B47A52B00E2A855 /* LBASettingsCell.xib */; };
 		B066292B1B47AE3000E2A855 /* LBASettingsTVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B066292A1B47AE3000E2A855 /* LBASettingsTVCell.m */; };
 		B066292D1B480C8000E2A855 /* LBASunriseCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B066292C1B480C8000E2A855 /* LBASunriseCell.xib */; };
@@ -52,6 +54,7 @@
 		B0D8A31E1B68486000DD3D87 /* LBAHueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D8A31D1B68486000DD3D87 /* LBAHueManager.m */; };
 		B0E8D2771B40A65C009683A2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E8D2761B40A65C009683A2 /* CoreLocation.framework */; };
 		B0FCFD021B2521410034FD4E /* LBALogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0FCFD011B2521410034FD4E /* LBALogManager.m */; };
+		B0FF0CEC1C226318001999A5 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = B0FF0CEB1C226318001999A5 /* User.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,8 +92,6 @@
 		B00370711B5B16F900194CCA /* LBACoreDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBACoreDataManager.m; sourceTree = "<group>"; };
 		B003707B1B5DE64100194CCA /* UIColor+LBAColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+LBAColors.h"; sourceTree = "<group>"; };
 		B003707C1B5DE64100194CCA /* UIColor+LBAColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+LBAColors.m"; sourceTree = "<group>"; };
-		B0283CF41B58AFEB00897D93 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = ../User.h; sourceTree = "<group>"; };
-		B0283CF51B58AFEB00897D93 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = ../User.m; sourceTree = "<group>"; };
 		B032BCED1B2BCF72003AC098 /* LBARectangleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBARectangleView.h; sourceTree = "<group>"; };
 		B032BCEE1B2BCF72003AC098 /* LBARectangleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBARectangleView.m; sourceTree = "<group>"; };
 		B032BCF11B2BD25A003AC098 /* LBASettingsTab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBASettingsTab.h; sourceTree = "<group>"; };
@@ -99,6 +100,10 @@
 		B032BCF81B2BE0EE003AC098 /* LBAPlusSign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBAPlusSign.m; sourceTree = "<group>"; };
 		B032BCFA1B2BE10A003AC098 /* LBAMinusSign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBAMinusSign.h; sourceTree = "<group>"; };
 		B032BCFB1B2BE10A003AC098 /* LBAMinusSign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBAMinusSign.m; sourceTree = "<group>"; };
+		B05CCB501B76C880003F0E37 /* LBABridgeVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBABridgeVC.h; sourceTree = "<group>"; };
+		B05CCB511B76C880003F0E37 /* LBABridgeVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBABridgeVC.m; sourceTree = "<group>"; };
+		B05CCB521B76C880003F0E37 /* LBABridgeVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LBABridgeVC.xib; sourceTree = "<group>"; };
+		B05CCB8F1B77C093003F0E37 /* SpinnerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SpinnerView.xib; sourceTree = "<group>"; };
 		B06629271B47A52B00E2A855 /* LBASettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LBASettingsCell.xib; sourceTree = "<group>"; };
 		B06629291B47AE3000E2A855 /* LBASettingsTVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBASettingsTVCell.h; sourceTree = "<group>"; };
 		B066292A1B47AE3000E2A855 /* LBASettingsTVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBASettingsTVCell.m; sourceTree = "<group>"; };
@@ -142,6 +147,8 @@
 		B0E8D2761B40A65C009683A2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B0FCFD001B2521410034FD4E /* LBALogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBALogManager.h; sourceTree = "<group>"; };
 		B0FCFD011B2521410034FD4E /* LBALogManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBALogManager.m; sourceTree = "<group>"; };
+		B0FF0CEA1C226318001999A5 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		B0FF0CEB1C226318001999A5 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,6 +184,7 @@
 				B032BCF81B2BE0EE003AC098 /* LBAPlusSign.m */,
 				B032BCFA1B2BE10A003AC098 /* LBAMinusSign.h */,
 				B032BCFB1B2BE10A003AC098 /* LBAMinusSign.m */,
+				B05CCB8F1B77C093003F0E37 /* SpinnerView.xib */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -219,11 +227,11 @@
 		B09D90A31B233F1F00C2653B /* LightBeacon */ = {
 			isa = PBXGroup;
 			children = (
-				B06629241B47A43D00E2A855 /* Cells */,
+				B0D4B95C1B24898D00713A26 /* Managers */,
 				B032BCF01B2BCF79003AC098 /* View */,
-				B0D4B9611B248A0D00713A26 /* Data */,
 				B0D4B9601B2489C900713A26 /* Controller */,
-				B0D4B95C1B24898D00713A26 /* Model */,
+				B06629241B47A43D00E2A855 /* Cells */,
+				B0D4B9611B248A0D00713A26 /* Data */,
 				B09D90A41B233F1F00C2653B /* Supporting Files */,
 				B0009C321B471A3800B12175 /* LBAAlert.h */,
 				B0009C331B471A3800B12175 /* LBAAlert.m */,
@@ -294,7 +302,7 @@
 			name = Lumberjack;
 			sourceTree = "<group>";
 		};
-		B0D4B95C1B24898D00713A26 /* Model */ = {
+		B0D4B95C1B24898D00713A26 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
 				B0FCFD001B2521410034FD4E /* LBALogManager.h */,
@@ -308,7 +316,7 @@
 				B0D8A31C1B68486000DD3D87 /* LBAHueManager.h */,
 				B0D8A31D1B68486000DD3D87 /* LBAHueManager.m */,
 			);
-			name = Model;
+			name = Managers;
 			sourceTree = "<group>";
 		};
 		B0D4B9601B2489C900713A26 /* Controller */ = {
@@ -326,6 +334,9 @@
 				B0009C201B4633AA00B12175 /* LBARightVC.h */,
 				B0009C211B4633AA00B12175 /* LBARightVC.m */,
 				B0009C121B46330000B12175 /* LBARightVC.xib */,
+				B05CCB501B76C880003F0E37 /* LBABridgeVC.h */,
+				B05CCB511B76C880003F0E37 /* LBABridgeVC.m */,
+				B05CCB521B76C880003F0E37 /* LBABridgeVC.xib */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -334,8 +345,8 @@
 			isa = PBXGroup;
 			children = (
 				B09D90AB1B233F1F00C2653B /* LightBeacon.xcdatamodeld */,
-				B0283CF41B58AFEB00897D93 /* User.h */,
-				B0283CF51B58AFEB00897D93 /* User.m */,
+				B0FF0CEA1C226318001999A5 /* User.h */,
+				B0FF0CEB1C226318001999A5 /* User.m */,
 				B003706C1B58BF6700194CCA /* Favorite.h */,
 				B003706D1B58BF6700194CCA /* Favorite.m */,
 			);
@@ -439,7 +450,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B05CCB901B77C093003F0E37 /* SpinnerView.xib in Resources */,
 				B0009C111B4632F300B12175 /* LBALeftVC.xib in Resources */,
+				B05CCB541B76C880003F0E37 /* LBABridgeVC.xib in Resources */,
 				B0009C2A1B465D9900B12175 /* LBACenterVC.xib in Resources */,
 				B066292D1B480C8000E2A855 /* LBASunriseCell.xib in Resources */,
 				B0CB51C21B51890700C4AC18 /* LBAFavsTVCell.xib in Resources */,
@@ -466,14 +479,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0FF0CEC1C226318001999A5 /* User.m in Sources */,
 				B06629301B48137C00E2A855 /* LBASunriseTVCell.m in Sources */,
 				B0009C341B471A3800B12175 /* LBAAlert.m in Sources */,
 				B0009C221B4633AA00B12175 /* LBARightVC.m in Sources */,
 				B032BCF31B2BD25A003AC098 /* LBASettingsTab.m in Sources */,
 				B0CB51C51B518BC000C4AC18 /* LBAFavsTVCell.m in Sources */,
+				B05CCB531B76C880003F0E37 /* LBABridgeVC.m in Sources */,
 				B00370721B5B16F900194CCA /* LBACoreDataManager.m in Sources */,
 				B0D8A31E1B68486000DD3D87 /* LBAHueManager.m in Sources */,
-				B0283CF61B58AFEB00897D93 /* User.m in Sources */,
 				B0D8A3101B6538C700DD3D87 /* DDAbstractDatabaseLogger.m in Sources */,
 				B0D8A3111B6538C700DD3D87 /* DDASLLogger.m in Sources */,
 				B066292B1B47AE3000E2A855 /* LBASettingsTVCell.m in Sources */,
@@ -614,6 +628,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/JonFox/Documents/Programming/Frameworks/gimbalsdk_2/Frameworks,
@@ -632,6 +647,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/JonFox/Documents/Programming/Frameworks/gimbalsdk_2/Frameworks,

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9052" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9040"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LBACenterVC">
+            <connections>
+                <outlet property="spinner" destination="0vr-Kb-VoM" id="ibX-D4-5FC"/>
+                <outlet property="spinnerLabel" destination="jFs-UO-Eag" id="u52-eV-2ba"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view alpha="0.39999999999999963" contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="0vr-Kb-VoM">
+                    <rect key="frame" x="290" y="290" width="20" height="20"/>
+                </activityIndicatorView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Bogus..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jFs-UO-Eag">
+                    <rect key="frame" x="249" y="261" width="103" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="0vr-Kb-VoM" firstAttribute="top" secondItem="jFs-UO-Eag" secondAttribute="bottom" constant="8" id="4tQ-Gd-NYb"/>
+                <constraint firstAttribute="centerY" secondItem="0vr-Kb-VoM" secondAttribute="centerY" id="YNf-1E-Dl0"/>
+                <constraint firstAttribute="centerX" secondItem="0vr-Kb-VoM" secondAttribute="centerX" id="cBZ-Bq-SHJ"/>
+                <constraint firstAttribute="centerX" secondItem="jFs-UO-Eag" secondAttribute="centerX" id="kFz-vB-jSX"/>
+                <constraint firstItem="0vr-Kb-VoM" firstAttribute="top" secondItem="jFs-UO-Eag" secondAttribute="bottom" constant="8" id="lKK-6c-UHm"/>
+            </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="lKK-6c-UHm"/>
+                </mask>
+            </variation>
+        </view>
+    </objects>
+</document>

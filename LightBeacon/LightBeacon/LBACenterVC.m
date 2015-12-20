@@ -16,15 +16,20 @@
 #import "LBACoreDataManager.h"
 #import "UIColor+LBAColors.h"
 #import "LBAHueManager.h"
+#import "LBABridgeVC.h"
+#import "AppDelegate.h"
 #import <Gimbal/Gimbal.h>
 #import <CoreLocation/CoreLocation.h>
 #import <HueSDK_iOS/HueSDK.h>
 
-@interface LBACenterVC () <GMBLPlaceManagerDelegate, LBALocationManagerDelegate>
+@interface LBACenterVC () <GMBLPlaceManagerDelegate, LBALocationManagerDelegate, AppDelegateDelegate, UIAlertViewDelegate>
 @property (nonatomic) GMBLPlaceManager *placeManager;
 @property (nonatomic) NSMutableString *log;
 @property (nonatomic) PHBridgeResourcesCache *cache;
 @property (nonatomic) PHLight *light;
+@property (nonatomic) AppDelegate *appDelegate;
+@property (nonatomic) UIView *spinnerView;
+@property (nonatomic) UIAlertView *alert;
 
 @property (nonatomic) BOOL lightIsOn;
 @property (nonatomic) BOOL delayTimerIsOn;
@@ -38,6 +43,9 @@
 @property (weak, nonatomic) IBOutlet UIView *centerContainerView;
 @property (nonatomic) UITapGestureRecognizer *gestureRecognizer;
 @property (nonatomic) User *user;
+@property (nonatomic) NSTimer *timer;
+@property (nonatomic) LBABridgeVC *bridgeVC;
+@property (nonatomic) int currentBridgeTimerNumber;
 
 // User configurable properties
 @property (nonatomic) BOOL userLightOffTimerIsOn;
@@ -60,6 +68,8 @@
 @property (nonatomic) int entrySldrValue;
 @property (nonatomic) int exitSldrValue;
 @property (nonatomic) int exitDelaySldrValue;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
+@property (weak, nonatomic) IBOutlet UILabel *spinnerLabel;
 
 //Labels
 @property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
@@ -100,6 +110,9 @@
     
     self.favsButton.title = @"\u2661";
     [self.favsButton setTitleTextAttributes:@{ NSFontAttributeName: [UIFont fontWithName:@"Helvetica-Bold" size:24.0],NSForegroundColorAttributeName: [UIColor darkGrayColor]} forState:UIControlStateNormal];
+    
+    self.appDelegate = [[UIApplication sharedApplication]delegate];
+    self.appDelegate.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -566,9 +579,106 @@
     self.exitDelaySldrValue = exitDelaySliderValue;
 }
 
+#pragma mark - AppDelegateDelegate
+- (void)handleButtonNotTapped{
+    if (!self.bridgeVC) {
+        self.bridgeVC = [[LBABridgeVC alloc]initWithNibName:@"LBABridgeVC" bundle:nil];
+        [self presentViewController:self.bridgeVC animated:YES completion:nil];
+        self.currentBridgeTimerNumber = 30;
+        self.bridgeVC.bridgeTimer.text = [NSString stringWithFormat:@"%i", self.currentBridgeTimerNumber];
+    }
+    if (!self.timer) {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerEvent:) userInfo:nil repeats:YES];
+    }
+}
+
+- (void)handleAuthenticationSuccess{
+    if (self.bridgeVC) {
+        [self dismissViewControllerAnimated:YES completion:^{
+            self.bridgeVC = nil;
+            self.timer = nil;
+        }];
+    }
+}
+
+- (void)handleAuthenticationFailure{
+    [self presentAlertWithTitle:@"Authentication Failed" andMessage:@"Would you like to try again?"];
+}
+
+- (void)showSpinnerViewWithText:(NSString *)text{
+    if (!self.spinnerView) {
+        self.spinnerView = [[[NSBundle mainBundle] loadNibNamed:@"SpinnerView" owner:self options:nil]lastObject];
+        self.spinnerView.frame = self.view.frame;
+        self.spinnerLabel.text = text;
+        [self.view addSubview:self.spinnerView];
+        [self.spinner startAnimating];
+    }
+}
+
+- (void)removeSpinnerView{
+    if (self.spinnerView) {
+        [self.spinner stopAnimating];
+        [self.spinnerView removeFromSuperview];
+    }
+}
+
+- (void)showBridgeSelectionTVC{
+    
+}
+
+- (void)handleBridgeConnectionFailure{
+    [self presentAlertWithTitle:@"Unable to Connect Bridge" andMessage:@"Would you like to try again?"];
+}
+
+
+
+
+#pragma mark - UIAlertViewDelegate
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 0) {
+        if (self.spinnerView) {
+            [self.spinner stopAnimating];
+            [self.spinnerView removeFromSuperview];
+        }
+        if (self.bridgeVC) {
+            [self dismissViewControllerAnimated:YES completion:^{
+                self.bridgeVC = nil;
+                self.alert = nil;
+            }];
+        }
+    }else if (buttonIndex == 1) {
+        self.timer = nil;
+        if (self.bridgeVC) {
+            self.currentBridgeTimerNumber = 30;
+            self.bridgeVC.bridgeTimer.text = [NSString stringWithFormat:@"%i", self.currentBridgeTimerNumber];
+        }
+        self.alert = nil;
+        [self.appDelegate enableLocalHeartbeat];
+    }
+}
+
 #pragma mark - private methods
 - (void)saveContext{
     [[LBACoreDataManager sharedManager]saveContextForEntity:@"User"];
+}
+
+-(void)timerEvent:(NSTimer *)timer{
+    if (self.currentBridgeTimerNumber > 0) {
+        self.currentBridgeTimerNumber--;
+        self.bridgeVC.bridgeTimer.text = [NSString stringWithFormat:@"%i", self.currentBridgeTimerNumber];
+    }else{
+        [self handleBridgeConnectionFailure];
+        [self.timer invalidate];
+        self.timer = nil;
+    }
+}
+
+- (void)presentAlertWithTitle:(NSString *)title andMessage:(NSString *)message{
+    if (!self.alert) {
+        [self.appDelegate disableLocalHeartbeat];
+        self.alert = [[UIAlertView alloc]initWithTitle:title message:message delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+        [self.alert show];
+    }
 }
 
 @end

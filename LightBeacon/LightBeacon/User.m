@@ -2,7 +2,7 @@
 //  User.m
 //  LightBeacon
 //
-//  Created by Jonathan Fox on 7/16/15.
+//  Created by Jonathan Fox on 8/25/15.
 //  Copyright (c) 2015 Jon Fox. All rights reserved.
 //
 
@@ -11,17 +11,18 @@
 
 @implementation User
 
-@dynamic lightOnThreshold;
-@dynamic lightOffThreshold;
-@dynamic lightOffDelay;
-@dynamic dimmerValue;
-@dynamic sunriseSunsetMode;
+@dynamic alpha;
 @dynamic autoLightOn;
+@dynamic blue;
+@dynamic dimmerValue;
+@dynamic green;
+@dynamic lightOffDelay;
+@dynamic lightOffThreshold;
+@dynamic lightOnThreshold;
 @dynamic lightSwitchOn;
 @dynamic red;
-@dynamic green;
-@dynamic blue;
-@dynamic alpha;
+@dynamic sunriseSunsetMode;
+
 
 + (User *)fetchCurrentUser{
     User *user = nil;
@@ -31,5 +32,4 @@
     }
     return user;
 }
-
 @end
