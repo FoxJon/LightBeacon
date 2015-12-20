@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14E46" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9053" systemVersion="14F1509" minimumToolsVersion="Automatic">
     <entity name="Favorite" representedClassName="Favorite" syncable="YES">
         <attribute name="alpha" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="blue" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
@@ -22,7 +22,7 @@
         <attribute name="sunriseSunsetMode" optional="YES" attributeType="Boolean" syncable="YES"/>
     </entity>
     <elements>
-        <element name="User" positionX="-63" positionY="-18" width="128" height="210"/>
         <element name="Favorite" positionX="-63" positionY="63" width="128" height="135"/>
+        <element name="User" positionX="-63" positionY="-18" width="128" height="210"/>
     </elements>
 </model>

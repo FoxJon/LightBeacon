@@ -17,8 +17,6 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSLog(@"PATH: %@",[paths objectAtIndex:0]);
     
     NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Keys" ofType:@"plist"]];
     NSString *GimbalAPIKey = [dictionary objectForKey:@"GimbalAPIKey"];
@@ -28,33 +26,17 @@
     [self.phHueSDK enableLogging:YES];
     [self.phHueSDK startUpSDK];
     
-    self.phBridgeSearching = [[PHBridgeSearching alloc]initWithUpnpSearch:YES andPortalSearch:YES andIpAdressSearch:YES];
-    
-    [self.phBridgeSearching startSearchWithCompletionHandler:^(NSDictionary *bridgesFound) {
-        NSLog(@"BRIDGE: %@", bridgesFound);
-        if (bridgesFound.count > 0) {
-            NSString *bridgeId = [[bridgesFound allKeys]objectAtIndex:0];
-            NSString *ipAddress = [bridgesFound objectForKey:bridgeId];
-            [self.phHueSDK setBridgeToUseWithId:bridgeId ipAddress:ipAddress];
-        }
-    }];
-    
-    // Register for notifications about pushlinking
-    PHNotificationManager *phNotificationMgr = [PHNotificationManager defaultManager];
-    
-    [phNotificationMgr registerObject:self withSelector:@selector(authenticationSuccess) forNotification:PUSHLINK_LOCAL_AUTHENTICATION_SUCCESS_NOTIFICATION];
-    [phNotificationMgr registerObject:self withSelector:@selector(authenticationFailed) forNotification:PUSHLINK_LOCAL_AUTHENTICATION_FAILED_NOTIFICATION];
-    [phNotificationMgr registerObject:self withSelector:@selector(noLocalConnection) forNotification:PUSHLINK_NO_LOCAL_CONNECTION_NOTIFICATION];
-    [phNotificationMgr registerObject:self withSelector:@selector(noLocalBridge) forNotification:PUSHLINK_NO_LOCAL_BRIDGE_KNOWN_NOTIFICATION];
-    [phNotificationMgr registerObject:self withSelector:@selector(buttonNotPressed:) forNotification:PUSHLINK_BUTTON_NOT_PRESSED_NOTIFICATION];
-    
-    // Call to the Hue SDK to start the pushlinking process
-    [self.phHueSDK startPushlinkAuthentication];
-    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.viewController = [[LBAMainVC alloc] initWithNibName:@"LBAMainVC" bundle:nil];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+    
+    PHNotificationManager *notificationManager = [PHNotificationManager defaultManager];
+    [notificationManager registerObject:self withSelector:@selector(localConnection) forNotification:LOCAL_CONNECTION_NOTIFICATION];
+    [notificationManager registerObject:self withSelector:@selector(noLocalConnection) forNotification:NO_LOCAL_CONNECTION_NOTIFICATION];
+    [notificationManager registerObject:self withSelector:@selector(notAuthenticated) forNotification:NO_LOCAL_AUTHENTICATION_NOTIFICATION];
+    
+    [self enableLocalHeartbeat];
     
 return YES;
 }
@@ -65,22 +47,54 @@ return YES;
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     [self saveContext];
+    [self disableLocalHeartbeat];
 }
-
-
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     [self saveContext];
 }
 
-#pragma mark - PHNotification Manager callbacks
+
+#pragma mark - LOCAL PHNotificationManager callbacks
+/**
+ Notification receiver for successful local connection
+ */
+- (void)localConnection {
+    // If connection is successful this method will be called every heartbeat interval
+    // Update UI to show connected state and cached data
+    [self.delegate removeSpinnerView];
+    NSLog(@"HEARTBEAT");
+}
+
+/**
+ Notification receiver for failed local connection
+ */
+- (void)noLocalConnection {
+    // Inform user to resolve connectivity issues or connect to other bridge
+    [self.delegate handleBridgeConnectionFailure];
+}
+
+/**
+ Notification receiver for failed local authentication
+ */
+- (void)notAuthenticated {
+    // We are not authenticated so start the authentication/pushlink process
+    // Register for notifications about pushlinking
+    PHNotificationManager *phNotificationMgr = [PHNotificationManager defaultManager];
+    [phNotificationMgr registerObject:self withSelector:@selector(authenticationSuccess) forNotification:PUSHLINK_LOCAL_AUTHENTICATION_SUCCESS_NOTIFICATION];
+    [phNotificationMgr registerObject:self withSelector:@selector(authenticationFailed) forNotification:PUSHLINK_LOCAL_AUTHENTICATION_FAILED_NOTIFICATION];
+    [phNotificationMgr registerObject:self withSelector:@selector(noLocalConnection) forNotification:PUSHLINK_NO_LOCAL_CONNECTION_NOTIFICATION];
+    [phNotificationMgr registerObject:self withSelector:@selector(noLocalBridge) forNotification:PUSHLINK_NO_LOCAL_BRIDGE_KNOWN_NOTIFICATION];
+    [phNotificationMgr registerObject:self withSelector:@selector(buttonNotPressed:) forNotification:PUSHLINK_BUTTON_NOT_PRESSED_NOTIFICATION];
+    
+    // Call to the Hue SDK to start the pushlinking process
+    [self.phHueSDK startPushlinkAuthentication];
+}
+
+#pragma mark - PHNotification PUSHLINK Manager callbacks
 - (void)authenticationSuccess {
-    PHNotificationManager *notificationManager = [PHNotificationManager defaultManager];
-    
-    [notificationManager registerObject:self withSelector:@selector(localConnection) forNotification:LOCAL_CONNECTION_NOTIFICATION];
-    [notificationManager registerObject:self withSelector:@selector(noLocalConnection) forNotification:NO_LOCAL_CONNECTION_NOTIFICATION];
-    [notificationManager registerObject:self withSelector:@selector(notAuthenticated) forNotification:NO_LOCAL_AUTHENTICATION_NOTIFICATION];
-    
+    [self.delegate handleAuthenticationSuccess];
+
     // You can now enable a heartbeat to connect to this bridge
     [self enableLocalHeartbeat];
 }
@@ -90,6 +104,7 @@ return YES;
  */
 - (void)authenticationFailed {
     // Authentication failed because time limit was reached, inform the user about this and let him try again
+    [self.delegate handleAuthenticationFailure];
 }
 
 
@@ -104,44 +119,44 @@ return YES;
  This method is called when the pushlinking is still ongoing but no button was pressed yet.
  @param notification The notification which contains the pushlinking percentage which has passed.
  */
-
 - (void)buttonNotPressed:(NSNotification *)notification {
     // Fetch percentage of time elapsed from notification
-    NSDictionary *dict = notification.userInfo;
-    NSNumber *progressPercentage = [dict objectForKey:@"progressPercentage"];
-    
-    // Code to update UI
+    [self.delegate handleButtonNotTapped];
 }
 
-- (void) disableLocalConnection {
-    [self.phHueSDK disableLocalConnection];
-}
-
-/**
- Notification receiver for successful local connection
- */
-- (void)localConnection {
-    // If connection is successful this method will be called every heartbeat interval
-    // Update UI to show connected state and cached data
-}
-
-/**
- Notification receiver for failed local connection
- */
-- (void)noLocalConnection {
-    // Inform user to resolve connectivity issues or connect to other bridge
-}
-
-/**
- Notification receiver for failed local authentication
- */
-- (void)notAuthenticated {
-    // We are not authenticated so start the authentication/pushlink process
-}
 
 #pragma mark - HUE HELPERS
 - (void)enableLocalHeartbeat{
-    [self.phHueSDK enableLocalConnection];
+    PHBridgeResourcesCache *cache = [PHBridgeResourcesReader readBridgeResourcesCache];
+    if (cache != nil && cache.bridgeConfiguration != nil && cache.bridgeConfiguration.ipaddress != nil) {
+        [self.delegate showSpinnerViewWithText:@"Connecting..."];
+        [self.phHueSDK enableLocalConnection];
+    }else{
+        [self searchForLocalBridge];
+    }
+}
+
+-(void)disableLocalHeartbeat{
+    [self.phHueSDK disableLocalConnection];
+    [self.phHueSDK cancelPushLinkAuthentication];
+}
+
+- (void) searchForLocalBridge{
+    [self.delegate showSpinnerViewWithText:@"Loading..."];
+
+    self.phBridgeSearching = [[PHBridgeSearching alloc]initWithUpnpSearch:YES andPortalSearch:YES andIpAdressSearch:YES];
+    [self.phBridgeSearching startSearchWithCompletionHandler:^(NSDictionary *bridgesFound) {
+        [self.delegate removeSpinnerView];
+        if (bridgesFound.count > 0) {
+            NSLog(@"Bridge Found");
+            NSString *bridgeId = [[bridgesFound allKeys]objectAtIndex:0];
+            NSString *ipAddress = [bridgesFound objectForKey:bridgeId];
+            [self.phHueSDK setBridgeToUseWithId:bridgeId ipAddress:ipAddress];
+            [self.phHueSDK enableLocalConnection];
+        }else{
+            [self.delegate handleBridgeConnectionFailure];
+        }
+    }];
 }
 
 #pragma mark - Core Data stack

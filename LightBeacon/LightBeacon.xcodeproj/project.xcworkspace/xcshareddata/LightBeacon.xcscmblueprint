@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "0521715154ECBA8E823FE0780A795580A195E5B4",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "2F134EAA86D27B2488B78B09958D5BB86BCF7B7A" : 0,
+    "0521715154ECBA8E823FE0780A795580A195E5B4" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "555E188B-4607-430C-BB7E-6B3BF71D8EFD",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "2F134EAA86D27B2488B78B09958D5BB86BCF7B7A" : "",
+    "0521715154ECBA8E823FE0780A795580A195E5B4" : "LightBeacon"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "LightBeacon",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "LightBeacon\/LightBeacon.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/FoxJon\/LightBeacon.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0521715154ECBA8E823FE0780A795580A195E5B4"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/FoxJon\/SwiftRingGraph.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2F134EAA86D27B2488B78B09958D5BB86BCF7B7A"
+    }
+  ]
+}
